@@ -1,0 +1,6 @@
+#import "./exam.graphql"
+
+
+fragment examDetails on Exam {
+  ...exam
+}

@@ -1,0 +1,11 @@
+#import "../../gqlfragments/exam.graphql"
+
+fragment examSummary on Exam {
+  ...exam
+}
+
+query examEnquiry {
+  exams {
+    ...examSummary
+  }
+}
