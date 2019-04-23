@@ -120,3 +120,4 @@ const ExamEnquiryPage = ({ data: { exams } }: ExamEnquiryPageProps) => (
 export default graphql<ExamEnquiryQuery, ExamEnquiryPageOwnProps, ExamEnquiryPageProps>(
   ExamEnquiryQueryGql
 )(withLoadingHandler(ExamEnquiryPage));
+
