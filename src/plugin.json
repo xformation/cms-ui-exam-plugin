@@ -1,7 +1,7 @@
 {
   "type": "app",
   "name": "Exam",
-  "id": "xformation-cms-exam-panel",
+  "id": "ems-exam",
   "css": {
     "dark": "css/dark.css",
     "light": "css/light.css"

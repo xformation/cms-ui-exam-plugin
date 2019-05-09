@@ -41,26 +41,21 @@ export type locationSummaryFragment = {
 
 /* Student */
 
-export type ExamEnquiryQuery = {
+export type ExamListQuery = {
   // Return all known Pet Institutes
   exams: Array<{
-    id: any;
-    studentName: string;
-    mobileNumber: string;
-    alternateMobileNumber: string;
-    email: string;
-    courseApplyingFor: string;
-    modeOfEnquiry: string;
-    status: string;
-    description: string;
-    enquiryDate: string;
-    updatedOn: string;
-    updatedBy: string;
-    branch: {
-      branchName: string;
+    id: number;
+    examType: string;
+    startDate: number;
+    endDate: number;
+    department: {
+      name: string;
     };
-    examApplication: {
-      examStatus: string;
+    year: {
+      year: any;
+    };
+    section: {
+      section: any;
     };
   }>;
 };
@@ -71,87 +66,67 @@ export type ExamQueryVariables = {
 
 export type ExamQuery = {
   exam: {
-    id: any;
-    studentName: string;
-    mobileNumber: string;
-    alternateMobileNumber: string;
-    email: string;
-    courseApplyingFor: string;
-    modeOfEnquiry: string;
-    status: string;
-    description: string;
-    enquiryDate: string;
-    updatedOn: string;
-    updatedBy: string;
-    branch: {
-      branchName: string;
+    id: number;
+    examType: string;
+    startDate: number;
+    endDate: number;
+    department: {
+      name: string;
     };
-    examApplication: {
-      examStatus: string;
+    year: {
+      year: any;
+    };
+    section: {
+      section: any;
     };
   };
 };
 
 export type ExamFragment = {
-  id: any;
-  studentName: string;
-  mobileNumber: string;
-  alternateMobileNumber: string;
-  email: string;
-  courseApplyingFor: string;
-  modeOfEnquiry: string;
-  status: string;
-  description: string;
-  enquiryDate: string;
-  updatedOn: string;
-  updatedBy: string;
-  branch: {
-    branchName: string;
+  id: number;
+  examType: string;
+  startDate: number;
+  endDate: number;
+  department: {
+    name: string;
   };
-  examApplication: {
-    examStatus: string;
+  year: {
+    year: any;
+  };
+  section: {
+    section: any;
   };
 };
 
 export type ExamDetailsFragment = {
-  id: any;
-  studentName: string;
-  mobileNumber: string;
-  alternateMobileNumber: string;
-  email: string;
-  courseApplyingFor: string;
-  modeOfEnquiry: string;
-  status: string;
-  description: string;
-  enquiryDate: string;
-  updatedOn: string;
-  updatedBy: string;
-  branch: {
-    branchName: string;
+  id: number;
+  examType: string;
+  startDate: number;
+  endDate: number;
+  department: {
+    name: string;
   };
-  examApplication: {
-    examStatus: string;
+  year: {
+    year: any;
+  };
+  section: {
+    section: any;
   };
 };
 
 export type ExamSummaryFragment = {
-  id: any;
-  studentName: string;
-  mobileNumber: string;
-  alternateMobileNumber: string;
-  email: string;
-  courseApplyingFor: string;
-  modeOfEnquiry: string;
-  status: string;
-  description: string;
-  enquiryDate: string;
-  updatedOn: string;
-  updatedBy: string;
-  branch: {
-    branchName: string;
+  id: number;
+  examType: string;
+  startDate: number;
+  endDate: number;
+  department: {
+    name: string;
   };
-  examApplication: {
-    examStatus: string;
+  year: {
+    year: any;
+  };
+  section: {
+    section: any;
   };
 };
 
