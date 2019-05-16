@@ -24,8 +24,19 @@ const AcademicExamSettingRow = ({ academicExamSetting }: { academicExamSetting: 
         {academicExamSetting.examType}
       </Link>
     </td>
-    <td>{academicExamSetting.examType}</td>
-    
+    <td>{academicExamSetting.semester}</td>
+    <td>{academicExamSetting.subject}</td>
+    <td>{academicExamSetting.date}</td>
+    <td>{academicExamSetting.day}</td>
+    <td>{academicExamSetting.duration}</td>
+    <td>{academicExamSetting.startTime}</td>
+    <td>{academicExamSetting.endTime}</td>
+    <td>{academicExamSetting.total}</td>
+    <td>{academicExamSetting.passing}</td>
+    <td>{academicExamSetting.actions}</td>
+    <td>{academicExamSetting.department.name}</td>
+    <td>{academicExamSetting.academicYear.year}</td>
+    <td>{academicExamSetting.section.section}</td>
   </tr>
 );
 
@@ -38,8 +49,19 @@ const AcademicExamSettingsTable = ({ academicExamSettings }: { academicExamSetti
             <input type="checkbox" value="checkedall" name="" id="" />
           </th>
           <th>Exam Type</th>
-          <th>Exam Type</th>
-         
+          <th>Semester</th>
+          <th>Subject</th>
+          <th>Date</th>
+          <th>Day</th>
+          <th>Duration</th>
+          <th>Start Time</th>
+          <th>End Time</th>
+          <th>Total</th>
+          <th>Passing</th>
+          <th>Actions</th>
+          <th>Department</th>
+          <th>Section</th>
+          <th>Academic Year</th>
         </tr>
       </thead>
       <tbody>
