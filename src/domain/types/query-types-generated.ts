@@ -1,57 +1,22 @@
-/* tslint:disable */
-//  This file was automatically generated and should not be edited.
-
-/* Location */
-
-export type locationListQuery = {
-  locations: Array<{
-    id: string;
-    name: string;
-    address: string;
-    appliesTo: string;
-  }>;
-};
-
-export type locationQueryVariables = {
-  locationId: any;
-};
-
-export type locationQuery = {
-  location: {
-    id: any;
-    name: string;
-    address: string;
-    appliesTo: string;
-  };
-};
-
-export type locationDetailsFragment = {
-  id: any;
-  name: string;
-  address: string;
-  appliesTo: string;
-};
-
-export type locationSummaryFragment = {
-  id: any;
-  name: string;
-  address: string;
-  appliesTo: string;
-};
-
-/* Student */
-
-export type ExamListQuery = {
+export type AcademicExamSettingListQuery = {
   // Return all known Pet Institutes
-  exams: Array<{
+  academicExamSettings: Array<{
     id: number;
     examType: string;
-    startDate: number;
-    endDate: number;
+    semester: string;
+    subject: string;
+    date: Date;
+    day: string;
+    duration: string;
+    startTime: string;
+    endTime: string;
+    total: number;
+    passing: number;
+    actions: string;
     department: {
       name: string;
     };
-    year: {
+    academicYear: {
       year: any;
     };
     section: {
@@ -60,20 +25,28 @@ export type ExamListQuery = {
   }>;
 };
 
-export type ExamQueryVariables = {
-  examId: number;
+export type AcademicExamSettingQueryVariables = {
+  academicExamSettingId: number;
 };
 
-export type ExamQuery = {
-  exam: {
+export type AcademicExamSettingQuery = {
+  academicExamSetting: {
     id: number;
     examType: string;
-    startDate: number;
-    endDate: number;
+    semester: string;
+    subject: string;
+    date: Date;
+    day: string;
+    duration: string;
+    startTime: string;
+    endTime: string;
+    total: number;
+    passing: number;
+    actions: string;
     department: {
       name: string;
     };
-    year: {
+    academicYear: {
       year: any;
     };
     section: {
@@ -82,15 +55,23 @@ export type ExamQuery = {
   };
 };
 
-export type ExamFragment = {
+export type AcademicExamSettingFragment = {
   id: number;
   examType: string;
-  startDate: number;
-  endDate: number;
+  semester: string;
+  subject: string;
+  date: Date;
+  day: string;
+  duration: string;
+  startTime: string;
+  endTime: string;
+  total: number;
+  passing: number;
+  actions: string;
   department: {
     name: string;
   };
-  year: {
+  academicYear: {
     year: any;
   };
   section: {
@@ -98,15 +79,23 @@ export type ExamFragment = {
   };
 };
 
-export type ExamDetailsFragment = {
+export type AcademicExamSettingDetailsFragment = {
   id: number;
   examType: string;
-  startDate: number;
-  endDate: number;
+  semester: string;
+  subject: string;
+  date: Date;
+  day: string;
+  duration: string;
+  startTime: string;
+  endTime: string;
+  total: number;
+  passing: number;
+  actions: string;
   department: {
     name: string;
   };
-  year: {
+  academicYear: {
     year: any;
   };
   section: {
@@ -114,20 +103,26 @@ export type ExamDetailsFragment = {
   };
 };
 
-export type ExamSummaryFragment = {
+export type AcademicExamSettingSummaryFragment = {
   id: number;
   examType: string;
-  startDate: number;
-  endDate: number;
+  semester: string;
+  subject: string;
+  date: Date;
+  day: string;
+  duration: string;
+  startTime: string;
+  endTime: string;
+  total: number;
+  passing: number;
+  actions: string;
   department: {
     name: string;
   };
-  year: {
+  academicYear: {
     year: any;
   };
   section: {
     section: any;
   };
 };
-
-/* tslint:enable */

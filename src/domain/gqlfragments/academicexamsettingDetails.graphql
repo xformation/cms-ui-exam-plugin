@@ -1,0 +1,6 @@
+#import "./academicExamSetting.graphql"
+
+
+fragment academicexamsettingDetails on AcademicExamSetting {
+  ...academicExamSetting
+}

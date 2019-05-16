@@ -1,0 +1,11 @@
+#import "../../gqlfragments/academicexamsetting.graphql"
+
+fragment academicexamsettingSummary on AcademicExamSetting {
+  ...academicExamSetting
+}
+
+query academicexamsettingList {
+  academicExamSettings {
+    ...academicexamsettingSummary
+  }
+}

@@ -1,0 +1,23 @@
+fragment academicExamSetting on AcademicExamSetting {
+  id
+    examType
+    semester
+    subject
+    date
+    day
+    duration
+    startTime
+    endTime
+    total
+    passing
+    actions
+    department {
+      name
+    }
+    academicYear {
+      year
+    }
+    section {
+      section
+    }
+}

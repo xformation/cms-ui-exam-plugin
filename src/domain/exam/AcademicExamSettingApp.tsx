@@ -6,7 +6,8 @@ import { ApolloProvider } from 'react-apollo';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 
 import { createGraphQLClient } from '../../createGraphQLClient';
-import ExamListPage from './ExamListPage';
+import AcademicExamSettingListPage from './AacadeicExamSettingListPage'
+
 
 const graphQLClient = createGraphQLClient();
 
@@ -16,11 +17,12 @@ export default function init() {
       <ApolloProvider client={graphQLClient}>
         <BrowserRouter>
           <Switch>
-          <Route path="/plugins/ems-exam/page/exams" component={ExamListPage} />
+          <Route path="/plugins/ems-exam/page/exams" 
+          component={AcademicExamSettingListPage} />
           </Switch>
         </BrowserRouter>
       </ApolloProvider>,
-      document.getElementById('mount')
+      document.getElementById('mountExamList')
     );
   }, 10);
 }

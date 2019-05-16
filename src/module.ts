@@ -1,5 +1,5 @@
 import {WelcomePage} from './ui/WelcomePage';
 import {ConfigCtrl} from './ui/Config';
-import {ExamPage} from './ui/ExamPage';
+import {AcademicExamSettingPage} from './ui/AcademicExamSettingPage';
 
-export {WelcomePage, ConfigCtrl, ExamPage};
+export {WelcomePage, ConfigCtrl, AcademicExamSettingPage};
