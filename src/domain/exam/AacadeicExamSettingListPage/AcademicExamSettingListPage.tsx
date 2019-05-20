@@ -75,9 +75,9 @@ const AcademicExamSettingListPage = ({ data: { academicExamSettings } }: Academi
         <div>
           <Link
             to={`/plugins/ems-exam/page/addacademicExamSetting`}
-            className="btn btn-primary m-r-1" style={w180}>Create New Exam
+            className="btn btn-primary m-r-1" style={w180}>Add Exam
         </Link>
-          <a className="btn btn-primary">Export</a>
+         
         </div>
       </div>
       <AcademicExamSettingsTable academicExamSettings={academicExamSettings} />
