@@ -570,7 +570,7 @@ h5 {
 }
 table#academicexamsettinglistpage th,
 td {
-  text-align: center !important;
+  text-align: left !important;
 }
 .family-details > h5 > span {
   color: #111111;
@@ -610,6 +610,11 @@ td {
 .bg-heading button:first-child {
   width: 180px;
   margin-right: 15px;
+}
+.eflex {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 /* Fee Setup */
