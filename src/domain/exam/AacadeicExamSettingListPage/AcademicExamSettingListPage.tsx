@@ -3,6 +3,7 @@ import * as React from 'react';
 import { withRouter, RouteComponentProps, Link } from 'react-router-dom';
 import { graphql, QueryProps } from 'react-apollo';
 import {AcademicExamSettingListQuery, AcademicExamSettingSummaryFragment} from  '../../types';
+
 import * as AcademicExamSettingListQueryGql from './AcademicExamSettingListQuery.graphql';
 import withLoadingHandler from '../../../components/withLoadingHandler';
 
@@ -22,7 +23,7 @@ const AcademicExamSettingRow = ({ academicExamSetting }: { academicExamSetting: 
       </Link>
     </td>
     <td>{academicExamSetting.department.name}</td>
-    <td>{academicExamSetting.academicYear.year}</td>
+    <td>{academicExamSetting.academicyear.year}</td>
     <td>{academicExamSetting.section.section}</td>
     <td>{academicExamSetting.date}</td>
     <td>{academicExamSetting.date}</td>
@@ -71,7 +72,8 @@ const AcademicExamSettingListPage = ({ data: { academicExamSettings } }: Academi
       </h3>
     <div className="plugin-bg-white p-1">
       <div className="m-b-1 eflex bg-heading">
-        <h4 className="ptl-06">Academic Year</h4>
+        <h4 className="ptl-06">Academic Year 2018-2019 </h4>
+
         <div>
           <Link
             to={`/plugins/ems-exam/page/addacademicExamSetting`}

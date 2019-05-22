@@ -16,7 +16,7 @@ export type AcademicExamSettingListQuery = {
     department: {
       name: string;
     };
-    academicYear: {
+    academicyear: {
       year: any;
     };
     section: {
@@ -46,7 +46,7 @@ export type AcademicExamSettingQuery = {
     department: {
       name: string;
     };
-    academicYear: {
+    academicyear: {
       year: any;
     };
     section: {
@@ -71,7 +71,7 @@ export type AcademicExamSettingFragment = {
   department: {
     name: string;
   };
-  academicYear: {
+  academicyear: {
     year: any;
   };
   section: {
@@ -95,7 +95,7 @@ export type AcademicExamSettingDetailsFragment = {
   department: {
     name: string;
   };
-  academicYear: {
+  academicyear: {
     year: any;
   };
   section: {
@@ -119,7 +119,7 @@ export type AcademicExamSettingSummaryFragment = {
   department: {
     name: string;
   };
-  academicYear: {
+  academicyear: {
     year: any;
   };
   section: {

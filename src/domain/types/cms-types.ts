@@ -21,7 +21,7 @@ export type AcademicExamSettingData = {
   department: {
     name: string;
   };
-  academicYear: {
+  academicyear: {
     year: any;
   };
   section: {

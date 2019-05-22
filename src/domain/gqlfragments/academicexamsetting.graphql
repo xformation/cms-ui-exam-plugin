@@ -14,7 +14,7 @@ fragment academicExamSetting on AcademicExamSetting {
     department {
       name
     }
-    academicYear {
+    academicyear {
       year
     }
     section {
