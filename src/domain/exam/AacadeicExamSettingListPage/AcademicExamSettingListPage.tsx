@@ -66,12 +66,12 @@ type AcademicExamSettingListPageProps = {
 
 const AcademicExamSettingListPage = ({ data: { academicExamSettings } }: AcademicExamSettingListPageProps) => (
   <section className="customCss">
-    <h3 className="bg-heading p-1 m-b-0">
+    <h3 className="bg-heading-exam p-1 m-b-0">
       <i className="fa fa-university stroke-transparent mr-1" aria-hidden="true" />{' '}
       Admin - Academic Exam Setting Management
       </h3>
     <div className="plugin-bg-white p-1">
-      <div className="m-b-1 eflex bg-heading">
+      <div className="m-b-1 eflex bg-heading-exam">
         <h4 className="ptl-06">Academic Year 2018-2019 </h4>
 
         <div>

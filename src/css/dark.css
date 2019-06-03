@@ -599,15 +599,15 @@ td {
 .margin-bott {
   margin-bottom: 25px;
 }
-.bg-heading {
+.bg-heading-exam {
   display: flex;
   align-items: center;
   justify-content: flex-start;
 }
-.bg-heading h2 {
+.bg-heading-exam h2 {
   flex-grow: 1;
 }
-.bg-heading button:first-child {
+.bg-heading-exam button:first-child {
   width: 180px;
   margin-right: 15px;
 }
