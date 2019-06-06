@@ -10,7 +10,7 @@ export type AcademicExamSettingData = {
   examType: string;
   semester: string;
   subject: string;
-  date: Date;
+  examDate: Date;
   day: string;
   duration: string;
   startTime: string;

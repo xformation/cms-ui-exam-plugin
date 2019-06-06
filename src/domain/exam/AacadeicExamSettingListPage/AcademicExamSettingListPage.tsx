@@ -25,8 +25,8 @@ const AcademicExamSettingRow = ({ academicExamSetting }: { academicExamSetting: 
     <td>{academicExamSetting.department.name}</td>
     <td>{academicExamSetting.academicyear.year}</td>
     <td>{academicExamSetting.section.section}</td>
-    <td>{academicExamSetting.date}</td>
-    <td>{academicExamSetting.date}</td>
+    <td>{academicExamSetting.examDate}</td>
+    <td>{academicExamSetting.examDate}</td>
     <td> <a >
             <i className="fa fa-pencil-square-o fa-1-5x" aria-hidden="true"></i>
           </a>

@@ -5,7 +5,7 @@ export type AcademicExamSettingListQuery = {
     examType: string;
     semester: string;
     subject: string;
-    date: Date;
+    examDate: Date;
     day: string;
     duration: string;
     startTime: string;
@@ -35,7 +35,7 @@ export type AcademicExamSettingQuery = {
     examType: string;
     semester: string;
     subject: string;
-    date: Date;
+    examDate: Date;
     day: string;
     duration: string;
     startTime: string;
@@ -60,7 +60,7 @@ export type AcademicExamSettingFragment = {
   examType: string;
   semester: string;
   subject: string;
-  date: Date;
+  examDate: Date;
   day: string;
   duration: string;
   startTime: string;
@@ -84,7 +84,7 @@ export type AcademicExamSettingDetailsFragment = {
   examType: string;
   semester: string;
   subject: string;
-  date: Date;
+  examDate: Date;
   day: string;
   duration: string;
   startTime: string;
@@ -108,7 +108,7 @@ export type AcademicExamSettingSummaryFragment = {
   examType: string;
   semester: string;
   subject: string;
-  date: Date;
+  examDate: Date;
   day: string;
   duration: string;
   startTime: string;

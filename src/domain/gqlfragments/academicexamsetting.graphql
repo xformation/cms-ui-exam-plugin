@@ -3,7 +3,7 @@ fragment academicExamSetting on AcademicExamSetting {
     examType
     semester
     subject
-    date
+    examDate
     day
     duration
     startTime
