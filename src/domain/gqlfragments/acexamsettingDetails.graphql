@@ -1,0 +1,6 @@
+#import "./acExamSetting.graphql"
+
+
+fragment acExamSettingDetails on AcExamSetting {
+  ...getacExamSetting
+}

@@ -1,6 +1,6 @@
 {
   "type": "app",
-  "name": "AcademicExamSetting",
+  "name": "AcExamSetting",
   "id": "ems-exam",
   "css": {
     "dark": "css/dark.css",
@@ -30,17 +30,17 @@
     },
     {
       "type": "page",
-      "name": "AcademicExamSettings",
+      "name": "AcExamSettings",
       "addToNav": false,
       "defaultNav": false,
-      "component": "AcademicExamSettingsPage"
+      "component": "AcExamSettingsPage"
     },
     {
       "type": "page",
       "name": "Exams",
       "addToNav": true,
       "defaultNav": true,
-      "component": "AcademicExamSettingPage"
+      "component": "AcExamSettingPage"
     }
   ],
   "dependencies": {

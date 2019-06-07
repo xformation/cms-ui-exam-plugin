@@ -1,0 +1,12 @@
+fragment acExamSetting on AcExamSetting {
+  examType
+  action
+    subject
+    endDate
+    startDate
+    examDate
+    departmnt
+    sectn
+
+    
+}

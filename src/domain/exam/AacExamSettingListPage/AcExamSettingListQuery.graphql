@@ -1,0 +1,11 @@
+#import "../../gqlfragments/acexamsetting.graphql"
+
+fragment acexamsettingSummary on AcExamSetting {
+  ...acExamSetting
+}
+
+query acexamsettingList {
+  acExamSettings {
+    ...acexamsettingSummary
+  }
+}

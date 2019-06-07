@@ -1,7 +1,0 @@
-#import "../gqlfragments/academicexamsettingDetails.graphql"
-
-query academicExamSetting($academicExamSettingId: Long!) {
-  academicExamSetting(id: $academicExamSettingId){
-  ...academicexamsettingDetails
-  }
-}

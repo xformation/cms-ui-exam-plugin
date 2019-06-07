@@ -5,26 +5,13 @@ export type ReactFunctionOrComponentClass<P> =
 
 // --------------------------------------
 
-export type AcademicExamSettingData = {
-  // id: any;
-  examType: string;
-  semester: string;
-  subject: string;
+export type AcExamSettingData = {
+  examType: String;
+  action: String;
+  subject: String;
+  endDate: Date;
+  startDate: Date;
   examDate: Date;
-  day: string;
-  duration: string;
-  startTime: string;
-  endTime: string;
-  total: number;
-  passing: number;
-  actions: string;
-  department: {
-    name: string;
-  };
-  academicyear: {
-    year: any;
-  };
-  section: {
-    section: any;
-  };
+  departmnt: String;
+  sectn: String;
 };

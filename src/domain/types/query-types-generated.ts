@@ -1,128 +1,68 @@
-export type AcademicExamSettingListQuery = {
+export type AcExamSettingListQuery = {
   // Return all known Pet Institutes
-  academicExamSettings: Array<{
-    id: number;
-    examType: string;
-    semester: string;
-    subject: string;
+  acExamSettings: Array<{
+    id: any;
+    examType: String;
+    action: String;
+    subject: String;
+    endDate: Date;
+    startDate: Date;
     examDate: Date;
-    day: string;
-    duration: string;
-    startTime: string;
-    endTime: string;
-    total: number;
-    passing: number;
-    actions: string;
-    department: {
-      name: string;
-    };
-    academicyear: {
-      year: any;
-    };
-    section: {
-      section: any;
-    };
+    departmnt: String;
+    sectn: String;
   }>;
 };
 
-export type AcademicExamSettingQueryVariables = {
-  academicExamSettingId: number;
+export type AcExamSettingQueryVariables = {
+  acExamSettingId: any;
 };
 
-export type AcademicExamSettingQuery = {
-  academicExamSetting: {
-    id: number;
-    examType: string;
-    semester: string;
-    subject: string;
+export type AcExamSettingQuery = {
+  acExamSetting: {
+    id: any;
+    examType: String;
+    action: String;
+    subject: String;
+    endDate: Date;
+    startDate: Date;
     examDate: Date;
-    day: string;
-    duration: string;
-    startTime: string;
-    endTime: string;
-    total: number;
-    passing: number;
-    actions: string;
-    department: {
-      name: string;
-    };
-    academicyear: {
-      year: any;
-    };
-    section: {
-      section: any;
-    };
+    departmnt: String;
+    sectn: String;
   };
 };
 
-export type AcademicExamSettingFragment = {
-  id: number;
-  examType: string;
-  semester: string;
-  subject: string;
+export type AcExamSettingFragment = {
+  id: any;
+  examType: String;
+  action: String;
+  subject: String;
+  endDate: Date;
+  startDate: Date;
   examDate: Date;
-  day: string;
-  duration: string;
-  startTime: string;
-  endTime: string;
-  total: number;
-  passing: number;
-  actions: string;
-  department: {
-    name: string;
-  };
-  academicyear: {
-    year: any;
-  };
-  section: {
-    section: any;
-  };
+  departmnt: String;
+  sectn: String;
 };
 
-export type AcademicExamSettingDetailsFragment = {
-  id: number;
-  examType: string;
-  semester: string;
-  subject: string;
+export type AcExamSettingDetailsFragment = {
+  id: any;
+  examType: String;
+  action: String;
+  subject: String;
+  endDate: Date;
+  startDate: Date;
   examDate: Date;
-  day: string;
-  duration: string;
-  startTime: string;
-  endTime: string;
-  total: number;
-  passing: number;
-  actions: string;
-  department: {
-    name: string;
-  };
-  academicyear: {
-    year: any;
-  };
-  section: {
-    section: any;
-  };
+  departmnt: String;
+  sectn: String;
 };
 
-export type AcademicExamSettingSummaryFragment = {
-  id: number;
-  examType: string;
-  semester: string;
-  subject: string;
+export type AcExamSettingSummaryFragment = {
+  id: any;
+  examType: String;
+  action: String;
+  subject: String;
+  endDate: Date;
+  startDate: Date;
   examDate: Date;
-  day: string;
-  duration: string;
-  startTime: string;
-  endTime: string;
-  total: number;
-  passing: number;
-  actions: string;
-  department: {
-    name: string;
-  };
-  academicyear: {
-    year: any;
-  };
-  section: {
-    section: any;
-  };
+  departmnt: String;
+  sectn: String;
 };
