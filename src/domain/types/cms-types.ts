@@ -13,5 +13,6 @@ export type AcExamSettingData = {
   startDate: Date;
   examDate: Date;
   departmnt: String;
+  bctch: String;
   sectn: String;
 };

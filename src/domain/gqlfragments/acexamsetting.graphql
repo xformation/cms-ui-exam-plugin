@@ -6,6 +6,7 @@ fragment acExamSetting on AcExamSetting {
     startDate
     examDate
     departmnt
+    bctch
     sectn
 
     

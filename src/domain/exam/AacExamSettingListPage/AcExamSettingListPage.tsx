@@ -22,10 +22,11 @@ const AcExamSettingRow = ({ acExamSetting }: { acExamSetting: AcExamSettingSumma
         {acExamSetting.examType}
       </Link>
     </td>
+    <td>{acExamSetting.bctch}</td>
     <td>{acExamSetting.departmnt}</td>
     <td>{acExamSetting.sectn}</td>
-    <td>{acExamSetting.examDate}</td>
-    <td>{acExamSetting.examDate}</td>
+    <td>{acExamSetting.startDate}</td>
+    <td>{acExamSetting.endDate}</td>
     <td> <a >
             <i className="fa fa-pencil-square-o fa-1-5x" aria-hidden="true"></i>
           </a>
@@ -42,6 +43,7 @@ const AcExamSettingsTable = ({ acExamSettings }: { acExamSettings: AcExamSetting
       <thead>
         <tr>
           <th>Exam Type</th>
+          <th>Year</th>          
           <th>Department</th>
           <th>Section</th>
           <th>Start Date</th>

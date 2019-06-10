@@ -9,6 +9,7 @@ export type AcExamSettingListQuery = {
     startDate: Date;
     examDate: Date;
     departmnt: String;
+    bctch: String;
     sectn: String;
   }>;
 };
@@ -27,6 +28,7 @@ export type AcExamSettingQuery = {
     startDate: Date;
     examDate: Date;
     departmnt: String;
+    bctch: String;
     sectn: String;
   };
 };
@@ -40,6 +42,7 @@ export type AcExamSettingFragment = {
   startDate: Date;
   examDate: Date;
   departmnt: String;
+  bctch: String;
   sectn: String;
 };
 
@@ -52,6 +55,7 @@ export type AcExamSettingDetailsFragment = {
   startDate: Date;
   examDate: Date;
   departmnt: String;
+  bctch: String;
   sectn: String;
 };
 
@@ -64,5 +68,6 @@ export type AcExamSettingSummaryFragment = {
   startDate: Date;
   examDate: Date;
   departmnt: String;
+  bctch: String;
   sectn: String;
 };
