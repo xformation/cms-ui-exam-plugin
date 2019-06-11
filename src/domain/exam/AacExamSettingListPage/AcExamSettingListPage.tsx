@@ -25,8 +25,8 @@ const AcExamSettingRow = ({ acExamSetting }: { acExamSetting: AcExamSettingSumma
     <td>{acExamSetting.bctch}</td>
     <td>{acExamSetting.departmnt}</td>
     <td>{acExamSetting.sectn}</td>
-    <td>{acExamSetting.startDate}</td>
-    <td>{acExamSetting.endDate}</td>
+    <td>{acExamSetting.st}</td>
+    <td>{acExamSetting.ed}</td>
     <td> <a >
             <i className="fa fa-pencil-square-o fa-1-5x" aria-hidden="true"></i>
           </a>

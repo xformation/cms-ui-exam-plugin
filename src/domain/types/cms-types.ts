@@ -15,4 +15,6 @@ export type AcExamSettingData = {
   departmnt: String;
   bctch: String;
   sectn: String;
+  st: String;
+  ed: String;
 };

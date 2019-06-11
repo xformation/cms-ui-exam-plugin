@@ -11,6 +11,8 @@ export type AcExamSettingListQuery = {
     departmnt: String;
     bctch: String;
     sectn: String;
+    st: String;
+    ed: String;
   }>;
 };
 
@@ -30,6 +32,8 @@ export type AcExamSettingQuery = {
     departmnt: String;
     bctch: String;
     sectn: String;
+    st: String;
+    ed: String;
   };
 };
 
@@ -44,6 +48,8 @@ export type AcExamSettingFragment = {
   departmnt: String;
   bctch: String;
   sectn: String;
+  st: String;
+  ed: String;
 };
 
 export type AcExamSettingDetailsFragment = {
@@ -57,6 +63,8 @@ export type AcExamSettingDetailsFragment = {
   departmnt: String;
   bctch: String;
   sectn: String;
+  st: String;
+  ed: String;
 };
 
 export type AcExamSettingSummaryFragment = {
@@ -70,4 +78,6 @@ export type AcExamSettingSummaryFragment = {
   departmnt: String;
   bctch: String;
   sectn: String;
+  st: String;
+  ed: String;
 };

@@ -8,6 +8,8 @@ fragment acExamSetting on AcExamSetting {
     departmnt
     bctch
     sectn
+    st
+    ed
 
     
 }
