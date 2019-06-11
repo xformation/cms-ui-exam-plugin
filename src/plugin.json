@@ -1,6 +1,6 @@
 {
   "type": "app",
-  "name": "AcExamSetting",
+  "name": "CMS Exam",
   "id": "ems-exam",
   "css": {
     "dark": "css/dark.css",
