@@ -25,6 +25,7 @@ const AcExamSettingRow = ({ acExamSetting }: { acExamSetting: AcExamSettingSumma
     <td>{acExamSetting.bctch}</td>
     <td>{acExamSetting.departmnt}</td>
     <td>{acExamSetting.sectn}</td>
+    <td>{acExamSetting.subject}</td>
     <td>{acExamSetting.st}</td>
     <td>{acExamSetting.ed}</td>
     <td> <a >
@@ -46,6 +47,7 @@ const AcExamSettingsTable = ({ acExamSettings }: { acExamSettings: AcExamSetting
           <th>Year</th>          
           <th>Department</th>
           <th>Section</th>
+          <th>Subjects</th>
           <th>Start Date</th>
           <th>End Date</th>
           <th>Actions</th>
@@ -75,10 +77,10 @@ const AcExamSettingListPage = ({ data: { acExamSettings } }: AcExamSettingListPa
         <h4 className="ptl-06">Academic Year 2018-2019 </h4>
 
         <div>
-          <Link
+          {/* <Link
             to={`/plugins/ems-exam/page/addacExamSetting`}
             className="btn btn-primary m-r-1" style={w180}>Add Exam
-        </Link>
+        </Link> */}
          
         </div>
       </div>
