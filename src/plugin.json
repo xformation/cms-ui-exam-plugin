@@ -24,16 +24,16 @@
     {
       "type": "page",
       "name": "Home",
-      "addToNav": true,
-      "defaultNav": true,
-      "component": "WelcomePage"
+      "addToNav": false,
+      "defaultNav": false,
+      "component": "AddExamPage"
     },
     {
       "type": "page",
-      "name": "AcExamSettings",
+      "name": "AddExams",
       "addToNav": false,
       "defaultNav": false,
-      "component": "AcExamSettingsPage"
+      "component": "WelcomePage"
     },
     {
       "type": "page",

@@ -28,12 +28,13 @@ const AcExamSettingRow = ({ acExamSetting }: { acExamSetting: AcExamSettingSumma
     <td>{acExamSetting.subject}</td>
     <td>{acExamSetting.st}</td>
     <td>{acExamSetting.ed}</td>
-    <td> <a >
+    {/* <td> <a >
             <i className="fa fa-pencil-square-o fa-1-5x" aria-hidden="true"></i>
           </a>
           <a >
             <i className="fa fa-trash-o fa-1-5x table-p" aria-hidden="true"></i>
-          </a></td>   
+          </a>
+    </td>    */}
    
   </tr>
 );
@@ -50,7 +51,7 @@ const AcExamSettingsTable = ({ acExamSettings }: { acExamSettings: AcExamSetting
           <th>Subjects</th>
           <th>Start Date</th>
           <th>End Date</th>
-          <th>Actions</th>
+          {/* <th>Actions</th> */}
                    
         </tr>
       </thead>

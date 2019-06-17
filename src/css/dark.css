@@ -603,6 +603,7 @@ td {
   display: flex;
   align-items: center;
   justify-content: flex-start;
+  background: #f6f6f6;
 }
 .bg-heading-exam h2 {
   flex-grow: 1;
