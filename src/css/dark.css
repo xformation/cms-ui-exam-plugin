@@ -852,4 +852,9 @@ table.adminListPage td:first-child {
   margin-right: 2rem;
 }
 
+.exam-flex {
+  display: flex;
+  justify-content: space-between;
+}
+
 /* Fee Setup */
