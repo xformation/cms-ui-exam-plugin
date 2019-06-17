@@ -14,13 +14,13 @@ const w180 = {
 
 const AcExamSettingRow = ({ acExamSetting }: { acExamSetting: AcExamSettingSummaryFragment }) => (
   <tr key={acExamSetting.id}>
-    <td>
-      <Link
+    <td>{acExamSetting.examType}
+      {/* <Link
         className="table-link link-color"
         to={`/plugins/ems-exam/page/acExamSetting?id=${acExamSetting.id}`}
       >
-        {acExamSetting.examType}
-      </Link>
+        
+      </Link> */}
     </td>
     <td>{acExamSetting.bctch}</td>
     <td>{acExamSetting.departmnt}</td>

@@ -827,7 +827,7 @@ table.adminListPage {
 }
 table.adminListPage th,
 td {
-  text-align: left !important;
+  text-align: center !important;
 }
 table.adminListPage th {
   border: 0px solid white !important;
