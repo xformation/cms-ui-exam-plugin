@@ -22,7 +22,7 @@ export default function init() {
           </Switch>
         </BrowserRouter>
       </ApolloProvider>,
-      document.getElementById('mountAddExam')
+      document.getElementById('mountExamList')
     );
   }, 10);
 }
