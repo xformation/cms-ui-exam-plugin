@@ -1,5 +1,6 @@
 fragment acExamSetting on AcExamSetting {
   examType
+  brnch
   action
     subject
     endDate
