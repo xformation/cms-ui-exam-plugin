@@ -163,34 +163,6 @@ export type ExamListQueryTypeForAdmin = {
     // endDate: Date
   }>;
 };
-// addAcademicExamSetting: {
-//   academicExamSetting: {
-//       examType: String,
-//       semester: String,
-//       subject: String,
-//       examDate: Date,
-//       day: String,
-//       duration: String,
-//       startTime: String,
-//       endTime: String,
-//       total: number,
-//       passing: number,
-//       actions: String,
-//       batch: {
-//         batch: any;
-//       };
-//       section: {
-//         section: any;
-//       };
-//       branch: {
-//         branchName: any;
-//       };
-//       department: {
-//         name: number;
-//       };
-//     };
-//   };
-// };
 
 export type UpdateExamMutation = {
   addAcademicSubjects: {

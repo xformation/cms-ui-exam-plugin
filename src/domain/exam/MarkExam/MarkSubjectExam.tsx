@@ -439,13 +439,14 @@ createBranches(branches: any) {
         let k = v.data.getSubjectList[x];
         let dayOfWeek = new Date(k.examDate).getDay();  
         var gsDayNames = [
+          'Saturday',
           'Sunday',
           'Monday',
           'Tuesday',
           'Wednesday',
           'Thursday',
-          'Friday',
-          'Saturday'
+          'Friday'        
+         
         ];  
          let dayofdate=gsDayNames[dayOfWeek];
       
@@ -453,12 +454,10 @@ createBranches(branches: any) {
         
         retVal.push(
           <tbody>
-            <tr>
-            <td> <input type="text" id={"t" + k.id} defaultValue={k.examType}  maxLength={255} onChange={this.handleChange} ></input> </td>
-
+            <tr id="custom-width-input">
                 <td> <input type="text" id={"t" + k.id} defaultValue={k.subject}  maxLength={255} onChange={this.handleChange} ></input> </td>
                 
-                <td> <input   id={"t" + k.id} defaultValue={k.examDate} maxLength={255} onChange={this.handleChange} ></input> </td>
+                <td> <input  id={"t" + k.id} defaultValue={k.examDate} maxLength={255} onChange={this.handleChange} ></input> </td>
 
                 <td> <input type="text" id={"t" + k.id} defaultValue={dayofdate} maxLength={255} onChange={this.handleChange} ></input> </td>
                
@@ -485,7 +484,7 @@ createBranches(branches: any) {
       <section className="plugin-bg-white">
         <h3 className="bg-heading p-1">
           <i className="fa fa-university stroke-transparent mr-1" aria-hidden="true" />{' '}
-          Admin - Exam
+          Admin - Academic Exam Setting
         </h3>
         <div className="p-1">
           <form className="gf-form-group" onSubmit={this.onFormSubmit} >
@@ -534,8 +533,9 @@ createBranches(branches: any) {
               </tbody>
             </table>
 
-            <div className="tflex bg-heading mt-1" id="detailGrid">
+            <div className="tflex bg-heading mt-1 e-flex"  id="detailGrid">
               <h4 className="p-1 py-2 mb-0"> Exam</h4>
+               <input type="text" className="h-input m-1"   maxLength={255} ></input>
               <div className="hhflex">
 
                 {/* <div className="mx-2">
@@ -553,18 +553,17 @@ createBranches(branches: any) {
             </div>
 
             <div className="hide" id="detailGridTable">
-              <table className="fwidth" id="matable">
+              <table className="fwidth">
                 <thead >
                   <tr>
-                    <th>Exam Type</th>
-                    <th>Subjects</th>
+                    <th>Subject</th>
                     <th>Date</th>
                     <th>Day</th>
                     <th>Duration</th>
                     <th>Start Time</th>
                     <th>End Time</th>
-                    <th>Passing</th>
-                    <th>Total</th>
+                    <th>Passing Marks</th>
+                    <th>Total Marks</th>
                    
                     {/* <th>Attendance</th>
                     <th>Comments</th> */}

@@ -866,8 +866,24 @@ table.adminListPage td:first-child {
   height: 26px;
 }
 
+#custom-width-input td:first-child input {
+  width: 160px !important;
+}
+
+#custom-width-input td:nth-child(2) input {
+  width: 140px !important;
+}
+
 #custom-width-input td input {
-  width: 130px !important;
+  width: 120px !important;
+}
+
+#custom-width-input td:nth-last-child(2) input {
+  width: 80px !important;
+}
+
+#custom-width-input td:last-child input {
+  width: 80px !important;
 }
 
 /* Fee Setup */
