@@ -857,4 +857,17 @@ table.adminListPage td:first-child {
   justify-content: space-between;
 }
 
+.e-flex {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.h-input {
+  height: 26px;
+}
+
+#custom-width-input td input {
+  width: 130px !important;
+}
+
 /* Fee Setup */

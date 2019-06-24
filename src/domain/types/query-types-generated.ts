@@ -81,7 +81,7 @@ export type AcExamSettingSummaryFragment = {
   st: String;
   ed: String;
 };
-export type LoadExamFilterDataCacheType = {
+export type LoadExamSubjQueryCacheForAdmin = {
   createExamFilterDataCache: {
     branches: Array<{
       id: number;
@@ -142,8 +142,59 @@ export type AddExamMutation = {
         branchName: any;
       };
       department: {
-        name: any;
+        name: number;
       };
     };
+  };
+};
+export type ExamListQueryTypeForAdmin = {
+  getSubjectList: Array<{
+    examType: String;
+    subject: String;
+    examDate: Date;
+    day: String;
+    duration: String;
+    startTime: String;
+    endTime: String;
+    total: number;
+    passing: number;
+    // actions: String!
+    // startDate: Date
+    // endDate: Date
+  }>;
+};
+// addAcademicExamSetting: {
+//   academicExamSetting: {
+//       examType: String,
+//       semester: String,
+//       subject: String,
+//       examDate: Date,
+//       day: String,
+//       duration: String,
+//       startTime: String,
+//       endTime: String,
+//       total: number,
+//       passing: number,
+//       actions: String,
+//       batch: {
+//         batch: any;
+//       };
+//       section: {
+//         section: any;
+//       };
+//       branch: {
+//         branchName: any;
+//       };
+//       department: {
+//         name: number;
+//       };
+//     };
+//   };
+// };
+
+export type UpdateExamMutation = {
+  addAcademicSubjects: {
+    statusCode: string;
+    statusDesc: string;
   };
 };

@@ -18,3 +18,10 @@ export type AcExamSettingData = {
   st: String;
   ed: String;
 };
+
+export type ExamData = {
+  // id: string;
+  examType: String;
+  action: String;
+  day: String;
+};

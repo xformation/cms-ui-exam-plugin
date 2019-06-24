@@ -4,16 +4,18 @@ import { withRouter, RouteComponentProps, Link } from 'react-router-dom';
 import * as AddExamMutationGql from './AddExamMutation.graphql';
 import ExamData from './ExamData';
 
+import * as ExamUpdateMutationGql from './ExamUpdateMutation.graphql';
+
 // import withLoadingHandler from '../../../components/withLoadingHandler';
 import withExamFilterDataCacheLoader from "./withExamFilterDataCacheLoader";
-import { LoadExamFilterDataCacheType, AddExamMutation } from '../../types';
+import { LoadExamSubjQueryCacheForAdmin, AddExamMutation } from '../../types';
 // import 'bootstrap/dist/css/bootstrap.min.css';
 
 type AddExamPageOwnProps = RouteComponentProps<{
     collegeId: string;
     academicYearId:  string;
 }> & {
-    data: QueryProps & LoadExamFilterDataCacheType; 
+    data: QueryProps & LoadExamSubjQueryCacheForAdmin; 
 };
 type AddExamPageProps = AddExamPageOwnProps & {
     mutate: MutationFunc<AddExamMutation>;
@@ -49,6 +51,7 @@ type EditExamProfileStates = {
     semesters: any,
     uploadPhoto: any,
     fileName: any,
+    mutateResult: any,
     academicYearId: any
 };
 
@@ -79,6 +82,7 @@ class AddExamPage extends React.Component<AddExamPageProps, EditExamProfileState
                     id: ""
                 },
             },
+            mutateResult: [],
             departments: [],
             batches: [],
             sections: [],
@@ -88,13 +92,22 @@ class AddExamPage extends React.Component<AddExamPageProps, EditExamProfileState
             uploadPhoto: null,
             fileName: "",
             academicYearId: 1701
+         
         };
         this.createDepartments = this.createDepartments.bind(this);
         this.createBatches = this.createBatches.bind(this);
         this.createBranches = this.createBranches.bind(this);
         this.createSections = this.createSections.bind(this);
+        this.onClickCheckbox = this.onClickCheckbox.bind(this);
         this.createSemestersOptions = this.createSemestersOptions.bind(this);
     }
+
+    onClickCheckbox(index: any, e: any) {
+        // const { target } = e;
+        const { id } = e.nativeEvent.target;
+        let chkBox: any = document.querySelector("#" + id);
+        chkBox.checked = e.nativeEvent.target.checked;
+      }
 
     createDepartments(departments: any, selectedBranchId: any) {
         let departmentsOptions = [<option key={0} value="">Select department</option>];
@@ -185,7 +198,7 @@ class AddExamPage extends React.Component<AddExamPageProps, EditExamProfileState
             }).then((data: any) => {
                 btn.removeAttribute("disabled");
                 dataSavedMessage.style.display = "inline-block";
-                location.href = `${location.origin}/plugins/ems-exam/page/exams`;
+                // location.href = `${location.origin}/plugins/ems-exam/page/exams`;
             }).catch((error: any) => {
                 btn.removeAttribute("disabled");
                 dataSavedMessage.style.display = "inline-block";
@@ -210,7 +223,35 @@ class AddExamPage extends React.Component<AddExamPageProps, EditExamProfileState
         })     
     }
 
-  
+    createGrid(ary: any){
+        const { examData } = this.state;
+        const retVal = [];
+        const len = ary.length;
+        
+        for(let pd = 0; pd < len; pd++){
+          let v = ary[pd]; 
+          for(let x= 0; x< v.data.getSubjectList.length; x++){
+            let k = v.data.getSubjectList[x];
+            
+            retVal.push(
+              <tbody>
+                <tr>
+                  <td>{k.examType}</td>
+                    <td>{k.day}</td>
+                   
+                    
+                </tr>
+                </tbody>
+            );
+            
+            
+          }
+        }
+        return retVal;
+      }
+
+
+
 
     onChange = (e: any) => {
         const { name, value } = e.nativeEvent.target;
@@ -325,19 +366,19 @@ class AddExamPage extends React.Component<AddExamPageProps, EditExamProfileState
                                 <div className="row p-1">
                                     
                                     
-                                    <div className="exam-flex">
-                                        <div>
-                                        <label htmlFor="">Branch</label>
-                                            <select name="branch" onChange={this.onChange} value={examData.branch.id} className="gf-form-input max-width-22">
-                                                {this.createBranches(this.props.data.createExamFilterDataCache.branches)}
-                                            </select>
-                                            {
-                                            submitted && !examData.branch.id &&
-                                            <div>
-                                                Student branch needed.
-                                                </div>
-                                             }
-                                        </div>
+       <div className="exam-flex">
+   <div>
+    <label htmlFor="">Branch</label>
+        <select name="branch" onChange={this.onChange} value={examData.branch.id} className="gf-form-input max-width-22">
+      {this.createBranches(this.props.data.createExamFilterDataCache.branches)}
+       </select>
+       {
+          submitted && !examData.branch.id &&
+                 <div>
+            exam branch needed.
+                     </div>
+           }
+         </div>
                                         
                                         <div >
                                         <label htmlFor="">Department</label>
@@ -347,7 +388,7 @@ class AddExamPage extends React.Component<AddExamPageProps, EditExamProfileState
                                             {
                                             submitted && !examData.department.id &&
                                             <div>
-                                                Student department needed.
+                                                exam department needed.
                                             </div>
                                             }
                                         </div>
@@ -374,7 +415,7 @@ class AddExamPage extends React.Component<AddExamPageProps, EditExamProfileState
                                             {
                                             submitted && !examData.section.id &&
                                             <div>
-                                                Student section needed.
+                                                exam section needed.
                                             </div>
                                             }
                                         </div>
@@ -399,35 +440,33 @@ class AddExamPage extends React.Component<AddExamPageProps, EditExamProfileState
 
                                 <div className="collapse-container">
                                     <div className="collapse-header">
-                                        <div className="collapse-title">Personal Details</div>
+                                       
                                         <div className="collapse-icon" onClick={onClickHeader}>
-                                            <i className="fa fa-fw fa-plus"></i>
-                                            <i className="fa fa-fw fa-minus"></i>
+                                          
                                         </div>
                                         <div className="clear-both"></div>
                                     </div>
-                                    <ExamData modelData={examData} onChange={(name: any, value: any) => {
-                                        this.setState({
-                                            examData: {
-                                                ...examData,
-                                                [name]: value
-                                            }
-                                        });
-                                    }} />
-                                </div>
-                                <div className="collapse-container">
-                                    <div className="collapse-header">
-                                        <div className="collapse-title">Contact Details</div>
-                                        <div className="collapse-icon" onClick={onClickHeader}>
-                                            <i className="fa fa-fw fa-plus"></i>
-                                            <i className="fa fa-fw fa-minus"></i>
-                                        </div>
-                                        <div className="clear-both"></div>
+                                    <table id="studentlistpage" className="striped-table fwidth bg-white">
+              <thead>
+                <tr>
+                 
+                  <th>Subject</th>
+                  <th>Date</th>
+                  {/* <th>Day</th>
+                  <th>Duration</th>
+                  <th>Start Time</th>
+                  <th>End Time</th>
+                  <th>Total</th>
+                  <th>Passing</th> */}
+                </tr>
+              </thead>
+              <tbody>
+                  {                    this.createGrid(this.state.examData.mutateResult)
+}
+              </tbody>
+            </table>
                                     </div>
                                     
-                                </div>
-                               
-                                   
                                 </div>
                         </div>
                     </form>
@@ -446,7 +485,7 @@ class AddExamPage extends React.Component<AddExamPageProps, EditExamProfileState
 export default withExamFilterDataCacheLoader( 
   
     compose(
-      graphql<AddExamMutation, AddExamPageOwnProps>(AddExamMutationGql, {
+      graphql<AddExamMutation, AddExamPageOwnProps>(ExamUpdateMutationGql, {
         name: "mutate"
       })
       

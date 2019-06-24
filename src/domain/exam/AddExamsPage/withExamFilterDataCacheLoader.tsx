@@ -1,7 +1,7 @@
 import { RouteComponentProps } from 'react-router-dom';
 import { graphql, QueryProps } from "react-apollo";
 import * as LoadExamFilterDataCacheQueryGql from './LoadExamFilterDataCacheQuery.graphql';
-import {ReactFunctionOrComponentClass, LoadExamFilterDataCacheType} from '../../types';
+import {ReactFunctionOrComponentClass, LoadExamSubjQueryCacheForAdmin} from '../../types';
 import withLoadingHandler from '../../../components/withLoadingHandler';
 
 
@@ -11,11 +11,11 @@ type withExamFilterDataCachePageDataLoaderProps = RouteComponentProps<{
   }>;
 
 type TargetComponentProps = {
-    data: QueryProps & LoadExamFilterDataCacheType ;
+    data: QueryProps & LoadExamSubjQueryCacheForAdmin ;
 };
 
 const withExamFilterDataCacheLoader = (TargetComponent: ReactFunctionOrComponentClass<TargetComponentProps>) => {
-    return graphql<LoadExamFilterDataCacheType, withExamFilterDataCachePageDataLoaderProps, TargetComponentProps>(LoadExamFilterDataCacheQueryGql, {
+    return graphql<LoadExamSubjQueryCacheForAdmin, withExamFilterDataCachePageDataLoaderProps, TargetComponentProps>(LoadExamFilterDataCacheQueryGql, {
       options: ({ match }) => ({
         variables: {
           // collegeId: match.params.collegeId,
