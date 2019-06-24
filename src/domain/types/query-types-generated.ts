@@ -111,6 +111,13 @@ export type LoadExamSubjQueryCacheForAdmin = {
         id: number;
       };
     }>;
+    subjects: Array<{
+      id: number;
+      subjectCode: string;
+      batch: {
+        id: number;
+      };
+    }>;
     semesters: Array<{
       id: number;
       description: string;

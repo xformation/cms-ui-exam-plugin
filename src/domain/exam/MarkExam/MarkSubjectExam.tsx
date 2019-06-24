@@ -39,6 +39,7 @@ type ExamState = {
   semesters: any,
   sections: any,
   dtPicker: any,
+  // subjects:any,
   submitted: any,
   startDate: any
 };
@@ -65,6 +66,9 @@ class MarkExam extends React.Component<ExamPageProps, ExamState>{
         semester: {
           id: ""
         },
+        // subject:{
+        //   id:""
+        // },
         section: {
           id: ""
         },
@@ -82,6 +86,7 @@ class MarkExam extends React.Component<ExamPageProps, ExamState>{
       semesters: [],
       sections: [],
       dtPicker: [],
+      // subjects:[],
       submitted: false,
       startDate: moment()
       
@@ -155,8 +160,19 @@ createBranches(branches: any) {
     }
     return sectionsOptions;
   }
-
+//   createSubjects(subjects: any, selectedDepartmentId: any, selectedBatchId: any, selectedTeacherId: any) {
+//     let subjectsOptions = [<option key={0} value="">Select Subject</option>];
+//     for (let i = 0; i < subjects.length; i++) {
+//       let id = subjects[i].id;
+//       if (subjects[i].department.id == selectedDepartmentId && subjects[i].batch.id == selectedBatchId) {
+//         subjectsOptions.push(
+//           <option key={id} value={id}>{subjects[i].subjectDesc}</option>
+//         );
+//       }
+//     }
+//     return subjectsOptions;
   
+// }
   
 
   onFormSubmit = (e: any) => {
@@ -309,19 +325,17 @@ createBranches(branches: any) {
           }
         }
       });
-    // } else if (name === "subject") {
-    //   this.setState({
-    //     studentFilterData: {
-    //       ...studentFilterData,
-    //       subject: {
-    //         id: value
-    //       },
-    //       lecture: {
-    //         id: ""
-    //       }
-    //     }
-    //   });
-     } 
+    }  
+    else if (name === "subjects") {
+      this.setState({
+        examData: {
+          ...examData,
+          subjects: {
+            id: value
+          }
+        }
+      });
+    }
     else if (name === "section") {
       this.setState({
         examData: {
@@ -456,6 +470,11 @@ createBranches(branches: any) {
           <tbody>
             <tr id="custom-width-input">
                 <td> <input type="text" id={"t" + k.id} defaultValue={k.subject}  maxLength={255} onChange={this.handleChange} ></input> </td>
+                {/* <td>
+                    <select required name="subject" id="subject" onChange={this.onChange} value={examData.subject.id} className="gf-form-input max-width-22">
+                      {this.createSubjects(this.props.data.createExamFilterDataCache.subjects, examData.department.id, examData.batch.id, examData.teacher.id)}
+                    </select>
+                  </td> */}
                 
                 <td> <input  id={"t" + k.id} defaultValue={k.examDate} maxLength={255} onChange={this.handleChange} ></input> </td>
 
