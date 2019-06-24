@@ -3,7 +3,6 @@ export type AcExamSettingListQuery = {
   acExamSettings: Array<{
     id: any;
     examType: String;
-    brnch: String;
     action: String;
     subject: String;
     endDate: Date;
@@ -25,7 +24,6 @@ export type AcExamSettingQuery = {
   acExamSetting: {
     id: any;
     examType: String;
-    brnch: String;
     action: String;
     subject: String;
     endDate: Date;
@@ -43,7 +41,6 @@ export type AcExamSettingFragment = {
   id: any;
   examType: String;
   action: String;
-  brnch: String;
   subject: String;
   endDate: Date;
   startDate: Date;
@@ -60,7 +57,6 @@ export type AcExamSettingDetailsFragment = {
   examType: String;
   action: String;
   subject: String;
-  brnch: String;
   endDate: Date;
   startDate: Date;
   examDate: Date;
@@ -77,7 +73,6 @@ export type AcExamSettingSummaryFragment = {
   action: String;
   subject: String;
   endDate: Date;
-  brnch: String;
   startDate: Date;
   examDate: Date;
   departmnt: String;

@@ -14,8 +14,14 @@ const w180 = {
 
 const AcExamSettingRow = ({ acExamSetting }: { acExamSetting: AcExamSettingSummaryFragment }) => (
   <tr key={acExamSetting.id}>
-     <td>{acExamSetting.brnch}</td>
-    <td>{acExamSetting.examType} </td>
+    <td>{acExamSetting.examType}
+      {/* <Link
+        className="table-link link-color"
+        to={`/plugins/ems-exam/page/acExamSetting?id=${acExamSetting.id}`}
+      >
+        
+      </Link> */}
+    </td>
     <td>{acExamSetting.bctch}</td>
     <td>{acExamSetting.departmnt}</td>
     <td>{acExamSetting.sectn}</td>
@@ -38,7 +44,6 @@ const AcExamSettingsTable = ({ acExamSettings }: { acExamSettings: AcExamSetting
    <table id="academicexamsettinglistpage" className="striped-table fwidth bg-white">
       <thead>
         <tr>
-          <th>Branch</th>
           <th>Exam Type</th>
           <th>Year</th>          
           <th>Department</th>
