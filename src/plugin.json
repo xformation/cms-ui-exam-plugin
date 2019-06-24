@@ -31,7 +31,7 @@
     {
       "type": "page",
       "name": "AddExam",
-      "addToNav": false,
+      "addToNav": true,
       "defaultNav": false,
       "component": "MarkExam"
     },
