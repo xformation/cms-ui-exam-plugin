@@ -172,7 +172,9 @@ createBranches(branches: any) {
     return sectionsOptions;
   }
 
-  
+//   handleDate(date){
+//     this.setState({date}); # ES6 
+//  };
 
   onFormSubmit = (e: any) => {
     this.setState({
@@ -467,18 +469,19 @@ createBranches(branches: any) {
           <tbody>
             <tr id="custom-width-input">
             <td>
-                    <select required name="subject" id="subject" onChange={this.onChange} value={examData.subject.id} className="gf-form-input max-width-22">
+                    <select  name="subject" id="subject" onChange={this.onChange} value={examData.subject.id} className="gf-form-input max-width-22">
                       {this.createSubjects(this.props.data.createExamFilterDataCache.subjects, examData.department.id, examData.batch.id)}
                     </select>
                   </td>
-                
-                <td> <input type="date"  id={"t" + k.id} defaultValue={k.examDate} maxLength={255} onChange={this.handleChange} ></input> </td>
+              {/* <td> <input  name="subject"  id={"t" + k.id }  maxLength={255} onChange={this.handleChange} ></input> </td> */}
 
-                <td> <input type="text" id={"t" + k.id} defaultValue={dayofdate} maxLength={255} onChange={this.handleChange} ></input> </td>
+                <td> <input type="date" name="ac"  id={"tqw" }  maxLength={255} onChange={this.handleChange} ></input> </td>
+
+                <td> <input  id={"t" + k.id}   maxLength={255} onChange={this.handleChange} ></input> </td>
                
                 <td> <input type="text" id={"t" + k.id} defaultValue={k.duration} maxLength={255} onChange={this.handleChange} ></input> </td>
-                <td> <input type="text" id={"t" + k.id} defaultValue={k.startTime} maxLength={255} onChange={this.handleChange} ></input> </td>
-                <td> <input type="text" id={"t" + k.id} defaultValue={k.endTime} maxLength={255} onChange={this.handleChange} ></input> </td>
+                <td> <input type="time" id={"t" + k.id} maxLength={255} onChange={this.handleChange} ></input> </td>
+                <td> <input type="time" id={"t" + k.id} maxLength={255} onChange={this.handleChange} ></input> </td>
                 <td> <input  id={"t" + k.id} defaultValue={k.total}  onChange={this.handleChange} ></input> </td>
                 <td> <input  id={"t" + k.id} defaultValue={k.passing}  onChange={this.handleChange} ></input> </td>
                
