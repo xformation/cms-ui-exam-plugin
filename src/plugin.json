@@ -41,6 +41,13 @@
       "addToNav": true,
       "defaultNav": true,
       "component": "AcExamSettingPage"
+    },
+    {
+      "type": "page",
+      "name": "Exam",
+      "addToNav": false,
+      "defaultNav": false,
+      "component": "ExamPage"
     }
   ],
   "dependencies": {

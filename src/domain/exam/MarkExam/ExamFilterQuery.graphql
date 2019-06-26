@@ -5,7 +5,6 @@ mutation getSubjectList($filter: ExamListFilterInput!) {
     day
     startTime
     endTime
-    subject
     total
     passing
     duration

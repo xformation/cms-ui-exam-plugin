@@ -157,7 +157,7 @@ export type AddExamMutation = {
 export type ExamListQueryTypeForAdmin = {
   getSubjectList: Array<{
     examType: String;
-    subject: String;
+    // subject: String;
     examDate: Date;
     day: String;
     duration: String;

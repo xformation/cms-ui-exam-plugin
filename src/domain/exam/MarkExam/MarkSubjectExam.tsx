@@ -36,10 +36,10 @@ type ExamState = {
   academicYears: any,
    departments: any,
   batches: any,
+  subjects:any,
   semesters: any,
   sections: any,
   dtPicker: any,
-  // subjects:any,
   submitted: any,
   startDate: any
 };
@@ -66,9 +66,9 @@ class MarkExam extends React.Component<ExamPageProps, ExamState>{
         semester: {
           id: ""
         },
-        // subject:{
-        //   id:""
-        // },
+        subject: {
+          id: ""
+        },
         section: {
           id: ""
         },
@@ -86,7 +86,7 @@ class MarkExam extends React.Component<ExamPageProps, ExamState>{
       semesters: [],
       sections: [],
       dtPicker: [],
-      // subjects:[],
+      subjects: [],
       submitted: false,
       startDate: moment()
       
@@ -95,7 +95,7 @@ class MarkExam extends React.Component<ExamPageProps, ExamState>{
     this.createDepartments = this.createDepartments.bind(this);
     this.createBatches = this.createBatches.bind(this);
     this.createSemesters = this.createSemesters.bind(this);
-    // this.createSubjects = this.createSubjects.bind(this);
+    this.createSubjects = this.createSubjects.bind(this);
     this.createSections = this.createSections.bind(this);
    this.handleChange = this.handleChange.bind(this);
     this.changeDate = this.changeDate.bind(this);
@@ -136,7 +136,18 @@ createBranches(branches: any) {
     }
     return batchesOptions;
   }
- 
+  createSubjects(subjects: any, selectedDepartmentId: any, selectedBatchId: any) {
+    let subjectsOptions = [<option key={0} value="">Select Subject</option>];
+    for (let i = 0; i < subjects.length; i++) {
+      let id = subjects[i].id;
+      if (subjects[i].department.id == selectedDepartmentId && subjects[i].batch.id == selectedBatchId) {
+        subjectsOptions.push(
+          <option key={id} value={id}>{subjects[i].subjectDesc}</option>
+        );
+      }
+    }
+    return subjectsOptions;
+  }
   createSemesters(semesters: any) {
     let semestersOptions = [<option key={0} value="">Select Semester</option>];
     for (let i = 0; i < semesters.length; i++) {
@@ -160,19 +171,7 @@ createBranches(branches: any) {
     }
     return sectionsOptions;
   }
-//   createSubjects(subjects: any, selectedDepartmentId: any, selectedBatchId: any, selectedTeacherId: any) {
-//     let subjectsOptions = [<option key={0} value="">Select Subject</option>];
-//     for (let i = 0; i < subjects.length; i++) {
-//       let id = subjects[i].id;
-//       if (subjects[i].department.id == selectedDepartmentId && subjects[i].batch.id == selectedBatchId) {
-//         subjectsOptions.push(
-//           <option key={id} value={id}>{subjects[i].subjectDesc}</option>
-//         );
-//       }
-//     }
-//     return subjectsOptions;
-  
-// }
+
   
 
   onFormSubmit = (e: any) => {
@@ -199,8 +198,9 @@ createBranches(branches: any) {
      
       e.target.querySelector("#department").setAttribute("disabled", true);
       e.target.querySelector("#batch").setAttribute("disabled", true);
-      e.target.querySelector("#semester").setAttribute("disabled", true);
-     e.target.querySelector("#section").setAttribute("disabled", true);
+      // e.target.querySelector("#subject").setAttribute("disabled", true);
+      // e.target.querySelector("#semester").setAttribute("disabled", true);
+      e.target.querySelector("#section").setAttribute("disabled", true);
     
       
       // e.target.querySelector("#detailGrid").setAttribute("class", "tflex bg-heading mt-1");
@@ -213,6 +213,7 @@ createBranches(branches: any) {
         // branchId: examData.branch.id,
         departmentId: examData.department.id,
         batchId: examData.batch.id,
+        // subjectId: examData.subject.id,
         sectionId: examData.section.id,
         // academicYearId: examData.academicYear.id      
       };
@@ -236,33 +237,29 @@ createBranches(branches: any) {
         console.log('Query Result ::::: ', examData.mutateResult);
 
         btn.removeAttribute("disabled");
-        // let optTr : any = document.querySelector("#term");
-        // optTr.removeAttribute("disabled");
+       
         let optDt : any = document.querySelector("#department");
         optDt.removeAttribute("disabled");
         let optBt : any = document.querySelector("#batch");
         optBt.removeAttribute("disabled");
         let optSm : any = document.querySelector("#semester");
         optSm.removeAttribute("disabled");
-        // let optSb : any = document.querySelector("#subject");
-        // optSb.removeAttribute("disabled");
+        let optSb : any = document.querySelector("#subject");
+        optSb.removeAttribute("disabled");
         let optSc : any = document.querySelector("#section");
         optSc.removeAttribute("disabled");
-        // let optLc : any = document.querySelector("#lecture");
-        // optLc.removeAttribute("disabled");
-        // dtPk.removeAttribute("disabled");
+        
       }).catch((error: any) => {
         btn.removeAttribute("disabled");
-        // let optTr : any = document.querySelector("#term");
-        // optTr.removeAttribute("disabled");
+        
         let optDt : any = document.querySelector("#department");
         optDt.removeAttribute("disabled");
         let optBt : any = document.querySelector("#batch");
         optBt.removeAttribute("disabled");
         let optSm : any = document.querySelector("#semester");
         optSm.removeAttribute("disabled");
-        // let optSb : any = document.querySelector("#subject");
-        // optSb.removeAttribute("disabled");
+        let optSb : any = document.querySelector("#subject");
+        optSb.removeAttribute("disabled");
         let optSc : any = document.querySelector("#section");
         optSc.removeAttribute("disabled");
         // let optLc : any = document.querySelector("#lecture");
@@ -326,11 +323,11 @@ createBranches(branches: any) {
         }
       });
     }  
-    else if (name === "subjects") {
+    else if (name === "subject") {
       this.setState({
         examData: {
           ...examData,
-          subjects: {
+          subject: {
             id: value
           }
         }
@@ -469,14 +466,13 @@ createBranches(branches: any) {
         retVal.push(
           <tbody>
             <tr id="custom-width-input">
-                <td> <input type="text" id={"t" + k.id} defaultValue={k.subject}  maxLength={255} onChange={this.handleChange} ></input> </td>
-                {/* <td>
+            <td>
                     <select required name="subject" id="subject" onChange={this.onChange} value={examData.subject.id} className="gf-form-input max-width-22">
-                      {this.createSubjects(this.props.data.createExamFilterDataCache.subjects, examData.department.id, examData.batch.id, examData.teacher.id)}
+                      {this.createSubjects(this.props.data.createExamFilterDataCache.subjects, examData.department.id, examData.batch.id)}
                     </select>
-                  </td> */}
+                  </td>
                 
-                <td> <input  id={"t" + k.id} defaultValue={k.examDate} maxLength={255} onChange={this.handleChange} ></input> </td>
+                <td> <input type="date"  id={"t" + k.id} defaultValue={k.examDate} maxLength={255} onChange={this.handleChange} ></input> </td>
 
                 <td> <input type="text" id={"t" + k.id} defaultValue={dayofdate} maxLength={255} onChange={this.handleChange} ></input> </td>
                
@@ -497,7 +493,7 @@ createBranches(branches: any) {
   }
   render() {
     const { data: { createExamFilterDataCache, refetch }, mutate, mutateUpd } = this.props;
-    const { examData, departments, batches, semesters,  sections,  submitted } = this.state;
+    const { examData, departments, batches,subjects, semesters,  sections,  submitted } = this.state;
 
     return (
       <section className="plugin-bg-white">
@@ -531,6 +527,7 @@ createBranches(branches: any) {
                       {this.createBatches(this.props.data.createExamFilterDataCache.batches, examData.department.id)}
                     </select>
                   </td>
+                  
                   <td>
                     <select required name="semester" id="semester" onChange={this.onChange} value={examData.semester.id} className="gf-form-input max-width-22">
                       {this.createSemesters(this.props.data.createExamFilterDataCache.semesters)}
