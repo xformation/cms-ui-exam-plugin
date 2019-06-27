@@ -1,5 +1,0 @@
-mutation getSubjectList($filter:ExamListFilterInput!) {
-  getSubjectList(filter: $filter) {
-   id,examDate,day,duration,startTime,endDate,total
- }
-}

@@ -1,3 +1,5 @@
+import {any} from 'prop-types';
+
 export type AcExamSettingListQuery = {
   // Return all known Pet Institutes
   acExamSettings: Array<{
@@ -129,9 +131,9 @@ export type AcdemicExamSettingQueryVariables = {
 };
 
 export type AddExamMutation = {
-  addExam: {
+  addAcademicExamSetting: {
     academicExamSetting: {
-      id: any;
+      id: number;
       examType: String;
       action: String;
       subject: String;
@@ -149,7 +151,10 @@ export type AddExamMutation = {
         branchName: any;
       };
       department: {
-        name: number;
+        name: any;
+      };
+      academicyear: {
+        year: any;
       };
     };
   };
@@ -171,9 +176,9 @@ export type ExamListQueryTypeForAdmin = {
   }>;
 };
 
-export type UpdateExamMutation = {
-  addAcademicSubjects: {
-    statusCode: string;
-    statusDesc: string;
-  };
-};
+// export type UpdateExamMutation = {
+//   addAcademicSubjects: {
+//     statusCode: string;
+//     statusDesc: string;
+//   };
+// };

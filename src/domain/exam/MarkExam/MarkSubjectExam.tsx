@@ -1,12 +1,12 @@
 import * as moment from 'moment';
 import * as React from 'react';
 import * as ExamFilterQueryGql from './ExamFilterQuery.graphql';
-import * as ExamSubjectUpdateMutationGql from './ExamSubjectUpdateMutation.graphql';
 import { RouteComponentProps } from 'react-router-dom';
 import { graphql, QueryProps, MutationFunc, compose } from "react-apollo";
+import * as AddExamMutationGql from './AddExamMutation.graphql';
 
 
-import { LoadExamSubjQueryCacheForAdmin, ExamListQueryTypeForAdmin, UpdateExamMutation } from '../../types';
+import { LoadExamSubjQueryCacheForAdmin, ExamListQueryTypeForAdmin,  AddExamMutation } from '../../types';
 import withExamSubjDataLoader from './withExamSubjDataLoader';
 
 
@@ -26,8 +26,8 @@ type ExamRootProps = RouteComponentProps<{
 }
 
 type ExamPageProps = ExamRootProps & {
-  mutate: MutationFunc<ExamListQueryTypeForAdmin>;
-  mutateUpd: MutationFunc<UpdateExamMutation>;
+  // mutate: MutationFunc<ExamListQueryTypeForAdmin>;
+  mutate: MutationFunc<AddExamMutation>;
 };
 
 type ExamState = {
@@ -41,7 +41,10 @@ type ExamState = {
   sections: any,
   dtPicker: any,
   submitted: any,
-  startDate: any
+  startDate: any,
+  noOfExams: number,
+ examDate: any
+
 };
 
 
@@ -50,6 +53,9 @@ class MarkExam extends React.Component<ExamPageProps, ExamState>{
   constructor(props: ExamPageProps) {
     super(props);
     this.state = {
+      noOfExams: 0,
+      examDate:"",
+          
       examData: {
         branch: {
           id: 1851 //1001
@@ -172,52 +178,57 @@ createBranches(branches: any) {
     return sectionsOptions;
   }
 
-//   handleDate(date){
-//     this.setState({date}); # ES6 
+  increaseExamValue(){
+    if(this.state.noOfExams <=5)
+    this.setState({noOfExams:this.state.noOfExams + 1})
+  }
+  decreaseExamValue(){
+    if(this.state.noOfExams !==0){
+    this.setState({noOfExams:this.state.noOfExams - 1})
+    }
+  }
+  // date() {
+  //   input = document.querySelector('input[type="date"]').value;
+  //   var date = new Date(input).getUTCDay();
+    
+  //   var weekday = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+    
+  //   document.getElementById('output').textContent = weekday[date];
+  // }
+  
+
+//   handleDate(date1){
+//     this.setState({date1}); 
 //  };
+//  dateControl = document.querySelector('input[type="date"]');
+//  dateControl.value;
 
   onFormSubmit = (e: any) => {
     this.setState({
       submitted: true
     });
 
-    const { mutate } = this.props;
+     const { mutate } = this.props;
     const { examData } = this.state;
     e.preventDefault();
 
-    // examData.branch.id &&
     if ( examData.department.id && examData.batch.id && examData.section.id) {
-     
-
-      // let dtPk: any = document.querySelector("#dtPicker");
-      // let selectedDate = this.state.startDate;//moment(dtPk.value, "DD/MM/YYYY");//.format("DD-MM-YYYY");
-      // var tmpDt = moment(selectedDate).format("DD-MM-YYYY");
-      // selectedDate = moment(tmpDt, "DD-MM-YYYY");
-      // console.log("Date at the time of submission : ", selectedDate);
-    
-     
-
      
       e.target.querySelector("#department").setAttribute("disabled", true);
       e.target.querySelector("#batch").setAttribute("disabled", true);
-      // e.target.querySelector("#subject").setAttribute("disabled", true);
-      // e.target.querySelector("#semester").setAttribute("disabled", true);
+     
       e.target.querySelector("#section").setAttribute("disabled", true);
     
-      
-      // e.target.querySelector("#detailGrid").setAttribute("class", "tflex bg-heading mt-1");
       e.target.querySelector("#detailGridTable").removeAttribute("class");
 
-      // dtPk.setAttribute("disabled", true);
-      // console.log('date picker value : ', moment(selectedDate).format("DD-MM-YYYY"));
 
       let examInputData = {
-        // branchId: examData.branch.id,
+      
         departmentId: examData.department.id,
         batchId: examData.batch.id,
-        // subjectId: examData.subject.id,
+      
         sectionId: examData.section.id,
-        // academicYearId: examData.academicYear.id      
+    
       };
 
       let btn = e.target.querySelector("button[type='submit']");
@@ -264,9 +275,7 @@ createBranches(branches: any) {
         optSb.removeAttribute("disabled");
         let optSc : any = document.querySelector("#section");
         optSc.removeAttribute("disabled");
-        // let optLc : any = document.querySelector("#lecture");
-        // optLc.removeAttribute("disabled");
-        // dtPk.removeAttribute("disabled");
+       
         console.log('there was an error sending the query result - exam for admin role: ', error);
         return Promise.reject(`Could not retrieve exam data for admin: ${error}`);
       });
@@ -349,71 +358,11 @@ createBranches(branches: any) {
     
   }
 
-  onClick = (e: any) => {
-
-    const { mutateUpd } = this.props;
-    const { examData } = this.state;
-
-    e.preventDefault();
-    examData.selectedIds = "";
-    let els = document.querySelectorAll("input[type=checkbox]");
-    const delim = "#~#";
-    var empty = [].filter.call(els, function (el: any) {
-      let txt: any = document.querySelector("#t" + el.id);
-      let txtIds: any;
-      if (el.checked) {
-        const eid = "" + el.id + delim + "PRESENT" + delim
-        var txtData = "";
-        if (txt != null) {
-          var tmp = examData.textValueMap["t" + el.id];
-          if (tmp === undefined) {
-            txtData = txt.value;
-          } else {
-            txtData = tmp;
-          }
-        }
-
-        txtIds = eid + txtData;
-        // let sadt = new SaData(txtIds, examData.id);
-        // studentFilterData.payLoad.push(sadt);
-      } else {
-        const eid = "" + el.id + delim + "ABSENT" + delim
-        var txtData = "";
-        if (txt != null) {
-          var tmp = examData.textValueMap["t" + el.id];
-          if (tmp === undefined) {
-            txtData = txt.value;
-          } else {
-            txtData = tmp;
-          }
-        }
-
-        txtIds = eid + txtData;
-        let sadt 
-        //= new SaData(txtIds, examData.lecture.id);
-        examData.payLoad.push(sadt);
-      }
-    });
-
-    console.log('total IDS : ', examData.selectedIds);
+  
     
-    let btn : any = document.querySelector("#btnSave");
-    btn.setAttribute("disabled", true);
-    return mutateUpd({
-      variables: { input: examData.payLoad },
-    }).then(data => {
-      btn.removeAttribute("disabled");
-      console.log('Update Result: ', data.data.addAcademicSubjects.statusDesc);
-      alert(data.data.addAcademicSubjects.statusDesc);
-    }).catch((error: any) => {
-      btn.removeAttribute("disabled");
-      console.log('there is some error while updating exam data', error);
-      return Promise.reject(`there is some error while updating exam data: ${error}`);
-    });
-
-
-
-  }
+    
+    
+    
 
   handleChange = (e: any) => {
     const { id, value } = e.nativeEvent.target;
@@ -427,7 +376,8 @@ createBranches(branches: any) {
     });
 
   }
-
+  
+ 
   
   changeDate = (e: any) => {
    
@@ -447,24 +397,24 @@ createBranches(branches: any) {
     const len = ary.length;
     
     for(let pd = 0; pd < len; pd++){
-      let v = ary[pd]; 
-      for(let x= 0; x< v.data.getSubjectList.length; x++){
+      let v = ary[pd];
+      for(let x= 0; x< this.state.noOfExams; x++){
         let k = v.data.getSubjectList[x];
-        let dayOfWeek = new Date(k.examDate).getDay();  
-        var gsDayNames = [
-          'Saturday',
-          'Sunday',
-          'Monday',
-          'Tuesday',
-          'Wednesday',
-          'Thursday',
-          'Friday'        
+        
+        // let dayOfWeek = new Date(k.examDate).getDay();  
+        // var gsDayNames = [
+        //   'Saturday',
+        //   'Sunday',
+        //   'Monday',
+        //   'Tuesday',
+        //   'Wednesday',
+        //   'Thursday',
+        //   'Friday'        
          
-        ];  
-         let dayofdate=gsDayNames[dayOfWeek];
-      
-        
-        
+        // ];  
+        //  let dayofdate=gsDayNames[dayOfWeek];
+
+       
         retVal.push(
           <tbody>
             <tr id="custom-width-input">
@@ -475,15 +425,15 @@ createBranches(branches: any) {
                   </td>
               {/* <td> <input  name="subject"  id={"t" + k.id }  maxLength={255} onChange={this.handleChange} ></input> </td> */}
 
-                <td> <input type="date" name="ac"  id={"tqw" }  maxLength={255} onChange={this.handleChange} ></input> </td>
+                <td> <input type="date" placeholder="dd:mm:yy"  value={examData.examDate}  id="input"  maxLength={255} onChange={this.handleChange} ></input> </td>
 
-                <td> <input  id={"t" + k.id}   maxLength={255} onChange={this.handleChange} ></input> </td>
+                <td> <input  id={"t" + k.id}   maxLength={255} onChange= {this.handleChange}></input> </td>
                
-                <td> <input type="text" id={"t" + k.id} defaultValue={k.duration} maxLength={255} onChange={this.handleChange} ></input> </td>
+                <td> <input type="text" id={"t" + k.id}  maxLength={255} onChange={this.handleChange} ></input> </td>
                 <td> <input type="time" id={"t" + k.id} maxLength={255} onChange={this.handleChange} ></input> </td>
                 <td> <input type="time" id={"t" + k.id} maxLength={255} onChange={this.handleChange} ></input> </td>
-                <td> <input  id={"t" + k.id} defaultValue={k.total}  onChange={this.handleChange} ></input> </td>
-                <td> <input  id={"t" + k.id} defaultValue={k.passing}  onChange={this.handleChange} ></input> </td>
+                <td> <input  id={"t" + k.id}   onChange={this.handleChange} ></input> </td>
+                <td> <input  id={"t" + k.id}   onChange={this.handleChange} ></input> </td>
                
             </tr>
             </tbody>
@@ -495,9 +445,8 @@ createBranches(branches: any) {
     return retVal;
   }
   render() {
-    const { data: { createExamFilterDataCache, refetch }, mutate, mutateUpd } = this.props;
+    const { data: { createExamFilterDataCache, refetch  }, mutate} = this.props;
     const { examData, departments, batches,subjects, semesters,  sections,  submitted } = this.state;
-
     return (
       <section className="plugin-bg-white">
         <h3 className="bg-heading p-1">
@@ -514,6 +463,7 @@ createBranches(branches: any) {
                   <th>Year</th>
                   <th>Semester</th>
                   <th>Section</th>
+                  <th>No of Exams</th>
                   <th>Create Exam</th>
                 </tr>
               </thead>
@@ -541,6 +491,11 @@ createBranches(branches: any) {
                     <select required name="section" id="section" onChange={this.onChange} value={examData.section.id} className="gf-form-input max-width-22">
                       {this.createSections(this.props.data.createExamFilterDataCache.sections, examData.batch.id)}
                     </select>
+                  </td>
+                  <td>
+                   <button onClick={this.decreaseExamValue.bind(this)}>-</button>
+                    &nbsp;{this.state.noOfExams}&nbsp;
+                    <button onClick={this.increaseExamValue.bind(this)}>+</button>
                   </td>
                   
                   
@@ -600,7 +555,8 @@ createBranches(branches: any) {
                 <p></p>
                 <div>
 
-                  <button className="btn btn-primary mr-1" id="btnSave" name="btnSave" onClick={this.onClick}>Save</button>
+                  <button className="btn btn-primary mr-1" id="btnSave" name="btnSave" >Save</button>
+                  {/* //onClick={this.onClick} */}
 
                 </div>
               </div>
@@ -626,7 +582,7 @@ export default withExamSubjDataLoader(
     graphql<ExamListQueryTypeForAdmin, ExamRootProps>(ExamFilterQueryGql, {
       name: "mutate"
     }),
-    graphql<UpdateExamMutation, ExamRootProps>(ExamSubjectUpdateMutationGql, {
+    graphql<AddExamMutation, ExamRootProps>(AddExamMutationGql, {
       name: "mutateUpd",
     }),
 
