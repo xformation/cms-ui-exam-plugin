@@ -360,7 +360,7 @@ createBranches(branches: any) {
     for(let pd = 0; pd < len; pd++){
       let v = ary[pd];
       for(let x= 0; x< this.state.noOfExams; x++){
-        let k = v.data.addAcademicExamSetting[x];
+        let k = v.data.getSubjectList[x];
         // let dayOfWeek = new Date(k.examDate).getDay();  
         var gsDayNames = [
           'Saturday',

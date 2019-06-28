@@ -1,33 +1,14 @@
-mutation addAcademicExamSetting($input: AddAcademicExamSettingInput!) {
-  addAcademicExamSetting(input: $input) {
-     academicExamSetting
-  {
+
+mutation getSubjectList($filter: ExamListFilterInput!) {
+  getSubjectList(filter: $filter) {
    examType
-    semester
-    subject
-    examDate
+  examDate
     day
-    duration
     startTime
     endTime
-    gradeType
     total
     passing
-    actions
-    startDate
-    endDate
-    department{
-      id
-    }
-    section{
-      id
-    }
-    academicyear{
-      id
-    }
-    batch{
-      id
-    }
+    duration
+
   }
- }
 }
