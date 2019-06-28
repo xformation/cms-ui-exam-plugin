@@ -26,8 +26,8 @@ type ExamRootProps = RouteComponentProps<{
 }
 
 type ExamPageProps = ExamRootProps & {
-  // mutate: MutationFunc<ExamListQueryTypeForAdmin>;
-  mutate: MutationFunc<AddExamMutation>;
+   mutate: MutationFunc<ExamListQueryTypeForAdmin>;
+  mutateup: MutationFunc<AddExamMutation>;
 };
 
 type ExamState = {
@@ -42,9 +42,7 @@ type ExamState = {
   dtPicker: any,
   submitted: any,
   startDate: any,
-  noOfExams: number,
- examDate: any
-
+  noOfExams: number
 };
 
 
@@ -54,8 +52,6 @@ class MarkExam extends React.Component<ExamPageProps, ExamState>{
     super(props);
     this.state = {
       noOfExams: 0,
-      examDate:"",
-          
       examData: {
         branch: {
           id: 1851 //1001
@@ -179,7 +175,6 @@ createBranches(branches: any) {
   }
 
   increaseExamValue(){
-    if(this.state.noOfExams <=5)
     this.setState({noOfExams:this.state.noOfExams + 1})
   }
   decreaseExamValue(){
@@ -187,21 +182,10 @@ createBranches(branches: any) {
     this.setState({noOfExams:this.state.noOfExams - 1})
     }
   }
-  // date() {
-  //   input = document.querySelector('input[type="date"]').value;
-  //   var date = new Date(input).getUTCDay();
-    
-  //   var weekday = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-    
-  //   document.getElementById('output').textContent = weekday[date];
-  // }
-  
 
-//   handleDate(date1){
-//     this.setState({date1}); 
+//   handleDate(date){
+//     this.setState({date}); # ES6 
 //  };
-//  dateControl = document.querySelector('input[type="date"]');
-//  dateControl.value;
 
   onFormSubmit = (e: any) => {
     this.setState({
@@ -214,10 +198,10 @@ createBranches(branches: any) {
 
     if ( examData.department.id && examData.batch.id && examData.section.id) {
      
-      e.target.querySelector("#department").setAttribute("disabled", true);
-      e.target.querySelector("#batch").setAttribute("disabled", true);
+      // e.target.querySelector("#department").setAttribute("disabled", false);
+      // e.target.querySelector("#batch").setAttribute("disabled", false);
      
-      e.target.querySelector("#section").setAttribute("disabled", true);
+      // e.target.querySelector("#section").setAttribute("disabled", false);
     
       e.target.querySelector("#detailGridTable").removeAttribute("class");
 
@@ -251,30 +235,30 @@ createBranches(branches: any) {
 
         btn.removeAttribute("disabled");
        
-        let optDt : any = document.querySelector("#department");
-        optDt.removeAttribute("disabled");
-        let optBt : any = document.querySelector("#batch");
-        optBt.removeAttribute("disabled");
-        let optSm : any = document.querySelector("#semester");
-        optSm.removeAttribute("disabled");
-        let optSb : any = document.querySelector("#subject");
-        optSb.removeAttribute("disabled");
-        let optSc : any = document.querySelector("#section");
-        optSc.removeAttribute("disabled");
+        // let optDt : any = document.querySelector("#department");
+        // optDt.removeAttribute("disabled");
+        // let optBt : any = document.querySelector("#batch");
+        // optBt.removeAttribute("disabled");
+        // let optSm : any = document.querySelector("#semester");
+        // optSm.removeAttribute("disabled");
+        // let optSb : any = document.querySelector("#subject");
+        // optSb.removeAttribute("disabled");
+        // let optSc : any = document.querySelector("#section");
+        // optSc.removeAttribute("disabled");
         
       }).catch((error: any) => {
         btn.removeAttribute("disabled");
         
-        let optDt : any = document.querySelector("#department");
-        optDt.removeAttribute("disabled");
-        let optBt : any = document.querySelector("#batch");
-        optBt.removeAttribute("disabled");
-        let optSm : any = document.querySelector("#semester");
-        optSm.removeAttribute("disabled");
-        let optSb : any = document.querySelector("#subject");
-        optSb.removeAttribute("disabled");
-        let optSc : any = document.querySelector("#section");
-        optSc.removeAttribute("disabled");
+        // let optDt : any = document.querySelector("#department");
+        // optDt.removeAttribute("disabled");
+        // let optBt : any = document.querySelector("#batch");
+        // optBt.removeAttribute("disabled");
+        // let optSm : any = document.querySelector("#semester");
+        // optSm.removeAttribute("disabled");
+        // let optSb : any = document.querySelector("#subject");
+        // optSb.removeAttribute("disabled");
+        // let optSc : any = document.querySelector("#section");
+        // optSc.removeAttribute("disabled");
        
         console.log('there was an error sending the query result - exam for admin role: ', error);
         return Promise.reject(`Could not retrieve exam data for admin: ${error}`);
@@ -377,7 +361,14 @@ createBranches(branches: any) {
 
   }
   
- 
+  // date() {
+  //   var input = document.getElementById("input").value;
+  //   var date = new Date(input).getUTCDay();
+    
+  //   var weekday = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+    
+  //   document.getElementById('output').textContent = weekday[date];
+  // }
   
   changeDate = (e: any) => {
    
@@ -400,18 +391,17 @@ createBranches(branches: any) {
       let v = ary[pd];
       for(let x= 0; x< this.state.noOfExams; x++){
         let k = v.data.getSubjectList[x];
-        
         // let dayOfWeek = new Date(k.examDate).getDay();  
-        // var gsDayNames = [
-        //   'Saturday',
-        //   'Sunday',
-        //   'Monday',
-        //   'Tuesday',
-        //   'Wednesday',
-        //   'Thursday',
-        //   'Friday'        
+        var gsDayNames = [
+          'Saturday',
+          'Sunday',
+          'Monday',
+          'Tuesday',
+          'Wednesday',
+          'Thursday',
+          'Friday'        
          
-        // ];  
+        ];  
         //  let dayofdate=gsDayNames[dayOfWeek];
 
        
@@ -423,17 +413,17 @@ createBranches(branches: any) {
                       {this.createSubjects(this.props.data.createExamFilterDataCache.subjects, examData.department.id, examData.batch.id)}
                     </select>
                   </td>
-              {/* <td> <input  name="subject"  id={"t" + k.id }  maxLength={255} onChange={this.handleChange} ></input> </td> */}
+         
+                <td> <input type="date" placeholder="dd:mm:yy"  value={examData.examDate}  id="examDate" name="examDate"  maxLength={255} onChange={this.handleChange} ></input> </td>
 
-                <td> <input type="date" placeholder="dd:mm:yy"  value={examData.examDate}  id="input"  maxLength={255} onChange={this.handleChange} ></input> </td>
-
-                <td> <input  id={"t" + k.id}   maxLength={255} onChange= {this.handleChange}></input> </td>
+                <td> <input  id="day" name="day"  maxLength={255} onChange={this.handleChange} ></input> </td>
                
-                <td> <input type="text" id={"t" + k.id}  maxLength={255} onChange={this.handleChange} ></input> </td>
-                <td> <input type="time" id={"t" + k.id} maxLength={255} onChange={this.handleChange} ></input> </td>
-                <td> <input type="time" id={"t" + k.id} maxLength={255} onChange={this.handleChange} ></input> </td>
-                <td> <input  id={"t" + k.id}   onChange={this.handleChange} ></input> </td>
-                <td> <input  id={"t" + k.id}   onChange={this.handleChange} ></input> </td>
+                <td> <input type="text" id="duration" name="duration"  maxLength={255} onChange={this.handleChange} ></input> </td>
+                <td> <input type="time" id="startTime" name="startTime"
+                maxLength={255} onChange={this.handleChange} ></input> </td>
+                <td> <input type="time" id="endTime" name="endTime" maxLength={255} onChange={this.handleChange} ></input> </td>
+                <td> <input  id="passingMarks" name="passingMarks"  onChange={this.handleChange} ></input> </td>
+                <td> <input  id="totalMarks" name="totalMarks" onChange={this.handleChange} ></input> </td>
                
             </tr>
             </tbody>
@@ -445,7 +435,7 @@ createBranches(branches: any) {
     return retVal;
   }
   render() {
-    const { data: { createExamFilterDataCache, refetch  }, mutate} = this.props;
+    const { data: { createExamFilterDataCache, refetch }, mutate } = this.props;
     const { examData, departments, batches,subjects, semesters,  sections,  submitted } = this.state;
     return (
       <section className="plugin-bg-white">
@@ -493,10 +483,10 @@ createBranches(branches: any) {
                     </select>
                   </td>
                   <td>
-                   <button onClick={this.decreaseExamValue.bind(this)}>-</button>
+                   <a onClick={this.decreaseExamValue.bind(this)}>-</a>
                     &nbsp;{this.state.noOfExams}&nbsp;
-                    <button onClick={this.increaseExamValue.bind(this)}>+</button>
-                  </td>
+                    <a onClick={this.increaseExamValue.bind(this)}>+</a>
+                    </td>
                   
                   
                   <td>
@@ -512,17 +502,6 @@ createBranches(branches: any) {
                <input type="text" className="h-input m-1"   maxLength={255} ></input>
               <div className="hhflex">
 
-                {/* <div className="mx-2">
-                  <select className="ma-select">
-                    <option value="">Sort By</option>
-                    <option value="">Name</option>
-                    <option value="">ID</option>
-                  </select>
-                </div> */}
-                {/* <div className="h-center ma-select">
-                  <input type="text" placeholder="Search Exam" className="ma-select" />
-                  <i className="fa fa-search" aria-hidden="true" />
-                </div> */}
               </div>
             </div>
 
@@ -556,7 +535,7 @@ createBranches(branches: any) {
                 <div>
 
                   <button className="btn btn-primary mr-1" id="btnSave" name="btnSave" >Save</button>
-                  {/* //onClick={this.onClick} */}
+                 
 
                 </div>
               </div>
@@ -583,7 +562,7 @@ export default withExamSubjDataLoader(
       name: "mutate"
     }),
     graphql<AddExamMutation, ExamRootProps>(AddExamMutationGql, {
-      name: "mutateUpd",
+      name: "mutateup",
     }),
 
   )

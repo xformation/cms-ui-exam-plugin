@@ -160,7 +160,7 @@ export type AddExamMutation = {
   };
 };
 export type ExamListQueryTypeForAdmin = {
-  getSubjectList: Array<{
+  getSubjectList: {
     examType: String;
     // subject: String;
     examDate: Date;
@@ -173,7 +173,7 @@ export type ExamListQueryTypeForAdmin = {
     // actions: String!
     // startDate: Date
     // endDate: Date
-  }>;
+  };
 };
 
 // export type UpdateExamMutation = {
