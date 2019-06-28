@@ -159,6 +159,7 @@ export type AddExamMutation = {
     };
   };
 };
+
 export type ExamListQueryTypeForAdmin = {
   getSubjectList: {
     examType: String;

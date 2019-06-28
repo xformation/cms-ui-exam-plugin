@@ -1,6 +1,5 @@
 import * as moment from 'moment';
 import * as React from 'react';
-import * as ExamFilterQueryGql from './ExamFilterQuery.graphql';
 import { RouteComponentProps } from 'react-router-dom';
 import { graphql, QueryProps, MutationFunc, compose } from "react-apollo";
 import * as AddExamMutationGql from './AddExamMutation.graphql';
@@ -183,9 +182,6 @@ createBranches(branches: any) {
     }
   }
 
-//   handleDate(date){
-//     this.setState({date}); # ES6 
-//  };
 
   onFormSubmit = (e: any) => {
     this.setState({
@@ -198,10 +194,6 @@ createBranches(branches: any) {
 
     if ( examData.department.id && examData.batch.id && examData.section.id) {
      
-      // e.target.querySelector("#department").setAttribute("disabled", false);
-      // e.target.querySelector("#batch").setAttribute("disabled", false);
-     
-      // e.target.querySelector("#section").setAttribute("disabled", false);
     
       e.target.querySelector("#detailGridTable").removeAttribute("class");
 
@@ -217,9 +209,7 @@ createBranches(branches: any) {
 
       let btn = e.target.querySelector("button[type='submit']");
       btn.setAttribute("disabled", true);
-      // let dataSavedMessage: any =
-      //  document.querySelector(".data-saved-message");
-      // dataSavedMessage.style.display = "none";
+     
 
       return mutate({
         variables: { filter: examInputData },
@@ -235,30 +225,10 @@ createBranches(branches: any) {
 
         btn.removeAttribute("disabled");
        
-        // let optDt : any = document.querySelector("#department");
-        // optDt.removeAttribute("disabled");
-        // let optBt : any = document.querySelector("#batch");
-        // optBt.removeAttribute("disabled");
-        // let optSm : any = document.querySelector("#semester");
-        // optSm.removeAttribute("disabled");
-        // let optSb : any = document.querySelector("#subject");
-        // optSb.removeAttribute("disabled");
-        // let optSc : any = document.querySelector("#section");
-        // optSc.removeAttribute("disabled");
         
       }).catch((error: any) => {
         btn.removeAttribute("disabled");
         
-        // let optDt : any = document.querySelector("#department");
-        // optDt.removeAttribute("disabled");
-        // let optBt : any = document.querySelector("#batch");
-        // optBt.removeAttribute("disabled");
-        // let optSm : any = document.querySelector("#semester");
-        // optSm.removeAttribute("disabled");
-        // let optSb : any = document.querySelector("#subject");
-        // optSb.removeAttribute("disabled");
-        // let optSc : any = document.querySelector("#section");
-        // optSc.removeAttribute("disabled");
        
         console.log('there was an error sending the query result - exam for admin role: ', error);
         return Promise.reject(`Could not retrieve exam data for admin: ${error}`);
@@ -390,7 +360,7 @@ createBranches(branches: any) {
     for(let pd = 0; pd < len; pd++){
       let v = ary[pd];
       for(let x= 0; x< this.state.noOfExams; x++){
-        let k = v.data.getSubjectList[x];
+        let k = v.data.addAcademicExamSetting[x];
         // let dayOfWeek = new Date(k.examDate).getDay();  
         var gsDayNames = [
           'Saturday',
@@ -558,11 +528,11 @@ createBranches(branches: any) {
 export default withExamSubjDataLoader(
 
   compose(
-    graphql<ExamListQueryTypeForAdmin, ExamRootProps>(ExamFilterQueryGql, {
+    graphql<ExamListQueryTypeForAdmin, ExamRootProps>(AddExamMutationGql, {
       name: "mutate"
     }),
-    graphql<AddExamMutation, ExamRootProps>(AddExamMutationGql, {
-      name: "mutateup",
+    graphql<ExamListQueryTypeForAdmin, ExamRootProps>(AddExamMutationGql, {
+      name: "mutate",
     }),
 
   )
