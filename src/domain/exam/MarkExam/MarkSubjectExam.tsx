@@ -2,10 +2,8 @@ import * as moment from 'moment';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { graphql, QueryProps, MutationFunc, compose } from "react-apollo";
-import * as AddExamMutationGql from './AddExamMutation.graphql';
-
-
-import { LoadExamSubjQueryCacheForAdmin, ExamListQueryTypeForAdmin,  AddExamMutation } from '../../types';
+import * as ExamListQueryTypeForAdminGql from './ExamListQueryTypeForAdmin.graphql';
+import { LoadExamSubjQueryCacheForAdmin, ExamListQueryTypeForAdmin } from '../../types';
 import withExamSubjDataLoader from './withExamSubjDataLoader';
 
 
@@ -15,18 +13,15 @@ interface type {
 }
 
 
-
 type ExamRootProps = RouteComponentProps<{
-  // branchId: string;
   academicYearId: string;
   collegeId: string;
 }> & {
   data: QueryProps & LoadExamSubjQueryCacheForAdmin;
-}
+};
 
 type ExamPageProps = ExamRootProps & {
    mutate: MutationFunc<ExamListQueryTypeForAdmin>;
-  mutateup: MutationFunc<AddExamMutation>;
 };
 
 type ExamState = {
@@ -47,7 +42,7 @@ type ExamState = {
 
 
 class MarkExam extends React.Component<ExamPageProps, ExamState>{
-  constructor(props: ExamPageProps) {
+  constructor(props: any) {
     super(props);
     this.state = {
       noOfExams: 0,
@@ -202,7 +197,6 @@ createBranches(branches: any) {
       
         departmentId: examData.department.id,
         batchId: examData.batch.id,
-      
         sectionId: examData.section.id,
     
       };
@@ -234,7 +228,7 @@ createBranches(branches: any) {
         return Promise.reject(`Could not retrieve exam data for admin: ${error}`);
       });
     }
-    // }
+    
 
 
   }
@@ -331,15 +325,6 @@ createBranches(branches: any) {
 
   }
   
-  // date() {
-  //   var input = document.getElementById("input").value;
-  //   var date = new Date(input).getUTCDay();
-    
-  //   var weekday = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-    
-  //   document.getElementById('output').textContent = weekday[date];
-  // }
-  
   changeDate = (e: any) => {
    
     const { examData } = this.state;
@@ -348,8 +333,7 @@ createBranches(branches: any) {
     this.setState({
       startDate : varDt
     });
-    
-    // this.createLectures(this.props.data.createExamCacheForAdmin.lectures, this.props.data.createExamCacheForAdmin.attendanceMasters, studentFilterData.subject.id, studentFilterData.batch.id, studentFilterData.section.id, varDt);
+   
   }
    
   createGrid(ary: any){
@@ -360,8 +344,8 @@ createBranches(branches: any) {
     for(let pd = 0; pd < len; pd++){
       let v = ary[pd];
       for(let x= 0; x< this.state.noOfExams; x++){
-        let k = v.data.getSubjectList[x];
-        // let dayOfWeek = new Date(k.examDate).getDay();  
+       
+     
         var gsDayNames = [
           'Saturday',
           'Sunday',
@@ -372,7 +356,7 @@ createBranches(branches: any) {
           'Friday'        
          
         ];  
-        //  let dayofdate=gsDayNames[dayOfWeek];
+     
 
        
         retVal.push(
@@ -488,8 +472,6 @@ createBranches(branches: any) {
                     <th>Passing Marks</th>
                     <th>Total Marks</th>
                    
-                    {/* <th>Attendance</th>
-                    <th>Comments</th> */}
                   </tr>
                 </thead>
                 
@@ -528,12 +510,9 @@ createBranches(branches: any) {
 export default withExamSubjDataLoader(
 
   compose(
-    graphql<ExamListQueryTypeForAdmin, ExamRootProps>(AddExamMutationGql, {
+    graphql<ExamListQueryTypeForAdmin, ExamRootProps>(ExamListQueryTypeForAdminGql, {
       name: "mutate"
-    }),
-    graphql<ExamListQueryTypeForAdmin, ExamRootProps>(AddExamMutationGql, {
-      name: "mutate",
-    }),
+     })
 
   )
 
