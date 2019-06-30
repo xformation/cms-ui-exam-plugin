@@ -1,4 +1,5 @@
 fragment acExamSetting on AcExamSetting {
+  id
   examType
   action
     subject

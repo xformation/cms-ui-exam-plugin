@@ -131,55 +131,65 @@ export type AcdemicExamSettingQueryVariables = {
 };
 
 export type AddExamMutation = {
-  addAcademicExamSetting: {
-    academicExamSetting: {
+  addAcademicExamSetting: Array<{
+    id: number;
+    examType: String;
+    action: String;
+    subject: String;
+    endDate: Date;
+    startTime: String;
+    endTime: String;
+    day: String;
+    batch: {
       id: number;
-      examType: String;
-      action: String;
-      subject: String;
-      endDate: Date;
-      startTime: String;
-      endTime: String;
-      day: String;
-      batch: {
-        batch: any;
-      };
-      section: {
-        section: any;
-      };
-      branch: {
-        branchName: any;
-      };
-      department: {
-        name: any;
-      };
-      academicyear: {
-        year: any;
-      };
+      branchName: string;
     };
-  };
+    section: {
+      id: number;
+    };
+    branch: {
+      id: number;
+      branchName: string;
+    };
+    department: {
+      id: number;
+      name: string;
+    };
+    academicyear: {
+      id: number;
+      year: string;
+    };
+  }>;
 };
 
 export type ExamListQueryTypeForAdmin = {
-  getSubjectList: {
+  addAcademicExamSetting: Array<{
+    id: number;
     examType: String;
-    // subject: String;
-    examDate: Date;
-    day: String;
-    duration: String;
+    action: String;
+    subject: String;
+    endDate: Date;
     startTime: String;
     endTime: String;
-    total: number;
-    passing: number;
-    // actions: String!
-    // startDate: Date
-    // endDate: Date
-  };
+    day: String;
+    batch: {
+      id: number;
+      branchName: string;
+    };
+    section: {
+      id: number;
+    };
+    branch: {
+      id: number;
+      branchName: string;
+    };
+    department: {
+      id: number;
+      name: string;
+    };
+    academicyear: {
+      id: number;
+      year: string;
+    };
+  }>;
 };
-
-// export type UpdateExamMutation = {
-//   addAcademicSubjects: {
-//     statusCode: string;
-//     statusDesc: string;
-//   };
-// };

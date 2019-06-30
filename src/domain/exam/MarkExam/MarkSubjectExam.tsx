@@ -5,6 +5,7 @@ import { graphql, QueryProps, MutationFunc, compose } from "react-apollo";
 import * as ExamListQueryTypeForAdminGql from './ExamListQueryTypeForAdmin.graphql';
 import { LoadExamSubjQueryCacheForAdmin, ExamListQueryTypeForAdmin } from '../../types';
 import withExamSubjDataLoader from './withExamSubjDataLoader';
+import { findFieldsThatChangedType } from 'graphql/utilities/findBreakingChanges';
 
 
 
@@ -35,8 +36,10 @@ type ExamState = {
   sections: any,
   dtPicker: any,
   submitted: any,
-  startDate: any,
-  noOfExams: number
+  noOfExams: number,
+  examDate:any,
+  dayValue:any,
+
 };
 
 
@@ -46,6 +49,8 @@ class MarkExam extends React.Component<ExamPageProps, ExamState>{
     super(props);
     this.state = {
       noOfExams: 0,
+      dayValue:"",
+      examDate:"",
       examData: {
         branch: {
           id: 1851 //1001
@@ -73,7 +78,7 @@ class MarkExam extends React.Component<ExamPageProps, ExamState>{
         selectedIds: "",
         payLoad: [],
         textValueMap: {},
-        txtCmtVal : {}
+        txtCmtVal : {},
       },
       branches: [],
       academicYears: [],
@@ -84,7 +89,6 @@ class MarkExam extends React.Component<ExamPageProps, ExamState>{
       dtPicker: [],
       subjects: [],
       submitted: false,
-      startDate: moment()
       
     };
 
@@ -94,8 +98,8 @@ class MarkExam extends React.Component<ExamPageProps, ExamState>{
     this.createSubjects = this.createSubjects.bind(this);
     this.createSections = this.createSections.bind(this);
    this.handleChange = this.handleChange.bind(this);
-    this.changeDate = this.changeDate.bind(this);
     this.createGrid = this.createGrid.bind(this);
+
   }
 
 
@@ -287,7 +291,7 @@ createBranches(branches: any) {
         examData: {
           ...examData,
           subject: {
-            id: value
+            ...this.createSubjects,
           }
         }
       });
@@ -305,60 +309,33 @@ createBranches(branches: any) {
     
     
   }
-
-  
-    
-    
-    
-    
-
   handleChange = (e: any) => {
     const { id, value } = e.nativeEvent.target;
     const { examData } = this.state;
+    // const {dayValue} = this.state;
     const key = id;
     const val = value;
     e.preventDefault();
     examData.textValueMap[key] = val;
-    this.setState({
-      examData: examData
-    });
+   let stDate = moment(val, "YYYY-MM-DD");
+   let dow = stDate.day();
+   let days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+   let dayname = days[dow];
+   this.setState({dayValue:dayname})
+   console.log(dayname);
 
   }
   
-  changeDate = (e: any) => {
-   
-    const { examData } = this.state;
-    const varDt = e;
-    console.log("handling date picker changed date...", varDt);
-    this.setState({
-      startDate : varDt
-    });
-   
-  }
+ 
    
   createGrid(ary: any){
     const { examData } = this.state;
     const retVal = [];
-    const len = ary.length;
-    
-    for(let pd = 0; pd < len; pd++){
+    for (let pd = 0; pd < ary.length; pd++) {
       let v = ary[pd];
       for(let x= 0; x< this.state.noOfExams; x++){
-       
-     
-        var gsDayNames = [
-          'Saturday',
-          'Sunday',
-          'Monday',
-          'Tuesday',
-          'Wednesday',
-          'Thursday',
-          'Friday'        
-         
-        ];  
-     
-
-       
+      
+   
         retVal.push(
           <tbody>
             <tr id="custom-width-input">
@@ -370,8 +347,7 @@ createBranches(branches: any) {
          
                 <td> <input type="date" placeholder="dd:mm:yy"  value={examData.examDate}  id="examDate" name="examDate"  maxLength={255} onChange={this.handleChange} ></input> </td>
 
-                <td> <input  id="day" name="day"  maxLength={255} onChange={this.handleChange} ></input> </td>
-               
+      <td> {this.state.dayValue}</td>               
                 <td> <input type="text" id="duration" name="duration"  maxLength={255} onChange={this.handleChange} ></input> </td>
                 <td> <input type="time" id="startTime" name="startTime"
                 maxLength={255} onChange={this.handleChange} ></input> </td>
@@ -379,7 +355,7 @@ createBranches(branches: any) {
                 <td> <input  id="passingMarks" name="passingMarks"  onChange={this.handleChange} ></input> </td>
                 <td> <input  id="totalMarks" name="totalMarks" onChange={this.handleChange} ></input> </td>
                
-            </tr>
+             </tr>
             </tbody>
         );
         
@@ -391,6 +367,8 @@ createBranches(branches: any) {
   render() {
     const { data: { createExamFilterDataCache, refetch }, mutate } = this.props;
     const { examData, departments, batches,subjects, semesters,  sections,  submitted } = this.state;
+    // const selectedDay = moment(this.state.value, 'L', true).toDate();
+
     return (
       <section className="plugin-bg-white">
         <h3 className="bg-heading p-1">
@@ -441,8 +419,6 @@ createBranches(branches: any) {
                     &nbsp;{this.state.noOfExams}&nbsp;
                     <a onClick={this.increaseExamValue.bind(this)}>+</a>
                     </td>
-                  
-                  
                   <td>
                     <button className="btn btn-primary" type="submit" id="btnTakeAtnd" name="btnTakeAtnd" style={{ width: '130px' }}>Create Exam</button>
 

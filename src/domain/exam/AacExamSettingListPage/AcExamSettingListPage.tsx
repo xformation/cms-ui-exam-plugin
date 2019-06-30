@@ -80,7 +80,7 @@ class AcExamSettingsTable extends React.Component<ExamTableProps, ExamTableState
           <td>
             <Link
               className="table-link link-color"
-              to={`/plugins/ems-exam/page/addacExamSetting?id=${acExamSetting.id}`}
+              to={`/plugins/ems-exam/page/exam?id=${acExamSetting.id}`}
             >
              {acExamSetting.examType}
             </Link>
@@ -99,126 +99,7 @@ class AcExamSettingsTable extends React.Component<ExamTableProps, ExamTableState
     return retVal;
   }
  
-//   showDetail(obj: any){
-//     const { acExamSettings } = this.state;
-//     acExamSettings.enquiryData = obj;
-//     this.setState({
-//       acExamSettings: acExamSettings
-//     });
 
-//     let detailDiv : any = document.querySelector("#admissionDetailShow");
-//     let gridDiv : any = document.querySelector("#admissionGridShow");
-//     let backDiv : any = document.querySelector("#backDiv");
-//     detailDiv.setAttribute("class", "col-md-12 ");
-//     gridDiv.setAttribute("class", "hide");
-//     backDiv.setAttribute("class", "d-flex fwidth justify-content-between pt-2");
-//     this.createDetailsDiv(obj);
-// }
-
-// back(){
-//     let detailDiv : any = document.querySelector("#admissionDetailShow");
-//     let gridDiv : any = document.querySelector("#admissionGridShow");
-//     detailDiv.setAttribute("class", "hide");
-//     gridDiv.setAttribute("class", "col-md-12");
-//     let backDiv : any = document.querySelector("#backDiv");
-//     backDiv.setAttribute("class", "hide");
-// }
-
-// createDetailsDiv(obj: any){
-  
-  
-//   return (
-    
-//     <div className="hide" id="admissionDetailShow">
-//       <h5 className="bg-heading p-1 m-0">Details</h5>
-//       <div className="row">
-//           <div className="col-md-4">
-//             <div>
-//               <label htmlFor="">Enquiry ID</label>
-//               <input name="id" className="fwidth" value={obj.id}/>
-//             </div>
-//           </div>
-//       </div>
-//       <div className="row">
-//         <div className="col-md-4">
-//           <div>
-//             <label htmlFor="">Student Name</label>
-//             <input name="examType"  className="fwidth" value={obj.examType}/>
-//           </div>
-//         </div>
-//         <div className="col-md-4">
-//           <div>
-//             <label htmlFor="">Mobile Number</label>
-//             <input name="examType" className="fwidth" value={obj.examType}/>
-//           </div>
-//         </div>
-//         <div className="col-md-4">
-//           <div>
-//             <label htmlFor="">Alternate Mobile Number</label>
-//             <input name="examType"  className="fwidth" value={obj.examType}/>
-//           </div>
-//         </div>
-//         <div className="col-md-4">
-//           <div>
-//             <label htmlFor="">Email</label>
-//             <input name="examType" className="fwidth" value={obj.examType}/>
-//           </div>
-//         </div>
-//         <div className="col-md-4">
-//             <label htmlFor="">Class Applying For</label>
-//             <input name="courseApplyingFor"  className="fwidth" value={obj.courseApplyingFor}/>
-//         </div>
-//         <div className="col-md-4">
-//           <div>
-//             <label htmlFor="">Status</label>
-//             <input name="status"  className="fwidth" value={obj.status}/>
-//           </div>
-//         </div>
-//         <div className="col-md-4">
-//           <div>
-//             <label htmlFor="">Campus</label>
-//             { obj.branch !== undefined && (
-//               <input name="branchName"  className="fwidth" value={obj.branch.branchName}/>
-//             )
-//             }
-            
-//           </div>
-//         </div>
-//         <div className="col-md-4">
-//           <div>
-//             <label htmlFor="">State</label>
-//             { obj.branch !== undefined && (
-//               <input name="stateName"  className="fwidth" value={obj.branch.state.stateName}/>
-//             )
-//             }
-            
-//           </div>
-//         </div>
-//         <div className="col-md-4">
-//           <div>
-//             <label htmlFor="">City</label>
-//             { obj.branch !== undefined && (
-//               <input name="cityName"  className="fwidth" value={obj.branch.city.cityName}/>
-//             )
-//             }
-            
-//           </div>
-//         </div>
-//         <div className="col-md-4">
-//           <div>
-//             <label htmlFor="">Country</label>
-//             { obj.branch !== undefined && (
-//               <input name="countryName"  className="fwidth" value={obj.branch.state.country.countryName}/>
-//             )
-//             }
-            
-//           </div>
-//         </div>
-//     </div>
-//   </div>
-
-// );
-// }
 
 
 
