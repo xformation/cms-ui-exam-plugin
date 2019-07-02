@@ -187,7 +187,6 @@ createBranches(branches: any) {
       submitted: true
     });
 
-     const { mutate } = this.props;
     const { examData } = this.state;
     e.preventDefault();
 
@@ -207,30 +206,8 @@ createBranches(branches: any) {
 
       let btn = e.target.querySelector("button[type='submit']");
       btn.setAttribute("disabled", true);
+           return 
      
-
-      return mutate({
-        variables: { filter: examInputData },
-      }).then(data => {
-        const sdt = data;
-        examData.mutateResult = [];
-        examData.mutateResult.push(sdt);
-        examData.filtered.push(sdt);
-        this.setState({
-          examData: examData
-        });
-        console.log('Query Result ::::: ', examData.mutateResult);
-
-        btn.removeAttribute("disabled");
-       
-        
-      }).catch((error: any) => {
-        btn.removeAttribute("disabled");
-        
-       
-        console.log('there was an error sending the query result - exam for admin role: ', error);
-        return Promise.reject(`Could not retrieve exam data for admin: ${error}`);
-      });
     }
     
 
