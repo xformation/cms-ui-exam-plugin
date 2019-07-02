@@ -53,7 +53,7 @@ class MarkExam extends React.Component<ExamPageProps, ExamState>{
       examDate:"",
       examData: {
         branch: {
-          id: 1851 //1001
+          id: 1001 //1001
         },
         academicYear: {
           id: 1701 //1051
@@ -306,9 +306,11 @@ createBranches(branches: any) {
         }
       });
     } 
-    
-    
+      
   }
+
+
+  
   handleChange = (e: any) => {
     const { id, value } = e.nativeEvent.target;
     const { examData } = this.state;
@@ -326,7 +328,27 @@ createBranches(branches: any) {
 
   }
   
- 
+  checkAllExams(e: any) {
+    const { examData } = this.state;
+    const mutateResLength = this.state.noOfExams;
+    let chkAll = e.nativeEvent.target.checked;
+    let els = document.querySelectorAll("input[type=checkbox]");
+
+    var empty = [].filter.call(els, function (el: any) {
+      if (chkAll) {
+        el.checked = true;
+      } else {
+        el.checked = false;
+      }
+    });
+  }
+  onClickCheckbox(index: any, e: any) {
+  
+    const { id } = e.nativeEvent.target;
+    let chkBox: any = document.querySelector("#" + id);
+    chkBox.checked = e.nativeEvent.target.checked;
+  }
+
    
   createGrid(ary: any){
     const { examData } = this.state;
@@ -340,7 +362,10 @@ createBranches(branches: any) {
           <tbody>
             <tr id="custom-width-input">
             <td>
-                    <select  name="subject" id="subject" onChange={this.onChange} value={examData.subject.id} className="gf-form-input max-width-22">
+            <input onClick={(e: any) => this.onClickCheckbox(x, e)} checked={examData.isChecked} type="checkbox" name="" id="" defaultChecked />
+          </td>
+            <td>
+                <select  name="subject" id="subject" onChange={this.onChange} value={examData.subject.id} className="gf-form-input max-width-22">
                       {this.createSubjects(this.props.data.createExamFilterDataCache.subjects, examData.department.id, examData.batch.id)}
                     </select>
                   </td>
@@ -439,6 +464,9 @@ createBranches(branches: any) {
               <table className="fwidth">
                 <thead >
                   <tr>
+                  <th>
+                <input type="checkbox" onClick={(e: any) => this.checkAllExams(e)} value="checkedall" name="" id="" />
+              </th>
                     <th>Subject</th>
                     <th>Date</th>
                     <th>Day</th>

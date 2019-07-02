@@ -180,7 +180,9 @@ table#matable td:nth-child(3) {
 table#matable td:last-child {
   width: 55%;
 }
-
+table#matable td:first-child {
+  width: 85%;
+}
 .markWidth select {
   width: 190px !important;
 }
@@ -366,6 +368,9 @@ ul.ul-attend > li {
   border-right: 1px solid gray;
 }
 ul.ul-attend > li:last-child {
+  border-right: 0px solid gray;
+}
+ul.ul-attend > li:first-child {
   border-right: 0px solid gray;
 }
 .blr {
@@ -838,6 +843,10 @@ table.adminListPage td:last-child {
   border: none;
   float: right;
 }
+table.adminListPage td:first-child {
+  border: none;
+  float: right;
+}
 table.adminListPage td {
   border: 1px solid inherit;
   padding: 5px !important;
@@ -867,10 +876,15 @@ table.adminListPage td:first-child {
 }
 
 #custom-width-input td:first-child input {
-  width: 160px !important;
+  width: 20px !important;
+  box-shadow: none;
 }
 
 #custom-width-input td:nth-child(2) input {
+  width: 160px !important;
+}
+
+#custom-width-input td:nth-child(3) input {
   width: 140px !important;
 }
 
@@ -879,6 +893,9 @@ table.adminListPage td:first-child {
 }
 
 #custom-width-input td:nth-last-child(2) input {
+  width: 80px !important;
+}
+#custom-width-input td:nth-first-child(1) input {
   width: 80px !important;
 }
 
