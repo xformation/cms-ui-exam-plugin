@@ -77,6 +77,7 @@ class AcExamSettingsTable extends React.Component<ExamTableProps, ExamTableState
           <td>
             <input onClick={(e: any) => this.onClickCheckbox(i, e)} checked={acExamSetting.isChecked} type="checkbox" name="" id="" />
           </td>
+          <td>{acExamSetting.id}</td>
           <td>
             <Link
               className="table-link link-color"
@@ -85,7 +86,7 @@ class AcExamSettingsTable extends React.Component<ExamTableProps, ExamTableState
              {acExamSetting.examType}
             </Link>
           </td>
-         
+        
           <td>{acExamSetting.bctch}</td>
           <td>{acExamSetting.departmnt}</td>
           <td>{acExamSetting.sectn}</td>
@@ -116,6 +117,7 @@ class AcExamSettingsTable extends React.Component<ExamTableProps, ExamTableState
               <th>
                 <input type="checkbox" onClick={(e: any) => this.checkAllExams(e)} value="checkedall" name="" id="" />
               </th>
+              <th>Id</th>
               <th>EXAM TYPE</th>
            <th>YEAR</th>          
            <th>DEPARTMENT</th>           

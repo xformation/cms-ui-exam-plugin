@@ -37,7 +37,7 @@ type ExamState = {
   dtPicker: any,
   submitted: any,
   noOfExams: number,
-  examDate:any,
+  dateofExam:any,
   dayValue:any,
 
 };
@@ -49,8 +49,8 @@ class MarkExam extends React.Component<ExamPageProps, ExamState>{
     super(props);
     this.state = {
       noOfExams: 0,
-      dayValue:"",
-      examDate:"",
+      dayValue:[],
+      dateofExam:"",
       examData: {
         branch: {
           id: 1001 //1001
@@ -173,8 +173,10 @@ createBranches(branches: any) {
   }
 
   increaseExamValue(){
+    if(this.state.noOfExams < 5){
     this.setState({noOfExams:this.state.noOfExams + 1})
   }
+}
   decreaseExamValue(){
     if(this.state.noOfExams !==0){
     this.setState({noOfExams:this.state.noOfExams - 1})
@@ -187,6 +189,7 @@ createBranches(branches: any) {
       submitted: true
     });
 
+    const { mutate } = this.props;
     const { examData } = this.state;
     e.preventDefault();
 
@@ -206,9 +209,30 @@ createBranches(branches: any) {
 
       let btn = e.target.querySelector("button[type='submit']");
       btn.setAttribute("disabled", true);
-           return 
-     
+      return mutate({
+        variables: { filter: examInputData },
+      }).then(data => {
+        const sdt = data;
+        examData.mutateResult = [];
+        examData.mutateResult.push(sdt);
+        examData.filtered.push(sdt);
+        this.setState({
+          examData: examData
+        });
+        console.log('Query Result ::::: ', examData.mutateResult);
+
+        btn.removeAttribute("disabled");
+
+
+      }).catch((error: any) => {
+        btn.removeAttribute("disabled");
+
+
+        console.log('there was an error sending the query result - exam for admin role: ', error);
+        return Promise.reject(`Could not retrieve exam data for admin: ${error}`);
+      });
     }
+
     
 
 
@@ -295,12 +319,13 @@ createBranches(branches: any) {
     const key = id;
     const val = value;
     e.preventDefault();
-    examData.textValueMap[key] = val;
+    // examData.textValueMap[key] = val;
    let stDate = moment(val, "YYYY-MM-DD");
    let dow = stDate.day();
    let days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
    let dayname = days[dow];
-   this.setState({dayValue:dayname})
+   examData.textValueMap[id] = dayname;
+   this.setState({examData:examData})
    console.log(dayname);
 
   }
@@ -347,14 +372,18 @@ createBranches(branches: any) {
                     </select>
                   </td>
          
-                <td> <input type="date" placeholder="dd:mm:yy"  value={examData.examDate}  id="examDate" name="examDate"  maxLength={255} onChange={this.handleChange} ></input> </td>
+                <td> <input type="date" placeholder="dd:mm:yy"  value={examData.dateofExam}  id={"examDate"+x} name="examDate"  maxLength={8} onChange={this.handleChange} ></input> </td>
 
-      <td> {this.state.dayValue}</td>               
-                <td> <input type="text" id="duration" name="duration"  maxLength={255} onChange={this.handleChange} ></input> </td>
+                <td>{examData.textValueMap["examDate"+x]}</td>               
+                <td> <input  id="duration" name="duration"   onChange={this.handleChange} ></input> </td>
+
                 <td> <input type="time" id="startTime" name="startTime"
                 maxLength={255} onChange={this.handleChange} ></input> </td>
-                <td> <input type="time" id="endTime" name="endTime" maxLength={255} onChange={this.handleChange} ></input> </td>
+
+                <td> <input type="time" id="endTime" name="endTime"  onChange={this.handleChange} ></input> </td>
+
                 <td> <input  id="passingMarks" name="passingMarks"  onChange={this.handleChange} ></input> </td>
+
                 <td> <input  id="totalMarks" name="totalMarks" onChange={this.handleChange} ></input> </td>
                
              </tr>
