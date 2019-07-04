@@ -6,7 +6,7 @@ export type AcExamSettingListQuery = {
     id: any;
     examType: String;
     action: String;
-    subject: String;
+    sbjct: String;
     endDate: Date;
     startDate: Date;
     examDate: Date;

@@ -45,7 +45,7 @@ type ExamState = {
 
 
 
-class MarkExam extends React.Component<ExamPageProps, ExamState>{
+class ExamReportSrc extends React.Component<ExamPageProps, ExamState>{
   constructor(props: any) {
     super(props);
     this.state = {
@@ -545,5 +545,5 @@ export default withExamSubjDataLoader(
 
   )
 
-    (MarkExam) as any
+    (ExamReportSrc) as any
 );

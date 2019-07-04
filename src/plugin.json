@@ -48,6 +48,13 @@
       "addToNav": false,
       "defaultNav": false,
       "component": "ExamPage"
+    },
+    {
+      "type": "page",
+      "name": "Report",
+      "addToNav": true,
+      "defaultNav": false,
+      "component": "ExamReport"
     }
   ],
   "dependencies": {
