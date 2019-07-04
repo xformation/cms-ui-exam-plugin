@@ -44,10 +44,10 @@
     },
     {
       "type": "page",
-      "name": "Exam",
-      "addToNav": false,
+      "name": "Acexamsetting",
+      "addToNav": true,
       "defaultNav": false,
-      "component": "ExamPage"
+      "component": "ExamDetailsPageUi"
     },
     {
       "type": "page",

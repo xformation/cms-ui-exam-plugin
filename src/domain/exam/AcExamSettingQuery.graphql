@@ -2,6 +2,6 @@
 
 query acExamSetting($acExamSettingId: Long!) {
   acExamSetting(id: $acExamSettingId){
-  ...acexamsettingDetails
+  ...acExamSettingDetails
   }
 }

@@ -27,7 +27,7 @@ export type AcExamSettingQuery = {
     id: any;
     examType: String;
     action: String;
-    subject: String;
+    sbjct: String;
     endDate: Date;
     startDate: Date;
     examDate: Date;
@@ -43,7 +43,7 @@ export type AcExamSettingFragment = {
   id: any;
   examType: String;
   action: String;
-  subject: String;
+  sbjct: String;
   endDate: Date;
   startDate: Date;
   examDate: Date;
@@ -58,7 +58,7 @@ export type AcExamSettingDetailsFragment = {
   id: any;
   examType: String;
   action: String;
-  subject: String;
+  sbjct: String;
   endDate: Date;
   startDate: Date;
   examDate: Date;

@@ -8,7 +8,7 @@ export type ReactFunctionOrComponentClass<P> =
 export type AcExamSettingData = {
   examType: String;
   action: String;
-  subject: String;
+  sbjct: String;
   endDate: Date;
   startDate: Date;
   examDate: Date;

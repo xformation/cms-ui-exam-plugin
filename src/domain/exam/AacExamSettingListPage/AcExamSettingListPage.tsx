@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { withRouter, RouteComponentProps, Link } from 'react-router-dom';
 import { graphql, QueryProps } from 'react-apollo';
-import {AcExamSettingListQuery, AcExamSettingSummaryFragment} from  '../../types';
+import {AcExamSettingListQuery, AcExamSettingSummaryFragment, AcExamSettingFragment} from  '../../types';
 
 import * as AcExamSettingListQueryGql from './AcExamSettingListQuery.graphql';
 import withLoadingHandler from '../../../components/withLoadingHandler';
@@ -81,16 +81,16 @@ class AcExamSettingsTable extends React.Component<ExamTableProps, ExamTableState
           <td>
             <Link
               className="table-link link-color"
-              to={`/plugins/ems-exam/page/exam?id=${acExamSetting.id}`}
+              to={`/plugins/ems-exam/page/acExamSetting?action=${acExamSetting.action}`}
             >
              {acExamSetting.examType}
             </Link>
           </td>
-        
           <td>{acExamSetting.bctch}</td>
           <td>{acExamSetting.departmnt}</td>
           <td>{acExamSetting.sectn}</td>
           <td>{acExamSetting.sbjct}</td>
+          <td>{acExamSetting.subExamDate}</td>
           <td>{acExamSetting.st}</td>
           <td>{acExamSetting.ed}</td>
           {/* <td> <button className="btn btn-primary" onClick={e => this.showDetail(acExamSetting)}>Details</button></td> */}
@@ -99,17 +99,11 @@ class AcExamSettingsTable extends React.Component<ExamTableProps, ExamTableState
     }
     return retVal;
   }
- 
-
-
-
-
 
   render() {
     const { acExamSettings } = this.state;
     return (
-      <div>
-       
+      <div>     
 
         <table id="studentlistpage" className="striped-table fwidth bg-white">
           <thead>
@@ -123,6 +117,7 @@ class AcExamSettingsTable extends React.Component<ExamTableProps, ExamTableState
            <th>DEPARTMENT</th>           
             <th>SECTION</th>
            <th>SUBJECT</th>
+           <th>Sub-ExamDate</th>
            <th>START DATE</th>
            <th>END DATE</th>
           

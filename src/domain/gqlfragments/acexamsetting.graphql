@@ -11,6 +11,7 @@ fragment acExamSetting on AcExamSetting {
     sectn
     st
     ed
+    subExamDate
    
     
 }
