@@ -1,0 +1,40 @@
+mutation getSubjectList($filter: ExamListFilterInput!) {
+  getSubjectList(filter: $filter) {
+   examName
+   semester
+    examDate
+    startTime
+    endTime
+    gradeType
+    total
+    passing
+    actions
+    department{
+      id
+      name
+    }
+    section{
+      id
+      section
+    }
+    
+    subject{
+      id
+      subjectDesc
+          }
+    academicyear{
+      id
+      year
+    }
+    batch{
+      id
+      batch
+    }
+    branch{
+      id
+      branchName
+    }
+    
+
+  }
+}

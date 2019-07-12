@@ -81,9 +81,9 @@ class AcExamSettingsTable extends React.Component<ExamTableProps, ExamTableState
           <td>
             <Link
               className="table-link link-color"
-              to={`/plugins/ems-exam/page/acExamSetting?action=${acExamSetting.action}`}
+              to={`/plugins/ems-exam/page/acExamSetting?id=${acExamSetting.id}`}
             >
-             {acExamSetting.examType}
+             {acExamSetting.examName}
             </Link>
           </td>
           <td>{acExamSetting.bctch}</td>

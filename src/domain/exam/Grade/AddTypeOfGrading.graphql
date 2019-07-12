@@ -1,0 +1,12 @@
+mutation addTypeOfGrading($input: [AddTypeOfGradingInput!]!) {
+  addTypeOfGrading(input: $input) {
+       typeOfGrading {
+      id
+     minMarks
+        maxMarks
+        grades
+       nextId
+    }
+  }
+}
+

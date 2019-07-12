@@ -862,3 +862,8 @@ table.adminListPage td:first-child {
   text-transform: uppercase;
   cursor: pointer;
 }
+
+.g-flex {
+  display: flex;
+  justify-content: flex-end !important;
+}

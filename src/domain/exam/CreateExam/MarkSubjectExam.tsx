@@ -1,16 +1,15 @@
 import * as moment from 'moment';
 import * as React from 'react';
-import { RouteComponentProps, withRouter,  Link  } from 'react-router-dom';
+import { RouteComponentProps } from 'react-router-dom';
 import { graphql, QueryProps, MutationFunc, compose } from "react-apollo";
 import * as ExamListQueryTypeForAdminGql from './ExamListQueryTypeForAdmin.graphql';
-import * as AddReportMutationGql from './AddReportMutation.graphql';
-import { LoadExamSubjQueryCacheForAdmin, ExamListQueryTypeForAdmin,  AddReportMutation } from '../../types';
+import * as AddExamMutationGql from './AddExamMutation.graphql';
+import { LoadExamSubjQueryCacheForAdmin, ExamListQueryTypeForAdmin, AddExamMutation } from '../../types';
 import withExamSubjDataLoader from './withExamSubjDataLoader';
 import { findFieldsThatChangedType } from 'graphql/utilities/findBreakingChanges';
+import { any } from 'prop-types';
 
-const w180 = {
-  width: '180px'
-};
+
 
 interface type {
   checked: boolean;
@@ -26,47 +25,84 @@ type ExamRootProps = RouteComponentProps<{
 
 type ExamPageProps = ExamRootProps & {
    mutate: MutationFunc<ExamListQueryTypeForAdmin>;
-   mutateUpd: MutationFunc<AddReportMutation>;
+   mutateUpd: MutationFunc<AddExamMutation>;
 };
 
 type ExamState = {
   examData: any,
   branches: any,
   academicYears: any,
-  departments: any,
+   departments: any,
   batches: any,
   subjects:any,
   semesters: any,
   sections: any,
   dtPicker: any,
   submitted: any,
+  noOfExams: number,
   dateofExam:any,
   dayValue:any,
   duratn:number,
+  isSubjectSame: any
 
 };
 
-
 class SaData {
-  id: any;
   
-  marksObtain: any;
-  
-  constructor(id:any, marksObtain: any) {
-      this.id = id;
-      this.marksObtain=marksObtain;
+  examName: any;
+  examDate: any;
+  day: any;
+  duration: any;
+  startTime: any;
+  endTime: any;
+  gradeType: any;
+  total: any;
+  passing: any;
+  actions: any;
+  startDate: any;
+  endDate: any;
+  academicyearId: any;
+  subjectId: any;
+  departmentId: any;
+  batchId: any;
+  semester: any;
+  sectionId: any;
+  branchId: any;
+  constructor(examName: any,examDate: any,day: any,duration: any,startTime: any,endTime: any,gradeType: any,total: any,passing: any,actions: any,startDate: any,endDate: any,academicyearId: any, subjectId: any,departmentId: any,batchId: any, semester: any, sectionId: any, branchId: any) {
      
+      this.examName=examName;
+      this.semester=semester;
+      this.examDate=examDate
+      this.day=day;
+      this.duration=duration;
+      this.startTime=startTime;
+      this.endTime=endTime;
+      this.gradeType=gradeType;
+      this.total=total;
+      this.passing=passing;;
+      this.actions=actions;
+      this.startDate=startDate;
+      this.endDate=endDate;
+      this.departmentId=departmentId;
+      this.academicyearId=academicyearId;
+      this.subjectId=subjectId;
+      this.sectionId=sectionId;
+      this.batchId=batchId;
+      this.branchId=branchId;
   }
 }
-class ExamReportSrc extends React.Component<ExamPageProps, ExamState>{
-  constructor(props: any) {
+
+class MarkExam extends React.Component<ExamPageProps, ExamState>{
+  constructor(props: ExamPageProps) {
     super(props);
     this.state = {
+      noOfExams: 0,
       dayValue:[],
       duratn: 0,
       dateofExam:"",
-      
+      isSubjectSame:false,
       examData: {
+        
         branch: {
           id: 1001 //1001
         },
@@ -93,7 +129,13 @@ class ExamReportSrc extends React.Component<ExamPageProps, ExamState>{
         selectedIds: "",
         payLoad: [],
         textValueMap: {},
-        exmMarks: {},
+        exmDate: {},
+        exmDay: {},
+        exmStTime: {},
+        exmNdTime: {},
+        exmPassMarks: {},
+        exmTotalMarks: {},
+
         txtCmtVal : {},
       },
       branches: [],
@@ -115,12 +157,11 @@ class ExamReportSrc extends React.Component<ExamPageProps, ExamState>{
     this.createSections = this.createSections.bind(this);
    this.handleChange = this.handleChange.bind(this);
     this.createGrid = this.createGrid.bind(this);
-    this.handleMarksObtainedChange = this.handleMarksObtainedChange.bind(this);
-
-    // this.download = this.download.bind(this);
-    // this.exportStudents = this.exportStudents.bind(this);
-
-
+    this.validateDuplicateSubject = this.validateDuplicateSubject.bind(this);
+    this.handleStTimeChange = this.handleStTimeChange.bind(this);
+    this.handleNdTimeChange = this.handleNdTimeChange.bind(this);
+    this.handlePassMarksChange = this.handlePassMarksChange.bind(this);
+    this.handleTotalMarksChange = this.handleTotalMarksChange.bind(this);
   }
 
 
@@ -193,7 +234,18 @@ createBranches(branches: any) {
     return sectionsOptions;
   }
 
-  
+  increaseExamValue(){
+    if(this.state.noOfExams < 5){
+    this.setState({noOfExams:this.state.noOfExams + 1})
+  }
+}
+  decreaseExamValue(){
+    if(this.state.noOfExams !==0){
+    this.setState({noOfExams:this.state.noOfExams - 1})
+    }
+  }
+ 
+ 
 
   onFormSubmit = (e: any) => {
     this.setState({
@@ -250,7 +302,7 @@ createBranches(branches: any) {
   }
 
   onChange = (e: any) => {
-    const { name, value } = e.nativeEvent.target;
+    const { id, name, value } = e.nativeEvent.target;
     const { examData } = this.state;
      if (name === "department") {
       this.setState({
@@ -307,6 +359,7 @@ createBranches(branches: any) {
           }
         }
       });
+      this.validateDuplicateSubject(id);
     }
     else if (name === "section") {
       this.setState({
@@ -317,32 +370,38 @@ createBranches(branches: any) {
           }
         }
       });
+    }else{
+      this.setState({
+        examData: {
+          ...examData,
+          [name]: value
+        }
+      });
     } 
       
   }
 
-  checkAllRows(e: any) {
-    const { examData } = this.state;
-    const mutateResLength = examData.mutateResult.length;
-    let chkAll = e.nativeEvent.target.checked;
-    let els = document.querySelectorAll("input[type=checkbox]");
 
-    var empty = [].filter.call(els, function (el: any) {
-      if (chkAll) {
-        el.checked = true;
-      } else {
-        el.checked = false;
+  validateDuplicateSubject(objId: any){
+    
+    let currentSub : any = document.querySelector("#"+objId);
+    var isSubjectSame = false;
+    for(let i=0; i<this.state.noOfExams; i++) {
+      let subOptions : any = document.querySelector("#subject"+i);
+      if(subOptions.id !== currentSub.id && subOptions.options[subOptions.selectedIndex].value !== "" && 
+        subOptions.options[subOptions.selectedIndex].value === currentSub.options[currentSub.selectedIndex].value){
+        isSubjectSame = true;
+        alert("Subject cannot be same for two exams");
+        break;
       }
-    });
+    }
+    
+    this.setState({
+      isSubjectSame:isSubjectSame
+    })
+    return isSubjectSame;
   }
 
-  onClickCheckbox(index: any, e: any) {
-    // const { target } = e;
-    const { id } = e.nativeEvent.target;
-    let chkBox: any = document.querySelector("#" + id);
-    chkBox.checked = e.nativeEvent.target.checked;
-  }
-  
   handleChange = (e: any) => {
     const { id, value } = e.nativeEvent.target;
     const { examData } = this.state;
@@ -355,23 +414,52 @@ createBranches(branches: any) {
    let days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
    let dayname = days[dow];
    examData.textValueMap[id] = dayname;
+   examData.exmDate[id] = stDate;
    this.setState({examData:examData})
    
-  
+   
   
   //  let stTime: any = document.querySelector('input[type="time"]');
   //  console.log("time:", stTime.value);
  
   // console.log("final", edTime.value);
-  
-  
 
+  let durtn: any = document.querySelector("#duration");
+   console.log("mytext:", durtn.value);
+
+   let stTime = moment(val, "hh:mm");
+   console.log(stTime);
+   let edTime= stTime+durtn;
+   console.log(edTime);
 
   }
-  handleMarksObtainedChange= (e: any) => {
+ 
+
+  handleStTimeChange= (e: any) => {
     const { id, value } = e.nativeEvent.target;
     const { examData } = this.state;
-    examData.exmMarks[id] = value;
+    examData.exmStTime[id] = value;
+    this.setState({examData:examData})
+  }
+
+  handleNdTimeChange= (e: any) => {
+    const { id, value } = e.nativeEvent.target;
+    const { examData } = this.state;
+    examData.exmNdTime[id] = value;
+    this.setState({examData:examData})
+  }
+
+  handlePassMarksChange = (e: any) => {
+    const { id, value } = e.nativeEvent.target;
+    const { examData } = this.state;
+    examData.exmPassMarks[id] = value;
+    this.setState({examData:examData})
+  }
+
+  handleTotalMarksChange = (e: any) => {
+    const { id, value } = e.nativeEvent.target;
+    const { examData } = this.state;
+    examData.exmTotalMarks[id] = value;
     this.setState({examData:examData})
   }
 
@@ -381,41 +469,153 @@ createBranches(branches: any) {
     const { examData } = this.state;
     e.preventDefault();
 
-    for(let i=0; i<examData.mutateResult.length; i++) {
-      let dt : any = document.querySelector("#marksObtain"+i);
-      console.log(dt.value);
-      if(examData.exmMarks[dt.id] === undefined || examData.exmMarks[dt.id] === null || examData.exmMarks[dt.id] === ""){
-        alert("Please Enter Marks");
+
+    let allSubOpts : any = document.querySelectorAll("#subject");
+    let isSubNotSelected = false;
+
+
+
+    for(let i=0; i<this.state.noOfExams; i++) {
+      let subOptions : any = document.querySelector("#subject"+i);
+      if(subOptions.options[subOptions.selectedIndex].value === ""){
+        alert("Please select a subject for a listed exam");
         return;
       }
     }
+    // if(isSubNotSelected){
+    //   return;
+    // }
+    if(this.state.isSubjectSame){
+      return;
+    }
+
+    for(let i=0; i<this.state.noOfExams; i++) {
+      let dt : any = document.querySelector("#examDate"+i);
+        if(examData.exmDate[dt.id] === undefined || examData.exmDate[dt.id] === null || examData.exmDate[dt.id] === "" ){
+            alert("Please select an exam date");
+        return;
+      }
+    }
+  
+    for(let i=0; i<this.state.noOfExams; i++) {
+      let dt : any = document.querySelector("#startTime"+i);
+      if(examData.exmStTime[dt.id] === undefined || examData.exmStTime[dt.id] === null || examData.exmStTime[dt.id] === ""){
+        alert("Please select start time");
+        return;
+      }
+    }
+
+    for(let i=0; i<this.state.noOfExams; i++) {
+      let dt : any = document.querySelector("#endTime"+i);
+      if(examData.exmNdTime[dt.id] === undefined || examData.exmNdTime[dt.id] === null || examData.exmNdTime[dt.id] === ""){
+        alert("Please select end time");
+        return;
+      }
+    }
+
+    for(let i=0; i<this.state.noOfExams; i++) {
+      let dt : any = document.querySelector("#passingMarks"+i);
+      if(examData.exmPassMarks[dt.id] === undefined || examData.exmPassMarks[dt.id] === null || examData.exmPassMarks[dt.id] === ""){
+        alert("Please select passing marks for an listed exam");
+        return;
+      }
+    }
+
+    for(let i=0; i<this.state.noOfExams; i++) {
+      let dt : any = document.querySelector("#totalMarks"+i);
+      if(examData.exmTotalMarks[dt.id] === undefined || examData.exmTotalMarks[dt.id] === null || examData.exmTotalMarks[dt.id] === ""){
+        alert("Please select total marks for an listed exam");
+        return;
+      }
+    }
+   let stndDt = moment.now();
+   
+   for(let x=0; x<this.state.noOfExams; x++) {
+
+      let subOptions : any = document.querySelector("#subject"+x);
+      let sd  = new SaData( examData.txtExamName, examData.textValueMap["examDate"+x], "3", "MONDAY", examData.exmStTime["startTime"+x],examData.exmNdTime["endTime"+x], "PERCENTAGE", examData.exmTotalMarks["totalMarks"+x], examData.exmPassMarks["passingMarks"+x], "ACTIVE",stndDt, stndDt, examData.academicYear.id, subOptions.options[subOptions.selectedIndex].value, examData.department.id, examData.batch.id, examData.semester.id, examData.section.id, examData.branch.id);
+      examData.payLoad.push(sd);
+   }
+   this.setState({examData:examData})
+  
+  console.log('total IDS : ', examData.selectedIds);
+  let btn : any = document.querySelector("#btnSave");
+  btn.setAttribute("disabled", true);
+  return mutateUpd({
+    variables: { input: examData.payLoad },
+  }).then(data => {
+    btn.removeAttribute("disabled");
+    console.log('Update Result: ', data.data.addAcademicExamSetting);
+    alert("desc");
+  }).catch((error: any) => {
+    btn.removeAttribute("disabled");
+    console.log('there is some error ', error);
+    return Promise.reject(`there is some error while updating : ${error}`);
+  });
+
+
+}
+
+ 
+
+
+  checkAllExams(e: any) {
+    const { examData } = this.state;
+    const mutateResLength = this.state.noOfExams;
+    let chkAll = e.nativeEvent.target.checked;
+    let els = document.querySelectorAll("input[type=checkbox]");
+
+    var empty = [].filter.call(els, function (el: any) {
+      if (chkAll) {
+        el.checked = true;
+      } else {
+        el.checked = false;
+      }
+    });
+  }
+  onClickCheckbox(index: any, e: any) {
+  
+    const { id } = e.nativeEvent.target;
+    let chkBox: any = document.querySelector("#" + id);
+    chkBox.checked = e.nativeEvent.target.checked;
   }
 
+   
   createGrid(ary: any){
     const { examData } = this.state;
     const retVal = [];
     for (let pd = 0; pd < ary.length; pd++) {
       let v = ary[pd];
-      for(let x= 0; x< v.data.searchStudentExamReport.length; x++){
-        let k = v.data.searchStudentExamReport[x];
-   
+      for(let x= 0; x< this.state.noOfExams; x++){
+        let k = v.data.getSubjectList[x];
+   console.log(k);
         retVal.push(
           <tbody>
-            <tr key={examData.id} id="custom-width-input">
-            <td>
-              <input onClick={(e: any) => this.onClickCheckbox(x, e)} checked={examData.isChecked} type="checkbox" name="" id={"chk" + examData.id} />
-            </td>
-          <td>{k.id}</td>      
-            <td>{k.student.studentName}</td>
-            <td>{k.student.rollNo}</td>
-            <td>{k.student.id}</td>
+            <tr id="custom-width-input">
             
-            <td>  {k.academicExamSetting.total}</td>
-            <td> <input  id={"marksObtain"+x}  name="marksObtain"  onChange={this.handleMarksObtainedChange} ></input> </td>
+            <td>
+            <input onClick={(e: any) => this.onClickCheckbox(x, e)} checked={examData.isChecked} type="checkbox" name="" id="" defaultChecked />
+          </td>
+            <td>
+                <select name={"subject"} id={"subject"+x} onChange={this.onChange} value={examData.subject.id} className="gf-form-input max-width-22">
+                      {this.createSubjects(this.props.data.createExamFilterDataCache.subjects, examData.department.id, examData.batch.id)}
+                    </select>
+                  </td>
+         
+                <td> <input type="date"  value={examData.dateofExam}  id={"examDate"+x} name="examDate"  maxLength={8} onChange={this.handleChange} ></input> </td>
 
-            <td>{k.academicExamSetting.gradeType}</td>
-            <td> <input type="text"  defaultValue={k.comments} maxLength={255} onChange={this.handleChange} ></input>
-             </td>  
+                <td>{examData.textValueMap["examDate"+x]}</td> 
+
+              
+                <td> <input id={"startTime"+x} type="time"  name="startTime"  step='3' min="00:00:00" max="20:00:00"
+                value={examData.stTime} onChange={this.handleStTimeChange} ></input> </td>
+
+          <td> <input id={"endTime"+x} type="time"  name="endTime"  step='3' min="00:00:00" max="20:00:00"
+                onChange={this.handleNdTimeChange} ></input> </td>
+
+                <td> <input  id={"passingMarks"+x}  name="passingMarks"  onChange={this.handlePassMarksChange} ></input> </td>
+
+                <td> <input  id={"totalMarks"+x} name="totalMarks" onChange={this.handleTotalMarksChange} ></input> </td>
                
              </tr>
             </tbody>
@@ -426,8 +626,6 @@ createBranches(branches: any) {
     }
     return retVal;
   }
- 
-
   render() {
     const { data: { createExamFilterDataCache, refetch }, mutate } = this.props;
     const { examData, departments, batches,subjects, semesters,  sections,  submitted } = this.state;
@@ -438,9 +636,13 @@ createBranches(branches: any) {
         <h3 className="bg-heading p-1">
           <i className="fa fa-university stroke-transparent mr-1" aria-hidden="true" />{' '}
           Admin - Academic Exam Setting
+          {/* value={gradeType} */}
+          <select  name="fileType" id="fileType" className="max-width-10 m-l-1">
+                <option value="">Select Grade Type</option>
+                <option value="Percentage">Percentage</option>
+                <option value="gradeType">Grade</option>
+              </select>
         </h3>
-       
-       
         <div className="p-1">
           <form className="gf-form-group" onSubmit={this.onFormSubmit} >
             <table id="t-attendance" className="markAttendance">
@@ -451,8 +653,8 @@ createBranches(branches: any) {
                   <th>Year</th>
                   <th>Semester</th>
                   <th>Section</th>
-                  <th>Exam Report</th>
-                 
+                  <th>No of Exams</th>
+                  <th>Create Exam</th>
                 </tr>
               </thead>
               <tbody>
@@ -480,51 +682,43 @@ createBranches(branches: any) {
                       {this.createSections(this.props.data.createExamFilterDataCache.sections, examData.batch.id)}
                     </select>
                   </td>
-                  {/* <td> <select {examData.academicExamSetting.examType} /></td> */}
+                  
+                  <td>
+                   <a onClick={this.decreaseExamValue.bind(this)}>-</a>
+                    &nbsp;{this.state.noOfExams}&nbsp;
+                    <a onClick={this.increaseExamValue.bind(this)}>+</a>
+                    </td>
                   <td>
                     <button className="btn btn-primary" type="submit" id="btnTakeAtnd" name="btnTakeAtnd" style={{ width: '130px' }}>Create Exam</button>
 
                   </td>
-
                 </tr>
               </tbody>
             </table>
-            <div className="container-fluid p-1 ">
 
-            {/* <div className="tflex bg-heading mt-1 e-flex"  id="detailGrid">
+            <div className="tflex bg-heading mt-1 e-flex"  id="detailGrid">
               <h4 className="p-1 py-2 mb-0"> Exam</h4>
-               <input type="text" className="h-input m-1"   maxLength={255} ></input>
+               <input type="text" id="txtExamName" name="txtExamName" className="h-input m-1"   maxLength={255} ></input>
               <div className="hhflex">
-              <Link
-                to={`/plugins/ems-student/page/addstudent`}
-                className="btn btn-primary" style={w180}>Create New Student
-                </Link>
-              <a className="btn btn-primary m-l-1" onClick={(e: any) => this.exportStudents(this.state.examData.mutateResult)}>Export</a>
-              <select name="fileType" id="fileType" className="max-width-10 m-l-1">
-                <option value="">Select File Type</option>
-                <option value="CSV">CSV</option>
-              </select>
-          </div> 
+
               </div>
-            */}
             </div>
 
             <div className="hide" id="detailGridTable">
               <table className="fwidth">
                 <thead >
                   <tr>
-                    <th>
-                  <input type="checkbox" onClick={(e: any) => this.checkAllRows(e)} value="checkedall" name="" id="" />
+                  <th>
+                <input type="checkbox" onClick={(e: any) => this.checkAllExams(e)} value="checkedall" name="" id="" />
               </th>
-              <th>Id</th>
-                    <th>Name</th>
-                    <th>Roll No</th>
-                    <th>Student Id</th>
+                    <th>Subject</th>
+                    <th>Date</th>
+                    <th>Day</th>
+                    <th>Start Time</th>
+                    <th>End Time</th>
+                    <th>Passing Marks</th>
                     <th>Total Marks</th>
-                    <th>Marks Obtained</th>
-                    <th>Grade/Percentage</th>
-                    <th>Comments</th>
-                 
+                   
                   </tr>
                 </thead>
                 
@@ -539,8 +733,7 @@ createBranches(branches: any) {
                 <p></p>
                 <div>
 
-                  <button className="btn btn-primary mr-1" id="btnSave" name="btnSave" onClick={this.onClick} >Save</button>
-                 
+                <button className="btn btn-primary mr-1" id="btnSave" name="btnSave" onClick={this.onClick}>Save</button>
 
                 </div>
               </div>
@@ -566,12 +759,11 @@ export default withExamSubjDataLoader(
     graphql<ExamListQueryTypeForAdmin, ExamRootProps>(ExamListQueryTypeForAdminGql, {
       name: "mutate"
      }),
-     graphql<AddReportMutation, ExamRootProps>(AddReportMutationGql, {
+     graphql<AddExamMutation, ExamRootProps>(AddExamMutationGql, {
       name: "mutateUpd",
     }),
 
-
   )
 
-    (ExamReportSrc) as any
+    (MarkExam) as any
 );

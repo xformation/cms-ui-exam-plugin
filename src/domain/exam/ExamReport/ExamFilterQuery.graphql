@@ -1,13 +1,34 @@
-mutation getSubjectList($filter: ExamListFilterInput!) {
-  getSubjectList(filter: $filter) {
-   examType
-  examDate
-    day
-    startTime
-    endTime
-    total
-    passing
-    duration
+mutation searchStudentExamReport($filter: ExamListFilterInput!) {
+  searchStudentExamReport(filter: $filter) {
+  id
+    marksObtained
+    comments
+    createdOn
+    createdBy
+    updatedOn
+    updatedBy
+    typeOfGrading{
+      id,
+      minMarks,
+      maxMarks,
+      grades
+    }
+    academicExamSetting
+    {
+      id,
+      gradeType,
+      total,
+      examType
+    }
 
+    student{
+      id,
+      studentName,
+      rollNo
+    }
+academicyear{
+        id,
+        year
+      }
   }
 }

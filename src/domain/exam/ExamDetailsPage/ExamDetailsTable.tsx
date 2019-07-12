@@ -9,7 +9,7 @@ export default ({ acExamSetting }: { acExamSetting: AcExamSettingFragment }) => 
       <i className="fa fa-university stroke-transparent mr-1" aria-hidden="true" />{' '}
       Admin -  Exam Details
       </h3>
-      <h3>{acExamSetting.examType}</h3>
+      <h3>{acExamSetting.examName}</h3>
     <div className="plugin-bg-white p-1">
       <div className="m-b-1 dflex bg-heading">
         <h4 className="ptl-06">Exam Profile</h4>

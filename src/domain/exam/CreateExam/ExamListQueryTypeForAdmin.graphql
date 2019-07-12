@@ -1,14 +1,15 @@
 
 mutation getSubjectList($filter: ExamListFilterInput!) {
   getSubjectList(filter: $filter) {
-   examType
-  examDate
-    day
+   examName
+   semester
+    examDate
     startTime
     endTime
+    gradeType
     total
     passing
-    duration
+    actions
 
   }
 }

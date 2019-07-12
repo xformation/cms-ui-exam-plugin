@@ -1,0 +1,10 @@
+
+mutation addAcademicExamSettingData($input: [AcademicExamSettingUpdateFilter!]!){
+  addAcademicExamSettingData(input:$input){
+    statusCode
+    statusDesc
+ }
+}
+
+
+

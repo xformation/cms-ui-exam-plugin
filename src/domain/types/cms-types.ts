@@ -6,11 +6,9 @@ export type ReactFunctionOrComponentClass<P> =
 // --------------------------------------
 
 export type AcExamSettingData = {
-  examType: String;
+  examName: String;
   action: String;
   sbjct: String;
-  endDate: Date;
-  startDate: Date;
   examDate: Date;
   departmnt: String;
   bctch: String;
@@ -21,13 +19,13 @@ export type AcExamSettingData = {
 
 export type ExamData = {
   // id: string;
-  examType: String;
+  examName: String;
   action: String;
   day: String;
 };
 
 export type AddExamData = {
-  examType: String;
+  examName: String;
   semester: String;
   subject: String;
   examDate: Date;
@@ -39,8 +37,7 @@ export type AddExamData = {
   total: number;
   passing: number;
   actions: String;
-  startDate: Date;
-  endDate: Date;
+
   academicyear: {
     academicyear: any;
   };

@@ -1,10 +1,8 @@
 fragment acExamSetting on AcExamSetting {
-  id
-  examType
-  action
+    id
+    examName
+    action
     sbjct
-    endDate
-    startDate
     examDate
     departmnt
     bctch

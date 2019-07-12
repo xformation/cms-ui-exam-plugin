@@ -1,4 +1,4 @@
-import init from '../domain/exam/MarkExam/MarkExamApp';
+import init from '../domain/exam/CreateExam/MarkExamApp';
 
 export class MarkExam {
   static templateUrl = '/partials/addexam.html';

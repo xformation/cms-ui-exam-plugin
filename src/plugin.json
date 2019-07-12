@@ -55,6 +55,14 @@
       "addToNav": true,
       "defaultNav": false,
       "component": "ExamReport"
+    },
+
+    {
+      "type": "page",
+      "name": "Grading",
+      "addToNav": true,
+      "defaultNav": false,
+      "component": "Gradingui"
     }
   ],
   "dependencies": {
