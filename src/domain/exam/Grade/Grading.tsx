@@ -2,7 +2,7 @@ import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { graphql, QueryProps, MutationFunc, compose } from "react-apollo";
 import * as AddTypeOfGradingGql from './AddTypeOfGrading.graphql';
-import { LoadExamSubjQueryCacheForAdmin, ExamListQueryTypeForAdmin, AddTypeOfGrading } from '../../types';
+import { LoadExamSubjQueryCacheForAdmin,  AddTypeOfGrading } from '../../types';
 import withExamSubjDataLoader from './withExamSubjDataLoader';
 
 
@@ -84,11 +84,9 @@ class Grading extends React.Component<ExamPageProps, ExamState>{
 
    this.handleChange = this.handleChange.bind(this);
     this.createGrid = this.createGrid.bind(this);
-    // this.validateDuplicateSubject = this.validateDuplicateSubject.bind(this);
     this.handleMinMarksChange = this.handleMinMarksChange.bind(this);
     this.handleMaxMarksChange = this.handleMaxMarksChange.bind(this);
     this.handleGradesChange = this.handleGradesChange.bind(this);
-    // this.handleNxtIdChange = this.handleNxtIdChange.bind(this); 
     
     this.createGradeGrid = this.createGradeGrid.bind(this);
     
@@ -152,13 +150,6 @@ class Grading extends React.Component<ExamPageProps, ExamState>{
     gradeData.exmgradesMarks[id] = value;
     this.setState({gradeData:gradeData})
   }
-
-  // handleNxtIdChange = (e: any) => {
-  //   const { id, value } = e.nativeEvent.target;
-  //   const { gradeData } = this.state;
-  //   gradeData.exmnextIds[id] = value;
-  //   this.setState({gradeData:gradeData})
-  // }
 
   onClick = (e: any) => {
 
@@ -256,7 +247,9 @@ return mutate({
           <span>
              <button className="btn btn-primary mr-1" style={{ width: '130px' }} id="btnCreateGradeGrid" name="btnCreateGradeGrid" onClick={this.createGradeGrid}>Create Grade</button>
           </span>
-            
+          <span>
+              <button className="btn btn-primary mr-1" id="btnSave" name="btnSave" onClick={this.onClick}>Save</button>
+          </span>
             <div className="tflex bg-heading mt-1 dflex"  id="detailGrid">
               <h4 className="p-1 py-2 mb-0">Grading</h4>
             </div>
@@ -270,19 +263,26 @@ return mutate({
                     <th>Grades</th>        
                   </tr>
                 </thead>
-                
                   {this.createGrid()}
-               
               </table>
-
-              <div className="d-flex fwidth justify-content-between pt-2">
-                <p></p>
-                <div>
-                  <button className="btn btn-primary mr-1" id="btnSave" name="btnSave" onClick={this.onClick}>Save</button>
-                </div>
-              </div>
-            </div>         
-        </div>
+            </div>
+            <div className=""  id="detailGrid">
+            <div  className="" id="detailGridTable">
+              <table className="fwidth">
+                <thead >
+                  <tr>                  
+                    <th>MIn Marks</th>
+                    <th>Max Marks</th>
+                    <th>Grades</th>        
+                  </tr>
+                </thead>
+                  {this.createGrid()}
+              </table>
+            </div>
+            </div>
+                
+          </div>         
+       
       </section>
     );
   }

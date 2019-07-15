@@ -1,6 +1,7 @@
 mutation addAcademicExamSetting($input: [AddAcademicExamSettingInput!]!) {
   addAcademicExamSetting(input: $input) {
     academicExamSetting {
+    id
     examName
     semester
     examDate

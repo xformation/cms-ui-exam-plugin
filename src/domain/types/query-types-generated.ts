@@ -127,13 +127,20 @@ export type AcdemicExamSettingQueryVariables = {
 
 export type AddExamMutation = {
   addAcademicExamSetting: Array<{
+    id: number;
     examName: String;
-    action: String;
-    subject: String;
-    endDate: Date;
+    actions: String;
+    total: number;
+    passing: number;
+    subject: {
+      id: number;
+      subjectDesc: string;
+    };
     startTime: String;
     endTime: String;
-    day: String;
+    examDate: Date;
+    semester: String;
+    gradeType: String;
     batch: {
       id: number;
       branchName: string;
@@ -156,36 +163,37 @@ export type AddExamMutation = {
   }>;
 };
 
-export type ExamListQueryTypeForAdmin = {
-  addAcademicExamSetting: Array<{
-    examName: String;
-    action: String;
-    subject: String;
-    endDate: Date;
-    startTime: String;
-    endTime: String;
-    day: String;
-    batch: {
-      id: number;
-      branchName: string;
-    };
-    section: {
-      id: number;
-    };
-    branch: {
-      id: number;
-      branchName: string;
-    };
-    department: {
-      id: number;
-      name: string;
-    };
-    academicyear: {
-      id: number;
-      year: string;
-    };
-  }>;
-};
+// export type ExamListQueryTypeForAdmin = {
+//   addAcademicExamSetting: Array<{
+//     id: number;
+//     examName: String;
+//     action: String;
+//     subject: String;
+//     endDate: Date;
+//     startTime: String;
+//     endTime: String;
+//     day: String;
+//     batch: {
+//       id: number;
+//       branchName: string;
+//     };
+//     section: {
+//       id: number;
+//     };
+//     branch: {
+//       id: number;
+//       branchName: string;
+//     };
+//     department: {
+//       id: number;
+//       name: string;
+//     };
+//     academicyear: {
+//       id: number;
+//       year: string;
+//     };
+//   }>;
+// };
 export type StudentReportQueryTypeForAdmin = {
   searchStudentExamReport: Array<{
     id: number;
