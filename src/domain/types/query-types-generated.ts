@@ -163,37 +163,37 @@ export type AddExamMutation = {
   }>;
 };
 
-// export type ExamListQueryTypeForAdmin = {
-//   addAcademicExamSetting: Array<{
-//     id: number;
-//     examName: String;
-//     action: String;
-//     subject: String;
-//     endDate: Date;
-//     startTime: String;
-//     endTime: String;
-//     day: String;
-//     batch: {
-//       id: number;
-//       branchName: string;
-//     };
-//     section: {
-//       id: number;
-//     };
-//     branch: {
-//       id: number;
-//       branchName: string;
-//     };
-//     department: {
-//       id: number;
-//       name: string;
-//     };
-//     academicyear: {
-//       id: number;
-//       year: string;
-//     };
-//   }>;
-// };
+export type ExamListQueryTypeForAdmin = {
+  addAcademicExamSetting: Array<{
+    id: number;
+    examName: String;
+    action: String;
+    subject: String;
+    endDate: Date;
+    startTime: String;
+    endTime: String;
+    day: String;
+    batch: {
+      id: number;
+      branchName: string;
+    };
+    section: {
+      id: number;
+    };
+    branch: {
+      id: number;
+      branchName: string;
+    };
+    department: {
+      id: number;
+      name: string;
+    };
+    academicyear: {
+      id: number;
+      year: string;
+    };
+  }>;
+};
 export type StudentReportQueryTypeForAdmin = {
   searchStudentExamReport: Array<{
     id: number;
