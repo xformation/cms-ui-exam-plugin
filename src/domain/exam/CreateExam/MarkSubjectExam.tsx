@@ -161,16 +161,17 @@ class MarkExam extends React.Component<ExamPageProps, ExamState>{
     this.handleExamDateChange  =this.handleExamDateChange.bind(this);
     // this.changeStartDate = this.changeStartDate.bind(this);
     this.isDatesOverlap = this.isDatesOverlap.bind(this);
+    // this.maxendDate=this.maxendDate.bind(this);
 
 
   }
-  isDatesOverlap(startTime: any, endTime: any){
-    if (endTime.isBefore(startTime)) {
-      alert("End time should not be prior to start time.");
-      return true;
-    }
-    return false;
-  }
+  // isDatesOverlap(startTime: any, endTime: any){
+  //   if (endTime.isBefore(startTime)) {
+  //     alert("End time should not be prior to start time.");
+  //     return true;
+  //   }
+  //   return false;
+  // }
 
   createDepartments(departments: any, selectedBranchId: any) {
     let departmentsOptions = [<option key={0} value="">Select Department</option>];
@@ -413,7 +414,13 @@ class MarkExam extends React.Component<ExamPageProps, ExamState>{
     examData.exmDate[id] = value;
     this.setState({ examData: examData })
   }
-
+  isDatesOverlap(startTime: any, endTime: any){
+    if (endTime.isBefore(startTime)) {
+      alert("End time should not be prior to start time.");
+      return true;
+    }
+    return false;
+  }
   handleNdTimeChange = (e: any) => {
     const { id, value } = e.nativeEvent.target;
     const { examData } = this.state;
@@ -434,7 +441,7 @@ class MarkExam extends React.Component<ExamPageProps, ExamState>{
     examData.exmTotalMarks[id] = value;
     this.setState({ examData: examData })
   }
- 
+  
 
   onClick = (e: any) => {
 
@@ -482,28 +489,34 @@ class MarkExam extends React.Component<ExamPageProps, ExamState>{
     }
     for (let i = 0; i < this.state.noOfExams; i++) {
           let en: any = document.querySelector("#endTime" + i);
+          let dt: any = document.querySelector("#startTime" + i);
           if (examData.exmNdTime[en.id] === undefined || examData.exmNdTime[en.id] === null || examData.exmNdTime[en.id] === "") {
             alert("Please select end time");
             return;
-        }        
+        } 
+        if (examData.exmStTime[dt.id] >= examData.exmNdTime[en.id]) {
+          alert("Please enter valid end time");
+          return;
+      }        
         }
-    //  if(dt == null && en !== null){
-    //       if(this.isDatesOverlap(dt, en)){
-    //         return;
-    //       }
-    
+        
         for (let i = 0; i < this.state.noOfExams; i++) {
-          let dt: any = document.querySelector("#passingMarks" + i);
-          if (examData.exmPassMarks[dt.id] === undefined || examData.exmPassMarks[dt.id] === null || examData.exmPassMarks[dt.id] === "") {
+          let pm: any = document.querySelector("#passingMarks" + i);
+          if (examData.exmPassMarks[pm.id] === undefined || examData.exmPassMarks[pm.id] === null || examData.exmPassMarks[pm.id] === "") {
             alert("Please select passing marks for an listed exam");
             return;
           }
         }
     
         for (let i = 0; i < this.state.noOfExams; i++) {
-          let dt: any = document.querySelector("#totalMarks" + i);
-          if (examData.exmTotalMarks[dt.id] === undefined || examData.exmTotalMarks[dt.id] === null || examData.exmTotalMarks[dt.id] === "") {
+          let tm: any = document.querySelector("#totalMarks" + i);
+          let pm: any = document.querySelector("#passingMarks" + i);
+          if (examData.exmTotalMarks[tm.id] === undefined || examData.exmTotalMarks[tm.id] === null || examData.exmTotalMarks[tm.id] === "") {
             alert("Please select total marks for an listed exam");
+            return;
+          }
+          if (examData.exmTotalMarks[tm.id] > examData.exmPassMarks[pm.id]) {
+            alert("total marks should greater than pass marks");
             return;
           }
         }
@@ -529,7 +542,6 @@ class MarkExam extends React.Component<ExamPageProps, ExamState>{
       "1051"
       
       );
-    // ,gradeData.academicYear.id, gradeData.branch.id
     examData.payLoad.push(sd);
  }
 }
@@ -585,7 +597,7 @@ return mutate({
 
               <td> <input id={"startTime" + x} type="time" name="startTime" step='2' value={examData.startTime} onChange={this.handleStTimeChange} ></input> </td>
 
-              <td> <input id={"endTime" + x} type="time" name="endTime" step='2' value={examData.endTime} onChange={this.handleNdTimeChange} ></input> </td>
+              <td> <input id={"endTime" + x} type="time" name="endTime" step='2' value={examData.endTime}  onChange={this.handleNdTimeChange} ></input> </td>
 
               <td> <input id={"passingMarks" + x} name="passingMarks" value={examData.passing} onChange={this.handlePassMarksChange} ></input> </td>
 
