@@ -573,10 +573,10 @@ return mutate({
                   {this.createSubjects(this.props.data.createExamFilterDataCache.subjects, examData.department.id, examData.batch.id)}
                 </select>
               </td>
-              <td> 
-                <DatePicker selected={examData.dateofExam} value={examData.dateofExam} onChange={this.handleChange} id={"examDate" + x} name="examDate" />
-
-                {/* <input type="date" value={examData.dateofExam} id={"examDate" + x} name="examDate" maxLength={8} onChange={this.handleChange} ></input>  */}
+              {/* <td> 
+                <DatePicker selected={examData.dateofExam} value={examData.dateofExam} onChange={this.handleChange} id={"examDate" + x} name="examDate" /> */}
+                <td> 
+                <input type="date" value={examData.dateofExam} id={"examDate" + x} name="examDate" maxLength={8} onChange={this.handleChange} ></input> 
                 </td>
                          
 
