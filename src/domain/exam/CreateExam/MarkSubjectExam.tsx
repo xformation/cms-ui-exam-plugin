@@ -257,6 +257,11 @@ class MarkExam extends React.Component<ExamPageProps, ExamState>{
     const { examData } = this.state;
     e.preventDefault();
     
+    if (this.state.gradeType === "") {
+      alert("Please select Grade Type");
+      return;
+    }
+
     if (this.state.noOfExams === 0) {
       alert("Please select no of exams");
       return;
