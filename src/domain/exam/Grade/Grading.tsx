@@ -133,7 +133,7 @@ class Grading extends React.Component<ExamPageProps, ExamState>{
   
    this.setState({gradeData:gradeData})}
  
-    
+
   
   handleMinMarksChange = (e: any) => {
     const { id, value } = e.nativeEvent.target;
@@ -155,7 +155,6 @@ class Grading extends React.Component<ExamPageProps, ExamState>{
   }
 
   onClick = (e: any) => {
-
     const { mutate } = this.props;
     const { gradeData } = this.state;
     e.preventDefault();
