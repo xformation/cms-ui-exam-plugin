@@ -78,6 +78,19 @@ export type AcExamSettingSummaryFragment = {
   st: String;
   ed: String;
 };
+
+// grading
+
+export type TypeOfGradings = {
+  typeOfGradings: Array<{
+    id: any;
+    minMarks: string;
+    maxMarks: string;
+    grades: string;
+    nextId: any;
+  }>;
+};
+
 export type LoadExamSubjQueryCacheForAdmin = {
   createExamFilterDataCache: {
     branches: Array<{

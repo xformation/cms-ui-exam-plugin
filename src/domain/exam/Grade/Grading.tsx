@@ -2,8 +2,8 @@ import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { graphql, QueryProps, MutationFunc, compose } from "react-apollo";
 import * as AddTypeOfGradingGql from './AddTypeOfGrading.graphql';
-import { LoadExamSubjQueryCacheForAdmin,  AddTypeOfGrading } from '../../types';
-import withExamSubjDataLoader from './withExamSubjDataLoader';
+import { TypeOfGradings,  AddTypeOfGrading } from '../../types';
+import withGradingDataLoader from './withGradingDataLoader';
 
 
 interface type {
@@ -14,7 +14,7 @@ type ExamRootProps = RouteComponentProps<{
   academicYearId: string;
   collegeId: string;
 }> & {
-  data: QueryProps & LoadExamSubjQueryCacheForAdmin;
+  data: QueryProps & TypeOfGradings;
 };
 
 type ExamPageProps = ExamRootProps & {
@@ -63,6 +63,9 @@ class Grading extends React.Component<ExamPageProps, ExamState>{
         },
         academicYear: {
           id: 1701 //1051
+        },
+        grade: {
+          id: ""
         },
         mutateResult: [],
         filtered: [],
@@ -119,7 +122,7 @@ class Grading extends React.Component<ExamPageProps, ExamState>{
     
     } 
       
-
+  
 
   handleChange = (e: any) => {
     const { id, value } = e.nativeEvent.target;
@@ -130,7 +133,7 @@ class Grading extends React.Component<ExamPageProps, ExamState>{
   
    this.setState({gradeData:gradeData})}
  
-
+    
   
   handleMinMarksChange = (e: any) => {
     const { id, value } = e.nativeEvent.target;
@@ -203,7 +206,27 @@ return mutate({
   return Promise.reject(`there is some error while updating : ${error}`);
 });
 } 
-   
+  
+createGradeRow(obj: any) {
+ // const len = obj.length;
+ const retVal = [];
+ // for (let p = 0; p < len; p++) {
+ //   let v = obj[p];
+ for (let x = 0; x < obj.length; x++) {
+   let k = obj[x];
+   retVal.push(
+      <tr>
+        <td>{k.minMarks}</td>
+        <td>{k.maxMarks}</td>
+        <td>{k.grades}</td>     
+        <td>{k.nextId}</td>
+      </tr>
+    );
+  }
+  return retVal;
+}
+
+
   createGrid(){
     const { gradeData } = this.state;
     const retVal = [];
@@ -273,10 +296,12 @@ return mutate({
                   <tr>                  
                     <th>MIn Marks</th>
                     <th>Max Marks</th>
-                    <th>Grades</th>        
+                    <th>Grades</th>
+                    <th>next Id</th>        
                   </tr>
                 </thead>
-                  {this.createGrid()}
+                {/* this.createFeeCategoryRowFromCache(this.props.data.createFeeSetupDataCache.feeCategory) */}
+                  {this.createGradeRow(this.props.data.typeOfGradings)}
               </table>
             </div>
             </div>
@@ -288,7 +313,7 @@ return mutate({
   }
 }
 
-export default withExamSubjDataLoader(
+export default withGradingDataLoader(
 
   compose(   
      graphql<AddTypeOfGrading, ExamRootProps>(AddTypeOfGradingGql, {

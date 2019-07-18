@@ -1,0 +1,11 @@
+query{ 
+  typeOfGradings {
+    id,
+    minMarks,
+    maxMarks,
+    grades,
+    nextId,
+  }
+}
+
+
