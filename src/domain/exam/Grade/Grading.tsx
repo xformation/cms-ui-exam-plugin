@@ -1,10 +1,13 @@
 import * as React from 'react';
-import { RouteComponentProps } from 'react-router-dom';
+import { RouteComponentProps, Link } from 'react-router-dom';
 import { graphql, QueryProps, MutationFunc, compose } from "react-apollo";
 import * as AddTypeOfGradingGql from './AddTypeOfGrading.graphql';
 import { TypeOfGradings,  AddTypeOfGrading } from '../../types';
 import withGradingDataLoader from './withGradingDataLoader';
 
+const w180 = {
+  width: '180px'
+};
 
 interface type {
   checked: boolean;
@@ -289,6 +292,12 @@ createGradeRow(obj: any) {
           <span>
               <button className="btn btn-primary mr-1" id="btnSave" name="btnSave" onClick={this.onClick}>Save</button>
           </span>
+          <span>
+            <Link
+                to={`/plugins/ems-exam/page/addexam`}
+                className="btn btn-primary" style={w180}>Back
+                </Link>
+            </span>
             <div className="tflex bg-heading mt-1 dflex"  id="detailGrid">
               <h4 className="p-1 py-2 mb-0">Grading</h4>
             </div>

@@ -1,20 +1,20 @@
 import * as moment from 'moment';
 import * as React from 'react';
-import DatePicker from 'react-datepicker';
-import { RouteComponentProps } from 'react-router-dom';
+import { RouteComponentProps, Link } from 'react-router-dom';
 import { graphql, QueryProps, MutationFunc, compose } from "react-apollo";
-import * as ExamListQueryTypeForAdminGql from './ExamListQueryTypeForAdmin.graphql';
 import * as AddExamMutationGql from './AddExamMutation.graphql';
 import { LoadExamSubjQueryCacheForAdmin,AddExamMutation } from '../../types';
 import withExamSubjDataLoader from './withExamSubjDataLoader';
-
 import "react-datepicker/dist/react-datepicker.css";
-import ExamDetailsTable from '../ExamDetailsPage';
+
+
+const w180 = {
+  width: '180px'
+};
 
 interface type {
   checked: boolean;
 }
-
 
 type ExamRootProps = RouteComponentProps<{
   academicYearId: string;
@@ -159,19 +159,9 @@ class MarkExam extends React.Component<ExamPageProps, ExamState>{
     this.handlePassMarksChange = this.handlePassMarksChange.bind(this);
     this.handleTotalMarksChange = this.handleTotalMarksChange.bind(this);
     this.handleExamDateChange  =this.handleExamDateChange.bind(this);
-    // this.changeStartDate = this.changeStartDate.bind(this);
     this.isDatesOverlap = this.isDatesOverlap.bind(this);
-    // this.maxendDate=this.maxendDate.bind(this);
-
-
   }
-  // isDatesOverlap(startTime: any, endTime: any){
-  //   if (endTime.isBefore(startTime)) {
-  //     alert("End time should not be prior to start time.");
-  //     return true;
-  //   }
-  //   return false;
-  // }
+ 
 
   createDepartments(departments: any, selectedBranchId: any) {
     let departmentsOptions = [<option key={0} value="">Select Department</option>];
@@ -184,6 +174,7 @@ class MarkExam extends React.Component<ExamPageProps, ExamState>{
     }
     return departmentsOptions;
   }
+
   createBranches(branches: any) {
     let branchesOptions = [<option key={0} value="">Select Branch</option>];
     for (let i = 0; i < branches.length; i++) {
@@ -193,6 +184,7 @@ class MarkExam extends React.Component<ExamPageProps, ExamState>{
     }
     return branchesOptions;
   }
+
   createBatches(batches: any, selectedDepartmentId: any) {
     let batchesOptions = [<option key={0} value="">Select Year</option>];
     for (let i = 0; i < batches.length; i++) {
@@ -206,6 +198,7 @@ class MarkExam extends React.Component<ExamPageProps, ExamState>{
     }
     return batchesOptions;
   }
+
   createSubjects(subjects: any, selectedDepartmentId: any, selectedBatchId: any) {
     let subjectsOptions = [<option key={0} value="">Select Subject</option>];
     for (let i = 0; i < subjects.length; i++) {
@@ -218,6 +211,7 @@ class MarkExam extends React.Component<ExamPageProps, ExamState>{
     }
     return subjectsOptions;
   }
+
   createSemesters(semesters: any) {
     let semestersOptions = [<option key={0} value="">Select Semester</option>];
     for (let i = 0; i < semesters.length; i++) {
@@ -228,6 +222,7 @@ class MarkExam extends React.Component<ExamPageProps, ExamState>{
     }
     return semestersOptions;
   }
+
   createSections(sections: any, selectedBatchId: any) {
     let sectionsOptions = [<option key={0} value="">Select Section</option>];
     for (let i = 0; i < sections.length; i++) {
@@ -247,20 +242,18 @@ class MarkExam extends React.Component<ExamPageProps, ExamState>{
       this.setState({ noOfExams: this.state.noOfExams + 1 })
     }
   }
+
   decreaseExamValue() {
     if (this.state.noOfExams !== 0) {
       this.setState({ noOfExams: this.state.noOfExams - 1 })
     }
   }
 
-
-
   onFormSubmit = (e: any) => {
     this.setState({
       submitted: true
     });
 
-    // const { mutate } = this.props;
     const { examData } = this.state;
     e.preventDefault();
     
@@ -386,7 +379,6 @@ class MarkExam extends React.Component<ExamPageProps, ExamState>{
   handleChange = (e: any) => {
     const { id, value } = e.nativeEvent.target;
     const { examData } = this.state;
-    // const typeOfGrading = e.target.value;
     const key = id;
     const val = value;
     e.preventDefault();
@@ -515,8 +507,8 @@ class MarkExam extends React.Component<ExamPageProps, ExamState>{
             alert("Please select total marks for an listed exam");
             return;
           }
-          if (examData.exmTotalMarks[tm.id] > examData.exmPassMarks[pm.id]) {
-            alert("total marks should greater than pass marks");
+          if (examData.exmTotalMarks[tm.id] < examData.exmPassMarks[pm.id]) {
+            alert("Total marks should Greater than passing Marks");
             return;
           }
         }
@@ -528,7 +520,7 @@ class MarkExam extends React.Component<ExamPageProps, ExamState>{
      examData.exmDate["examDate"+i],
       examData.exmStTime["startTime"+i],
       examData.exmNdTime["endTime"+i], 
-      "PERCENTAGE",
+      this.state.gradeType,
       examData.exmTotalMarks["totalMarks"+i],
       examData.exmPassMarks["passingMarks"+i],      
       "ACTIVE",              
@@ -571,29 +563,20 @@ return mutate({
     const retVal = [];
     for (let x = 0; x < this.state.noOfExams; x++) {
       let v = ary[x];
-      // for (let x = 0; x < this.state.noOfExams; x++) {
-        // let k = this.state.noOfExams;
-        // console.log(k);
         retVal.push(
           <tbody>
             <tr id="custom-width-input">
-            {/* <td>
-                <input onClick={(e: any) => this.onClickCheckbox(x, e)} checked={examData.isChecked} type="checkbox" name="" id="" defaultChecked />
-              </td> */}
+           
               <td>
                 <select name={"subject"} id={"subject" + x} onChange={this.onChange} value={examData.subject.id} className="gf-form-input max-width-22">
                   {this.createSubjects(this.props.data.createExamFilterDataCache.subjects, examData.department.id, examData.batch.id)}
                 </select>
               </td>
-              {/* <td> 
-                <DatePicker selected={examData.dateofExam} value={examData.dateofExam} onChange={this.handleChange} id={"examDate" + x} name="examDate" /> */}
-                <td> 
+              <td> 
                 <input type="date" value={examData.dateofExam} id={"examDate" + x} name="examDate" maxLength={8} onChange={this.handleChange} ></input> 
-                </td>
-                         
+              </td>                         
 
               <td>{examData.textValueMap["examDate" + x]}</td>
-
 
               <td> <input id={"startTime" + x} type="time" name="startTime" step='2' value={examData.startTime} onChange={this.handleStTimeChange} ></input> </td>
 
@@ -609,20 +592,17 @@ return mutate({
 
 
       }
-    // }
     return retVal;
   }
   render() {
     const { data: { createExamFilterDataCache, refetch }, mutate } = this.props;
     const { examData, departments, batches, subjects, semesters, sections, submitted } = this.state;
-    // const selectedDay = moment(this.state.value, 'L', true).toDate();
 
     return (
       <section className="plugin-bg-white">
         <h3 className="bg-heading p-1">
           <i className="fa fa-university stroke-transparent mr-1" aria-hidden="true" />{' '}
           Admin - Academic Exam Setting
-          {/* value={gradeType} */}
           
           <label>
             <input
@@ -642,13 +622,13 @@ return mutate({
             />
             Grade
           </label>
-
-         
-          {/* <select name="fileType" id="fileType" className="max-width-10 m-l-1">
-            <option value="">Select Grade Type</option>
-            <option value="Percentage">Percentage</option>
-            <option value="gradeType">Grade</option>
-          </select> */}
+          <label>
+            <Link
+                to={`/plugins/ems-exam/page/grading`}
+                className="btn btn-primary" style={w180}>Continue
+                </Link>
+          </label>
+               
         </h3>
         <div className="p-1">
           <form className="gf-form-group" onSubmit={this.onFormSubmit} >
@@ -672,6 +652,7 @@ return mutate({
                       {this.createDepartments(this.props.data.createExamFilterDataCache.departments, examData.branch.id)}
                     </select>
                   </td>
+
                   <td>
                     <select required name="batch" id="batch" onChange={this.onChange} value={examData.batch.id} className="gf-form-input max-width-22">
                       {this.createBatches(this.props.data.createExamFilterDataCache.batches, examData.department.id)}
@@ -695,10 +676,11 @@ return mutate({
                     &nbsp;{this.state.noOfExams}&nbsp;
                     <a onClick={this.increaseExamValue.bind(this)}>+</a>
                   </td>
+
                   <td>
                     <button className="btn btn-primary" type="submit" id="btnTakeAtnd" name="btnTakeAtnd" style={{ width: '130px' }}>Create Exam</button>
-
                   </td>
+
                 </tr>
               </tbody>
             </table>
@@ -707,7 +689,6 @@ return mutate({
               <h4 className="p-1 py-2 mb-0"> Exam</h4>
               <input type="text" id="examName" name="examName" value={examData.examName} className="h-input m-1" maxLength={255} ></input>
               <div className="hhflex">
-
               </div>
             </div>
 
@@ -715,9 +696,6 @@ return mutate({
               <table className="fwidth">
                 <thead >
                   <tr>
-                    {/* <th>
-                      <input type="checkbox" onClick={(e: any) => this.checkAllExams(e)} value="checkedall" name="" id="" />
-                    </th> */}
                     <th>Subject</th>
                     <th>Date</th>
                     <th>Day</th>
@@ -725,15 +703,11 @@ return mutate({
                     <th>End Time</th>
                     <th>Passing Marks</th>
                     <th>Total Marks</th>
-
                   </tr>
                 </thead>
-
                 {
                   this.createGrid(this.state.examData.mutateResult)
-
                 }
-
               </table>
 
               <div className="d-flex fwidth justify-content-between pt-2">
@@ -747,26 +721,16 @@ return mutate({
             </div>
           </form>
         </div>
-
-
-
       </section>
-
-
-
     );
   }
 }
 
 export default withExamSubjDataLoader(
-
-  compose(
-   
+  compose(   
     graphql<AddExamMutation, ExamRootProps>(AddExamMutationGql, {
       name: "mutate",
     }),
-
   )
-
     (MarkExam) as any
 );
