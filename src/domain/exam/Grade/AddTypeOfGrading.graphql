@@ -5,7 +5,7 @@ mutation addTypeOfGrading($input: [AddTypeOfGradingInput!]!) {
      minMarks
         maxMarks
         grades
-       nextId
+       groupvalue
     }
   }
 }

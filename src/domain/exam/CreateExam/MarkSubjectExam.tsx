@@ -521,7 +521,8 @@ class MarkExam extends React.Component<ExamPageProps, ExamState>{
    for (let x = 0; x < this.state.noOfExams; x++) {
    let subOptions: any = document.querySelector("#subject" + x);
    for(let i=0; i<this.state.noOfExams; i++) {    
-    let sd  = new SaData(txtEsNm.value.trim(),
+    let sd  = new SaData(
+      txtEsNm.value.trim(),
      examData.exmDate["examDate"+i],
       examData.exmStTime["startTime"+i],
       examData.exmNdTime["endTime"+i], 
@@ -533,7 +534,7 @@ class MarkExam extends React.Component<ExamPageProps, ExamState>{
       subOptions.options[subOptions.selectedIndex].value,
       examData.department.id,
       examData.batch.id,
-      "SEMESTER2",
+      examData.semester.value,
       examData.section.id, 
       examData.branch.id,
       "1051"

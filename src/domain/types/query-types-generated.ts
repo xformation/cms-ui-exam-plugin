@@ -87,7 +87,7 @@ export type TypeOfGradings = {
     minMarks: string;
     maxMarks: string;
     grades: string;
-    nextId: any;
+    groupvalue: any;
   }>;
 };
 

@@ -39,16 +39,16 @@ class SaData {
   minMarks: any;
   maxMarks: any;
   grades: any;
-  nextId:any;
+  groupvalue:any;
   // branchId: any;
   // academicyearId: any
-  constructor( minMarks: any, maxMarks: any,grades: any, nextId:any) {
+  constructor( minMarks: any, maxMarks: any,grades: any, groupvalue:any) {
     //, branchId: any,
     // academicyearId: any 
     this.minMarks=minMarks
     this.maxMarks=maxMarks;    
     this.grades=grades;   
-    this.nextId=nextId;
+    this.groupvalue=groupvalue;
       // this.branchId=branchId;     
       // this.academicyearId=academicyearId;     
   }
@@ -78,7 +78,7 @@ class Grading extends React.Component<ExamPageProps, ExamState>{
         exmMinMarks: {},
         exmMaxMarks: {},
         exmgradesMarks: {},
-        exmnextIds: {},
+        exmgroupvalues: {},
         txtCmtVal : {},
       },
       branches: [],
@@ -196,7 +196,7 @@ class Grading extends React.Component<ExamPageProps, ExamState>{
    this.setState({gradeData:gradeData})
   
    for(let i=0; i<this.state.noOfExams; i++) {    
-    let sd  = new SaData(gradeData.exmMinMarks["minMarks"+i], gradeData.exmMaxMarks["maxMarks"+i],gradeData.exmgradesMarks["grades"+i], gradeData.exmnextIds["nextId"+i]);
+    let sd  = new SaData(gradeData.exmMinMarks["minMarks"+i], gradeData.exmMaxMarks["maxMarks"+i],gradeData.exmgradesMarks["grades"+i], gradeData.exmgroupvalues["groupvalue"+i]);
     // ,gradeData.academicYear.id, gradeData.branch.id
     gradeData.payLoad.push(sd);
  }
@@ -238,7 +238,7 @@ createGradeRow(obj: any) {
         <td>{k.minMarks}</td>
         <td>{k.maxMarks}</td>
         <td>{k.grades}</td>     
-        <td>{k.nextId}</td>
+        <td>{k.groupvalue}</td>
       </tr>
     );
   }

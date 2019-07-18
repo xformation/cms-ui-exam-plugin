@@ -4,7 +4,7 @@ query{
     minMarks,
     maxMarks,
     grades,
-    nextId,
+    groupvalue,
   }
 }
 
