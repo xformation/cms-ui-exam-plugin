@@ -139,7 +139,8 @@ class Grading extends React.Component<ExamPageProps, ExamState>{
     const { id, value } = e.nativeEvent.target;
     const { gradeData } = this.state;
     gradeData.exmMinMarks[id] = value;
-    this.setState({gradeData:gradeData})  
+    this.setState({gradeData:gradeData}) 
+    
   }
   handleMaxMarksChange = (e: any) => {
     const { id, value } = e.nativeEvent.target;
@@ -150,6 +151,7 @@ class Grading extends React.Component<ExamPageProps, ExamState>{
   handleGradesChange = (e: any) => {
     const { id, value } = e.nativeEvent.target;
     const { gradeData } = this.state;
+    e.nativeEvent.target.value=e.nativeEvent.target.value.toUpperCase();
     gradeData.exmgradesMarks[id] = value;
     this.setState({gradeData:gradeData})
   }
@@ -160,18 +162,25 @@ class Grading extends React.Component<ExamPageProps, ExamState>{
     e.preventDefault();
 
     for(let i=0; i<this.state.noOfExams; i++) {
-      let dt : any = document.querySelector("#minMarks"+i);
-      if(gradeData.exmMinMarks[dt.id] === undefined || gradeData.exmMinMarks[dt.id] === null || gradeData.exmMinMarks[dt.id] === ""){
+      let minm : any = document.querySelector("#minMarks"+i);
+      if(gradeData.exmMinMarks[minm.id] === undefined || gradeData.exmMinMarks[minm.id] === null || gradeData.exmMinMarks[minm.id] === ""){
         alert("Please enter Minimum marks for an listed exam");
         return;
       }
     }
     for(let i=0; i<this.state.noOfExams; i++) {
-      let dt : any = document.querySelector("#maxMarks"+i);
-      if(gradeData.exmMaxMarks[dt.id] === undefined || gradeData.exmMaxMarks[dt.id] === null || gradeData.exmMaxMarks[dt.id] === ""){
+      let maxm : any = document.querySelector("#maxMarks"+i);
+      let minm : any = document.querySelector("#minMarks"+i);
+      if(gradeData.exmMaxMarks[maxm.id] === undefined || gradeData.exmMaxMarks[maxm.id] === null || gradeData.exmMaxMarks[maxm.id] === ""){
         alert("Please enter Maximum marks for an listed exam");
-        return;
+        return;      
       }
+      if( gradeData.exmMaxMarks[maxm.id] < gradeData.exmMinMarks[minm.id]){
+        alert("Minimum Marks should not be more than maximum marks");
+        return;
+      } 
+      
+      
     } 
     for(let i=0; i<this.state.noOfExams; i++) {
       let dt : any = document.querySelector("#grades"+i);
@@ -205,7 +214,12 @@ return mutate({
   return Promise.reject(`there is some error while updating : ${error}`);
 });
 } 
-  
+onClickCheckbox(index: any, e: any) {
+  // const { target } = e;
+  const { id } = e.nativeEvent.target;
+  let chkBox: any = document.querySelector("#" + id);
+  chkBox.checked = e.nativeEvent.target.checked;
+}
 createGradeRow(obj: any) {
  // const len = obj.length;
  const retVal = [];
@@ -215,6 +229,9 @@ createGradeRow(obj: any) {
    let k = obj[x];
    retVal.push(
       <tr>
+        <td>
+           <input onClick={(e: any) => this.onClickCheckbox(k, e)}  type="radio" name="" id={"chk" + k.id} />
+            </td>
         <td>{k.minMarks}</td>
         <td>{k.maxMarks}</td>
         <td>{k.grades}</td>     
@@ -292,11 +309,14 @@ createGradeRow(obj: any) {
             <div  className="" id="detailGridTable">
               <table className="fwidth">
                 <thead >
-                  <tr>                  
+                  <tr> 
+                  <th>
+                    <input type="radio"  value="checkedall" name="" id="chkCheckedAll" />
+                  </th>                 
                     <th>MIn Marks</th>
                     <th>Max Marks</th>
                     <th>Grades</th>
-                    <th>next Id</th>        
+                    <th>Grade Id</th>        
                   </tr>
                 </thead>
                 {/* this.createFeeCategoryRowFromCache(this.props.data.createFeeSetupDataCache.feeCategory) */}
