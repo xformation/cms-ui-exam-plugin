@@ -48,7 +48,6 @@ type ExamState = {
 };
 
 class SaData {
-
   examName: any;
   examDate: any;
   startTime: any;
@@ -65,7 +64,9 @@ class SaData {
   sectionId: any;
   branchId: any;
   typeOfGradingId:any;
-  constructor(examName: any, examDate: any, startTime: any, endTime: any, gradeType: any, total: any, passing: any, actions: any, academicyearId: any, subjectId: any, departmentId: any, batchId: any, semester: any, sectionId: any, branchId: any, typeOfGradingId:any) {
+  countvalue:any;
+  groupvalue:any;
+  constructor(examName: any, examDate: any, startTime: any, endTime: any, gradeType: any, total: any, passing: any, actions: any, academicyearId: any, subjectId: any, departmentId: any, batchId: any, semester: any, sectionId: any, branchId: any, typeOfGradingId:any, countvalue:any, groupvalue:any) {
 
     this.examName = examName;
     this.semester = semester;
@@ -83,6 +84,8 @@ class SaData {
     this.batchId = batchId;
     this.branchId = branchId;
     this.typeOfGradingId = typeOfGradingId;
+    this.countvalue = countvalue;
+    this.groupvalue = groupvalue;
   }
 }
 
@@ -96,9 +99,9 @@ class MarkExam extends React.Component<ExamPageProps, ExamState>{
       dateofExam: "",
       isSubjectSame: false,
       examData: {
-
         branch: {
-          id: 1001 //1001
+          id: 1001 
+          //1001
         },
         academicYear: {
           id: 1051          
@@ -131,6 +134,7 @@ class MarkExam extends React.Component<ExamPageProps, ExamState>{
         exmPassMarks: {},
         exmTotalMarks: {},
         txtCmtVal: {},
+        exmcountvalues: {},
       },
       branches: [],
       academicYears: [],
@@ -248,7 +252,16 @@ class MarkExam extends React.Component<ExamPageProps, ExamState>{
       this.setState({ noOfExams: this.state.noOfExams - 1 })
     }
   }
+  // onContinueSubmit = (e: any) => {
+  //   this.setState({
+  //     submitted: true
+  //   });
 
+  //   const { examData } = this.state;
+  //   e.preventDefault();
+    
+    
+  // }
   onFormSubmit = (e: any) => {
     this.setState({
       submitted: true
@@ -534,11 +547,12 @@ class MarkExam extends React.Component<ExamPageProps, ExamState>{
       subOptions.options[subOptions.selectedIndex].value,
       examData.department.id,
       examData.batch.id,
-      examData.semester.value,
+      "SEMESTER1",
       examData.section.id, 
       examData.branch.id,
-      "1051"
-      
+      "7534",
+      examData.exmcountvalues["countvalue"+i],
+      3
       );
     examData.payLoad.push(sd);
  }
@@ -628,13 +642,16 @@ return mutate({
             />
             Grade
           </label>
-          <label>
-            <Link
-                to={`/plugins/ems-exam/page/grading`}
+          
+            {
+              this.state.gradeType === "GRADE"  &&
+          <span>
+            <Link                
+                to={`/plugins/ems-exam/page/grading`}               
                 className="btn btn-primary" style={w180}>Continue
                 </Link>
-          </label>
-               
+          </span>
+            }
         </h3>
         <div className="p-1">
           <form className="gf-form-group" onSubmit={this.onFormSubmit} >

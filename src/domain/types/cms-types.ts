@@ -15,6 +15,7 @@ export type AcExamSettingData = {
   sectn: String;
   st: String;
   ed: String;
+  countvalue: any;
 };
 
 export type ExamData = {
@@ -37,7 +38,7 @@ export type AddExamData = {
   total: number;
   passing: number;
   actions: String;
-
+  // countvalue: any;
   academicyear: {
     academicyear: any;
   };

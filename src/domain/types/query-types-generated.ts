@@ -7,13 +7,13 @@ export type AcExamSettingListQuery = {
     examName: String;
     action: String;
     sbjct: String;
-
     examDate: Date;
     departmnt: String;
     bctch: String;
     sectn: String;
     st: String;
     ed: String;
+    countvalue: any;
   }>;
 };
 
@@ -27,13 +27,13 @@ export type AcExamSettingQuery = {
     examName: String;
     action: String;
     sbjct: String;
-
     examDate: Date;
     departmnt: String;
     bctch: String;
     sectn: String;
     st: String;
     ed: String;
+    countvalue: any;
   };
 };
 
@@ -42,13 +42,13 @@ export type AcExamSettingFragment = {
   examName: String;
   action: String;
   sbjct: String;
-
   examDate: Date;
   departmnt: String;
   bctch: String;
   sectn: String;
   st: String;
   ed: String;
+  countvalue: any;
 };
 
 export type AcExamSettingDetailsFragment = {
@@ -56,13 +56,13 @@ export type AcExamSettingDetailsFragment = {
   examName: String;
   action: String;
   sbjct: String;
-
   examDate: Date;
   departmnt: String;
   bctch: String;
   sectn: String;
   st: String;
   ed: String;
+  countvalue: any;
 };
 
 export type AcExamSettingSummaryFragment = {
@@ -70,13 +70,13 @@ export type AcExamSettingSummaryFragment = {
   examName: String;
   action: String;
   subject: String;
-
   examDate: Date;
   departmnt: String;
   bctch: String;
   sectn: String;
   st: String;
   ed: String;
+  countvalue: any;
 };
 
 // grading
@@ -140,7 +140,6 @@ export type AcdemicExamSettingQueryVariables = {
 
 export type AddExamMutation = {
   addAcademicExamSetting: Array<{
-    id: number;
     examName: String;
     actions: String;
     total: number;
@@ -185,6 +184,7 @@ export type ExamListQueryTypeForAdmin = {
     endDate: Date;
     startTime: String;
     endTime: String;
+
     day: String;
     batch: {
       id: number;
