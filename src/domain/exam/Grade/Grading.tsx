@@ -31,7 +31,8 @@ type ExamState = {
   dtPicker: any,
   submitted: any,
   noOfExams: number,
-  add: any
+  add: any,
+  selectedGrades: any
 };
 
 class SaData {
@@ -86,6 +87,7 @@ class Grading extends React.Component<ExamPageProps, ExamState>{
       dtPicker: [],
       submitted: false,
       add: false,
+      selectedGrades: []
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -218,11 +220,10 @@ class Grading extends React.Component<ExamPageProps, ExamState>{
       return Promise.reject(`there is some error while updating : ${error}`);
     });
   }
-  onClickCheckbox(index: any, e: any) {
-    // const { target } = e;
-    const { id } = e.nativeEvent.target;
-    let chkBox: any = document.querySelector("#" + id);
-    chkBox.checked = e.nativeEvent.target.checked;
+  onClickCheckbox(index: any, arr: any, e: any) {
+    this.setState({
+      selectedGrades: arr
+    });
   }
 
   createGradeRow(obj: any) {
@@ -245,7 +246,7 @@ class Grading extends React.Component<ExamPageProps, ExamState>{
           <tr>
             {j === 0 &&
               <td rowSpan={gradesArr.length}>
-                <input onClick={(e: any) => this.onClickCheckbox(keys[i], e)} type="radio" name="grades" id={"chk" + keys[i]} />
+                <input onClick={(e: any) => this.onClickCheckbox(keys[i], gradesArr, e)} type="radio" name="grades" id={"chk" + keys[i]} />
               </td>
             }
             <td>{grade.minMarks}</td>
@@ -286,7 +287,7 @@ class Grading extends React.Component<ExamPageProps, ExamState>{
 
   render() {
     const { data: { refetch }, mutate } = this.props;
-    const { gradeData, submitted } = this.state;
+    const { gradeData, submitted, selectedGrades } = this.state;
 
     return (
       <section className="plugin-bg-white">
@@ -312,6 +313,24 @@ class Grading extends React.Component<ExamPageProps, ExamState>{
               className="btn btn-primary" style={w180}>Back
                 </Link>
           </span>
+          {
+            selectedGrades.length > 0 &&
+            <span>
+              <button className="btn btn-primary ml-1">Continue</button>
+            </span>
+          }
+          <div className="" id="detailGridTable">
+            <table className="fwidth">
+              <thead >
+                <tr>
+                  <th>Min Marks</th>
+                  <th>Max Marks</th>
+                  <th>Grades</th>
+                </tr>
+              </thead>
+              {this.createGrid()}
+            </table>
+          </div>
           <div className="tflex bg-heading mt-1 dflex" id="detailGrid">
             <h4 className="p-1 py-2 mb-0">Grading</h4>
           </div>
