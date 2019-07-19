@@ -259,10 +259,6 @@ class Grading extends React.Component<ExamPageProps, ExamState>{
     return retVal;
   }
 
-  createGradeCell() {
-
-  }
-
 
   createGrid() {
     const { gradeData } = this.state;
@@ -319,19 +315,6 @@ class Grading extends React.Component<ExamPageProps, ExamState>{
           <div className="tflex bg-heading mt-1 dflex" id="detailGrid">
             <h4 className="p-1 py-2 mb-0">Grading</h4>
           </div>
-
-          <div className="" id="detailGridTable">
-            <table className="fwidth">
-              <thead >
-                <tr>
-                  <th>MIn Marks</th>
-                  <th>Max Marks</th>
-                  <th>Grades</th>
-                </tr>
-              </thead>
-              {this.createGrid()}
-            </table>
-          </div>
           <div className="" id="detailGrid">
             <div className="" id="detailGridTable">
               <table className="fwidth">
@@ -340,7 +323,7 @@ class Grading extends React.Component<ExamPageProps, ExamState>{
                     <th>
                       <input type="radio" value="checkedall" name="" id="chkCheckedAll" />
                     </th>
-                    <th>MIn Marks</th>
+                    <th>Min Marks</th>
                     <th>Max Marks</th>
                     <th>Grades</th>
                     <th>Grade Id</th>

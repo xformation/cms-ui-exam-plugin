@@ -752,8 +752,7 @@ table.adminListPage {
   border-spacing: 8px 0px;
   border-collapse: separate !important;
 }
-table.adminListPage th,
-td {
+td, th {
   text-align: center !important;
 }
 table.adminListPage th {
