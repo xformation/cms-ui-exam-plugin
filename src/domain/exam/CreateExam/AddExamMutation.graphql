@@ -11,6 +11,7 @@ mutation addAcademicExamSetting($input: [AddAcademicExamSettingInput!]!) {
     total
     passing
     actions
+    countvalue
     department{
       id
       name

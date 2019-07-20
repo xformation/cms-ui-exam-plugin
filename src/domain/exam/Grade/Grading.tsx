@@ -63,10 +63,10 @@ class Grading extends React.Component<ExamPageProps, ExamState>{
       gradeData: {
 
         branch: {
-          id: 1001 //1001
+          id: 1001  //1801 //1001 
         },
         academicYear: {
-          id: 1701 //1051
+          id: 1051 //1701 //1051
         },
         grade: {
           id: ""

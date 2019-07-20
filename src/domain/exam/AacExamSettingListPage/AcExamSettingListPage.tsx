@@ -1,8 +1,8 @@
 import * as React from 'react';
 
-import { withRouter, RouteComponentProps, Link } from 'react-router-dom';
+import {RouteComponentProps, Link } from 'react-router-dom';
 import { graphql, QueryProps } from 'react-apollo';
-import {AcExamSettingListQuery, AcExamSettingSummaryFragment, AcExamSettingFragment} from  '../../types';
+import {AcExamSettingListQuery} from  '../../types';
 
 import * as AcExamSettingListQueryGql from './AcExamSettingListQuery.graphql';
 import withLoadingHandler from '../../../components/withLoadingHandler';
@@ -71,17 +71,18 @@ class AcExamSettingsTable extends React.Component<ExamTableProps, ExamTableState
     for (let i = 0; i < length; i++) {
       const acExamSetting = acExamSettings[i];
      
-      
+      console.log(acExamSetting.countvalue);
       retVal.push(
-        <tr key={acExamSetting.id}>
+        <tr key={acExamSetting.countvalue}>
           <td>
+           
             <input onClick={(e: any) => this.onClickCheckbox(i, e)} checked={acExamSetting.isChecked} type="checkbox" name="" id="" />
           </td>
-          <td>{acExamSetting.action}</td>
+          <td>{acExamSetting.countvalue}</td>
           <td>
             <Link
               className="table-link link-color"
-              to={`/plugins/ems-exam/page/acExamSetting?id=${acExamSetting.id}`}
+              to={`/plugins/ems-exam/page/acExamSetting?countvalue=${acExamSetting.countvalue}`}
             >
              {acExamSetting.examName}
             </Link>
@@ -143,10 +144,10 @@ const AcExamSettingListPage = ({ data: { acExamSettings } }: AcExamSettingListPa
         <h4 className="ptl-06">Academic Year 2018-2019 </h4>
 
         <div>
-          {/* <Link
-            to={`/plugins/ems-exam/page/addacExamSetting`}
+          <Link
+            to={`/plugins/ems-exam/page/addexam`}
             className="btn btn-primary m-r-1" style={w180}>Add Exam
-        </Link> */}
+        </Link>
          
         </div>
       </div>

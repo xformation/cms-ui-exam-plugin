@@ -71,7 +71,7 @@ class ExamReportSrc extends React.Component<ExamPageProps, ExamState>{
           id: 1001 //1001
         },
         academicYear: {
-          id: 1701 //1051
+          id: 1051 //1701 
         },
         department: {
           id: ""
