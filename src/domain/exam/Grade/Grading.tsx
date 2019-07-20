@@ -95,11 +95,9 @@ class Grading extends React.Component<ExamPageProps, ExamState>{
     this.handleMinMarksChange = this.handleMinMarksChange.bind(this);
     this.handleMaxMarksChange = this.handleMaxMarksChange.bind(this);
     this.handleGradesChange = this.handleGradesChange.bind(this);
-
+    this.onClickContinueButton = this.onClickContinueButton.bind(this);
     this.createGradeGrid = this.createGradeGrid.bind(this);
-
   }
-
 
   increaseExamValue() {
     // if(this.state.noOfExams < 5){
@@ -115,7 +113,9 @@ class Grading extends React.Component<ExamPageProps, ExamState>{
     // this.createGrid();
   }
 
-
+  onClickContinueButton(e: any){
+    localStorage.setItem("selectedGrades", JSON.stringify(this.state.selectedGrades));
+  }
 
   createGradeGrid = (e: any) => {
     this.createGrid();
@@ -310,13 +310,15 @@ class Grading extends React.Component<ExamPageProps, ExamState>{
           <span>
             <Link
               to={`/plugins/ems-exam/page/addexam`}
-              className="btn btn-primary" style={w180}>Back
+              className="btn btn-primary mr-1" style={w180}>Back
                 </Link>
           </span>
           {
             selectedGrades.length > 0 &&
             <span>
-              <button className="btn btn-primary ml-1">Continue</button>
+              <Link to={`/plugins/ems-exam/page/addexam`} className="btn btn-primary" style={w180} onClick={this.onClickContinueButton}>
+                Continue
+              </Link>
             </span>
           }
           <div className="" id="detailGridTable">

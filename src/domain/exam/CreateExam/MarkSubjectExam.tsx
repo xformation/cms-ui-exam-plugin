@@ -66,7 +66,6 @@ class SaData {
   branchId: any;
   typeOfGradingId:any;
   constructor(examName: any, examDate: any, startTime: any, endTime: any, gradeType: any, total: any, passing: any, actions: any, academicyearId: any, subjectId: any, departmentId: any, batchId: any, semester: any, sectionId: any, branchId: any, typeOfGradingId:any) {
-
     this.examName = examName;
     this.semester = semester;
     this.examDate = examDate
@@ -160,8 +159,18 @@ class MarkExam extends React.Component<ExamPageProps, ExamState>{
     this.handleTotalMarksChange = this.handleTotalMarksChange.bind(this);
     this.handleExamDateChange  =this.handleExamDateChange.bind(this);
     this.isDatesOverlap = this.isDatesOverlap.bind(this);
+    this.checkForSelectedGrades = this.checkForSelectedGrades.bind(this);
+    this.checkForSelectedGrades();
   }
  
+  checkForSelectedGrades(){
+    var selectedGrades = localStorage.getItem("selectedGrades");
+    if(selectedGrades){
+      selectedGrades = JSON.parse(selectedGrades);
+      console.log(selectedGrades);
+      localStorage.removeItem("selectedGrades");
+    }
+  }
 
   createDepartments(departments: any, selectedBranchId: any) {
     let departmentsOptions = [<option key={0} value="">Select Department</option>];
