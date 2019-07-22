@@ -164,6 +164,9 @@ class MarkExam extends React.Component<ExamPageProps, ExamState>{
     this.handleExamDateChange  =this.handleExamDateChange.bind(this);
     this.isDatesOverlap = this.isDatesOverlap.bind(this);
     this.checkForSelectedGrades = this.checkForSelectedGrades.bind(this);
+  }
+
+  componentDidMount(){
     this.checkForSelectedGrades();
   }
  
@@ -173,6 +176,9 @@ class MarkExam extends React.Component<ExamPageProps, ExamState>{
       selectedGrades = JSON.parse(selectedGrades);
       console.log(selectedGrades);
       localStorage.removeItem("selectedGrades");
+      this.setState({
+        gradeType: "GRADE"
+      });
     }
   }
 
@@ -261,16 +267,7 @@ class MarkExam extends React.Component<ExamPageProps, ExamState>{
       this.setState({ noOfExams: this.state.noOfExams - 1 })
     }
   }
-  // onContinueSubmit = (e: any) => {
-  //   this.setState({
-  //     submitted: true
-  //   });
 
-  //   const { examData } = this.state;
-  //   e.preventDefault();
-    
-    
-  // }
   onFormSubmit = (e: any) => {
     this.setState({
       submitted: true
@@ -375,7 +372,6 @@ class MarkExam extends React.Component<ExamPageProps, ExamState>{
     }
 
   }
-
 
   validateDuplicateSubject(objId: any) {
 
