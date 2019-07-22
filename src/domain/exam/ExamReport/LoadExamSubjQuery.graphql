@@ -5,6 +5,7 @@ query createExamFilterDataCache($collegeId:String!, $academicYearId:String!){
         id,name, branch{ id }, academicyear{id } },
      batches{ id, batch,department{id}},
      sections{id, section, batch{id}},
+     academicExamSettings {id,examName,department{id}, batch{id}}
 subjects{id,subjectType,subjectCode,subjectDesc,department{id}, batch{id}},     semesters{ id, description}
       
   }

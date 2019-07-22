@@ -114,6 +114,13 @@ export type LoadExamSubjQueryCacheForAdmin = {
         id: number;
       };
     }>;
+    academicExamSettings: Array<{
+      id: number;
+      examName: string;
+      batch: {
+        id: number;
+      };
+    }>;
     sections: Array<{
       id: number;
       section: string;
@@ -134,6 +141,7 @@ export type LoadExamSubjQueryCacheForAdmin = {
     }>;
   };
 };
+
 export type AcdemicExamSettingQueryVariables = {
   academicExamSettingId: any;
 };
