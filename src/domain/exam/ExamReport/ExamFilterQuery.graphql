@@ -1,11 +1,9 @@
-mutation searchStudentExamReport($filter: ExamListFilterInput!) {
-  searchStudentExamReport(filter: $filter) {
+mutation getSubjectandStudents($filter: ExamReportFilterInput!) {
+  getSubjectandStudents(filter: $filter) {
   id
     marksObtained
     comments
-    createdOn
     createdBy
-    updatedOn
     updatedBy
     typeOfGrading{
       id,
@@ -18,9 +16,8 @@ mutation searchStudentExamReport($filter: ExamListFilterInput!) {
       id,
       gradeType,
       total,
-      examType
+      examName
     }
-
     student{
       id,
       studentName,

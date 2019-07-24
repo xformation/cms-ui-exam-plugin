@@ -184,34 +184,32 @@ export type AddExamMutation = {
 };
 
 export type ExamListQueryTypeForAdmin = {
-  addAcademicExamSetting: Array<{
-    id: number;
-    examName: String;
-    action: String;
-    subject: String;
-    endDate: Date;
-    startTime: String;
-    endTime: String;
-
-    day: String;
-    batch: {
-      id: number;
-      branchName: string;
+  getSubjectandStudents: Array<{
+    id: any;
+    marksObtained: any;
+    comments: any;
+    createdBy: any;
+    updatedBy: any;
+    typeOfGrading: {
+      id: any;
+      minMarks: any;
+      maxMarks: any;
+      grades: any;
     };
-    section: {
-      id: number;
+    academicExamSetting: {
+      id: any;
+      gradeType: any;
+      total: any;
+      examName: any;
     };
-    branch: {
-      id: number;
-      branchName: string;
-    };
-    department: {
-      id: number;
-      name: string;
+    student: {
+      id: any;
+      studentName: any;
+      rollNo: any;
     };
     academicyear: {
-      id: number;
-      year: string;
+      id: any;
+      year: any;
     };
   }>;
 };
@@ -220,16 +218,16 @@ export type StudentReportQueryTypeForAdmin = {
     id: number;
     marksObtained: number;
     comments: String;
-    action: String;
+    actions: String;
     createdBy: String;
     createdOn: Date;
     updatedOn: Date;
     updatedBy: String;
-    typeOfGradingId: number;
+    typeOfGradingId: any;
     studnet: {
-      id: number;
+      id: any;
       studentName: String;
-      rollNo: number;
+      rollNo: any;
     };
     batch: {
       id: number;
@@ -237,7 +235,7 @@ export type StudentReportQueryTypeForAdmin = {
     academicExamSetting: {
       id: number;
       total: number;
-      examType: String;
+      examName: String;
     };
     academicyear: {
       id: number;
@@ -248,29 +246,29 @@ export type StudentReportQueryTypeForAdmin = {
 
 export type AddReportMutation = {
   addStudentExamReport: Array<{
-    marksObtained: number;
-    comments: String;
-    createdOn: Date;
-    createdBy: String;
-    updatedOn: Date;
-    updatedBy: String;
+    marksObtained: any;
+    comments: any;
+    createdOn: any;
+    createdBy: any;
+    updatedOn: any;
+    updatedBy: any;
     studnet: {
-      id: number;
-      studentName: String;
-      rollNo: number;
+      id: any;
+      studentName: any;
+      rollNo: any;
     };
     academicExamSetting: {
-      id: number;
+      id: any;
     };
     typeOfGrading: {
-      id: number;
+      id: any;
     };
     batch: {
-      id: number;
+      id: any;
     };
     academicyear: {
-      id: number;
-      year: string;
+      id: any;
+      year: any;
     };
   }>;
 };
