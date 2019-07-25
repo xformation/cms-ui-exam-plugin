@@ -36,7 +36,6 @@ type ExamState = {
   batches: any,
   academicExamSettings: any
   subjects:any,
-  // semesters: any,
   sections: any,
   dtPicker: any,
   submitted: any,
@@ -48,13 +47,13 @@ type ExamState = {
 
 
 class SaData {
-  id: any;
-  
+  id: any;  
   marksObtain: any;
   
   constructor(id:any, marksObtain: any) {
       this.id = id;
       this.marksObtain=marksObtain;
+      
      
   }
 }
@@ -85,9 +84,7 @@ class ExamReportSrc extends React.Component<ExamPageProps, ExamState>{
         academicExamSetting: {
           id: ""
         },
-        // semester: {
-        //   id: ""
-        // },
+        
         subject: {
           id: ""
         },
@@ -98,6 +95,9 @@ class ExamReportSrc extends React.Component<ExamPageProps, ExamState>{
         payLoad: [],
         textValueMap: {},
         exmMarks: {},
+        exmTotal: {},
+        exmPassMarks: {},
+        exmgrd:{},
         txtCmtVal : {},
       },
       branches: [],
@@ -106,7 +106,6 @@ class ExamReportSrc extends React.Component<ExamPageProps, ExamState>{
       batches: [],
       sections: [],
       academicExamSettings: [],
-      // semesters: [],
       dtPicker: [],
       subjects: [],
       submitted: false,
@@ -116,17 +115,12 @@ class ExamReportSrc extends React.Component<ExamPageProps, ExamState>{
     this.createDepartments = this.createDepartments.bind(this);
     this.createBatches = this.createBatches.bind(this);
     this.createacademicExamSettings = this.createacademicExamSettings.bind(this);
-    // this.createSemesters = this.createSemesters.bind(this);
     this.createSubjects = this.createSubjects.bind(this);
     this.createSections = this.createSections.bind(this);
    this.handleChange = this.handleChange.bind(this);
     this.createGrid = this.createGrid.bind(this);
     this.handleMarksObtainedChange = this.handleMarksObtainedChange.bind(this);
-
-    // this.download = this.download.bind(this);
-    // this.exportStudents = this.exportStudents.bind(this);
-
-
+    this.handletotalChange = this.handletotalChange.bind(this);
   }
 
 
@@ -150,7 +144,7 @@ createBranches(branches: any) {
   }
   return branchesOptions;
 }
-  createBatches(batches: any, selectedDepartmentId: any) {
+createBatches(batches: any, selectedDepartmentId: any) {
     let batchesOptions = [<option key={0} value="">Select Year</option>];
     for (let i = 0; i < batches.length; i++) {
       let id = batches[i].id;
@@ -163,7 +157,7 @@ createBranches(branches: any) {
     }
     return batchesOptions;
   }
-  createSections(sections: any, selectedBatchId: any) {
+createSections(sections: any, selectedBatchId: any) {
     let sectionsOptions = [<option key={0} value="">Select Section</option>];
     for (let i = 0; i < sections.length; i++) {
       let id = sections[i].id;
@@ -176,8 +170,7 @@ createBranches(branches: any) {
     }
     return sectionsOptions;
   }
-
-  createacademicExamSettings(academicExamSettings: any, selectedDepartmentId: any, selectedBatchId: any) {
+createacademicExamSettings(academicExamSettings: any, selectedDepartmentId: any, selectedBatchId: any) {
     let examOptions = [<option key={0} value="">Select Exam</option>];
     for (let i = 0; i < academicExamSettings.length; i++) {
       let id = academicExamSettings[i].id;
@@ -189,7 +182,7 @@ createBranches(branches: any) {
     }
     return examOptions;
   }
-  createSubjects(subjects: any, selectedDepartmentId: any, selectedBatchId: any) {
+createSubjects(subjects: any, selectedDepartmentId: any, selectedBatchId: any) {
     let subjectsOptions = [<option key={0} value="">Select Subject</option>];
     for (let i = 0; i < subjects.length; i++) {
       let id = subjects[i].id;
@@ -201,17 +194,7 @@ createBranches(branches: any) {
     }
     return subjectsOptions;
   }
-  // createSemesters(semesters: any) {
-  //   let semestersOptions = [<option key={0} value="">Select Semester</option>];
-  //   for (let i = 0; i < semesters.length; i++) {
-  //     let id = semesters[i].id;
-  //     semestersOptions.push(
-  //       <option key={id} value={id}>{semesters[i].description}</option>
-  //     );
-  //   }
-  //   return semestersOptions;
-  // }
-  
+ 
   
 
   onFormSubmit = (e: any) => {
@@ -249,7 +232,7 @@ createBranches(branches: any) {
         this.setState({
           examData: examData
         });
-        console.log('Query Result ::::: ', examData.mutateResult);
+         console.log('Query Result ::::: ', examData.mutateResult);
 
         btn.removeAttribute("disabled");
 
@@ -308,11 +291,7 @@ createBranches(branches: any) {
           subject: {
             id: ""
           }
-          // ,
          
-          // semester: {
-          //   id: ""
-          // }
         }
       });
     }
@@ -377,37 +356,13 @@ createBranches(branches: any) {
   }
 
   onClickCheckbox(index: any, e: any) {
-    // const { target } = e;
     const { id } = e.nativeEvent.target;
     let chkBox: any = document.querySelector("#" + id);
     chkBox.checked = e.nativeEvent.target.checked;
   }
   
-  handleChange = (e: any) => {
-    const { id, value } = e.nativeEvent.target;
-    const { examData } = this.state;
-    const key = id;
-    const val = value;
-    e.preventDefault();
-   let stDate = moment(val, "YYYY-MM-DD");
-   console.log(stDate);
-   let dow = stDate.day();
-   let days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-   let dayname = days[dow];
-   examData.textValueMap[id] = dayname;
-   this.setState({examData:examData})
-   
-  
-  
-  //  let stTime: any = document.querySelector('input[type="time"]');
-  //  console.log("time:", stTime.value);
  
-  // console.log("final", edTime.value);
-  
-  
-
-
-  }
+   
   handleMarksObtainedChange= (e: any) => {
     const { id, value } = e.nativeEvent.target;
     const { examData } = this.state;
@@ -415,30 +370,60 @@ createBranches(branches: any) {
     this.setState({examData:examData})
   }
 
+  handletotalChange= (e: any) => {
+    const { id, value } = e.nativeEvent.target;
+    const { examData } = this.state;
+
+    let mo: any = document.querySelector("#marksObtain");
+    let ttl: any = document.querySelector("#total");
+    let grd: any = document.querySelector("#grade");
+    console.log(grd.value);
+    //examData.ttlMarks[id] 
+
+    // if(grd.value === "PERCENTAGE"){
+      let aa = examData.exmMarks[mo.id] + examData.ttlMarks[ttl.id]
+      examData.textValueMap[id] = aa;
+      console.log(aa);
+      this.setState({examData:examData})
+    //}         
+  }
+
+  handleChange = (e: any) => {
+    const { id, value } = e.nativeEvent.target;
+    const { examData } = this.state;
+    const key = id;
+    const val = value;
+    e.preventDefault();
+    examData.textValueMap[key] = val;
+    this.setState({
+      examData: examData
+    });
+  }
+
+
   onClick = (e: any) => {
 
     const { mutateUpd } = this.props;
     const { examData } = this.state;
+    
     e.preventDefault();
-
-    for(let i=0; i<examData.mutateResult.length; i++) {
-      let dt : any = document.querySelector("#marksObtain"+i);
-      console.log(dt.value);
-      if(examData.exmMarks[dt.id] === undefined || examData.exmMarks[dt.id] === null || examData.exmMarks[dt.id] === ""){
-        alert("Please Enter Marks");
+    
+    for (let i = 0; i < examData.mutateResult.length; i++) {
+      let dt: any = document.querySelector("#marksObtain" + i);
+      if (examData.exmMarks[dt.id] === undefined || examData.exmMarks[dt.id] === null || examData.exmMarks[dt.id] === "") {
+        alert("Please Enter marks");
         return;
       }
     }
+     
+
   }
-
-
 
   createGrid(ary: any){
     const { examData } = this.state;
     const retVal = [];
     const len = ary.length;
     for (let pd = 0; pd < len; pd++) {
-      // ary.length
       let v = ary[pd];
       for(let x= 0; x< v.data.getSubjectandStudents.length; x++){
         let k = v.data.getSubjectandStudents[x];
@@ -452,18 +437,23 @@ createBranches(branches: any) {
             <td>{k.id}</td>      
             <td>{k.student.studentName}</td>
             <td>{k.student.rollNo}</td>
-            <td>{k.student.id}</td>            
+            <td>{k.student.id}</td> 
+                    
             <td>{k.academicExamSetting.total}</td>
             <td>
-               <input  id={"marksObtain"+x}  name="marksObtain"  onChange={this.handleMarksObtainedChange} ></input>
-             </td>
-            <td>{k.academicExamSetting.gradeType}</td>
+               <input  id={"marksObtain" + x}  name="marksObtain"  onChange={this.handleMarksObtainedChange} ></input>
+            </td>
+            <td> 
+                {examData.textValueMap["exmMarks" + x]} 
+              {/* <input   defaultValue={k.academicExamSetting.gradeType}
+              ></input> */}
+            </td>
             <td>
-               <input type="text"  defaultValue={k.comments} maxLength={255} onChange={this.handleChange} ></input>
-             </td>  
-               
-             </tr>
-            </tbody>
+                <input type="text" id={"t" + k.studentId} defaultValue={k.comments} maxLength={255} onChange={this.handleChange} ></input>
+            </td>
+
+          </tr>
+          </tbody>
         );
         
         
@@ -476,7 +466,6 @@ createBranches(branches: any) {
   render() {
     const { data: { createExamFilterDataCache, refetch }, mutate } = this.props;
     const { examData, departments, batches, sections, academicExamSettings, subjects,     submitted } = this.state;
-    // const selectedDay = moment(this.state.value, 'L', true).toDate();
 
     return (
       <section className="plugin-bg-white">
@@ -525,18 +514,10 @@ createBranches(branches: any) {
                     </select>
                   </td>
                   <td>
-                    <select required name="subject" id="subject" onChange={this.onChange} value={examData.subject.id} className="gf-form-input max-width-22">
+                    <select required name="subject" id="subject" onChange={this.onChange} value={examData.subject.subjectDesc} className="gf-form-input max-width-22">
                       {this.createSubjects(this.props.data.createExamFilterDataCache.subjects, examData.department.id,examData.batch.id)}
                     </select>
                   </td>
-                  {/* <td>
-                    <select required name="semester" id="semester" onChange={this.onChange} value={examData.semester.id} className="gf-form-input max-width-22">
-                      {this.createSemesters(this.props.data.createExamFilterDataCache.semesters)}
-                    </select>
-                  </td> */}
-                 
-                  
-                  {/* <td> <select {examData.academicExamSetting.examType} /></td> */}
                   <td>
                     <button className="btn btn-primary" type="submit" id="btnTakeAtnd" name="btnTakeAtnd" style={{ width: '130px' }}>Create Exam</button>
 
@@ -547,23 +528,8 @@ createBranches(branches: any) {
             </table>
             <div className="container-fluid p-1 ">
 
-            {/* <div className="tflex bg-heading mt-1 e-flex"  id="detailGrid">
-              <h4 className="p-1 py-2 mb-0"> Exam</h4>
-               <input type="text" className="h-input m-1"   maxLength={255} ></input>
-              <div className="hhflex">
-              <Link
-                to={`/plugins/ems-student/page/addstudent`}
-                className="btn btn-primary" style={w180}>Create New Student
-                </Link>
-              <a className="btn btn-primary m-l-1" onClick={(e: any) => this.exportStudents(this.state.examData.mutateResult)}>Export</a>
-              <select name="fileType" id="fileType" className="max-width-10 m-l-1">
-                <option value="">Select File Type</option>
-                <option value="CSV">CSV</option>
-              </select>
-          </div> 
-              </div>
-            */}
-            </div>
+          
+          </div>
 
             <div className="hide" id="detailGridTable">
               <table className="fwidth">

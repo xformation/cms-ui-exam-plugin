@@ -447,6 +447,7 @@ class MarkExam extends React.Component<ExamPageProps, ExamState>{
     const { id, value } = e.nativeEvent.target;
     const { examData } = this.state;
     examData.exmPassMarks[id] = value;
+    console.log(value + "new");
     this.setState({ examData: examData })
   }
 

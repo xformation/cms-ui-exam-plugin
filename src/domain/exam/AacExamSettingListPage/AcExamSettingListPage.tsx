@@ -94,6 +94,12 @@ class AcExamSettingsTable extends React.Component<ExamTableProps, ExamTableState
           <td>{acExamSetting.subExamDate}</td>
           <td>{acExamSetting.st}</td>
           <td>{acExamSetting.ed}</td>
+          <td> <a >
+            <i className="fa fa-pencil-square-o fa-1-5x" aria-hidden="true"></i>
+          </a>
+          <a >
+            <i className="fa fa-trash-o fa-1-5x table-p" aria-hidden="true"></i>
+          </a></td>  
           {/* <td> <button className="btn btn-primary" onClick={e => this.showDetail(acExamSetting)}>Details</button></td> */}
         </tr>
       );
@@ -121,7 +127,7 @@ class AcExamSettingsTable extends React.Component<ExamTableProps, ExamTableState
            <th>Sub-ExamDate</th>
            <th>START DATE</th>
            <th>END DATE</th>
-          
+           <th>Actions</th>          
             </tr>
           </thead>
           <tbody>
@@ -144,10 +150,14 @@ const AcExamSettingListPage = ({ data: { acExamSettings } }: AcExamSettingListPa
         <h4 className="ptl-06">Academic Year 2018-2019 </h4>
 
         <div>
+        <Link
+            to={`/plugins/ems-exam/page/acExamSetting`}
+            className="btn btn-primary m-r-1" style={w180}>Details
+          </Link>
           <Link
             to={`/plugins/ems-exam/page/addexam`}
             className="btn btn-primary m-r-1" style={w180}>Add Exam
-        </Link>
+          </Link>
          
         </div>
       </div>
