@@ -88,6 +88,9 @@ class ExamReportSrc extends React.Component<ExamPageProps, ExamState>{
         subject: {
           id: ""
         },
+        examReport: {
+          id: ""
+        },
         
         mutateResult: [],
         filtered: [],
@@ -99,7 +102,7 @@ class ExamReportSrc extends React.Component<ExamPageProps, ExamState>{
         exmPassMarks: {},
         exmgrd:{},
         txtCmtVal : {},
-      },
+        },
       branches: [],
       academicyears: [],
       departments: [],
@@ -119,7 +122,7 @@ class ExamReportSrc extends React.Component<ExamPageProps, ExamState>{
     this.createSections = this.createSections.bind(this);
    this.handleChange = this.handleChange.bind(this);
     this.createGrid = this.createGrid.bind(this);
-    this.handleMarksObtainedChange = this.handleMarksObtainedChange.bind(this);
+    // this.handleMarksObtainedChange = this.handleMarksObtainedChange.bind(this);
     this.handletotalChange = this.handletotalChange.bind(this);
   }
 
@@ -340,6 +343,31 @@ createSubjects(subjects: any, selectedDepartmentId: any, selectedBatchId: any) {
       
   }
 
+  reset() {
+    const { examData } = this.state;
+    let txtCn: any = document.querySelector("#marksObtain");
+    // let txtDs: any = document.querySelector("#description")
+    // let dtPkSt: any = document.querySelector("#dtPickerSt");
+    // let dtPkNd: any = document.querySelector("#dtPickerNd");
+    // dtPkSt.value = "";
+    // dtPkNd.value = "";
+    txtCn.value = "";
+    // txtDs.value = "";
+    examData.markObtain = "";
+    // feeSetupData.description = "";
+    // feeSetupData.feeCategory.id = "";
+    // feeSetupData.operationType = "";
+    // this.setState({
+    //   endDate: "",
+    //   startDate: ""
+
+    //    feeSetupData : feeSetupData
+    // });
+    this.setState({
+      examData: examData
+    });
+  }
+
   checkAllRows(e: any) {
     const { examData } = this.state;
     const mutateResLength = examData.mutateResult.length;
@@ -363,31 +391,47 @@ createSubjects(subjects: any, selectedDepartmentId: any, selectedBatchId: any) {
   
  
    
-  handleMarksObtainedChange= (e: any) => {
-    const { id, value } = e.nativeEvent.target;
-    const { examData } = this.state;
-    examData.exmMarks[id] = value;
-    this.setState({examData:examData})
-  }
+  // handleMarksObtainedChange= (e: any) => {
+  //   const { id, value } = e.nativeEvent.target;
+  //   const { examData } = this.state;
+  //   examData.exmMarks[id] = value;
+  //   this.setState({examData:examData})
+  // }
 
   handletotalChange= (e: any) => {
+    const { mutateUpd } = this.props;
+    console.log("handletotalchnage working");
     const { id, value } = e.nativeEvent.target;
     const { examData } = this.state;
+    const key = id;
+    const val = value;
+    e.preventDefault();
+    let len = this.createGrid(this.state.examData.mutateResult).length;
+    for (let i = 0; i < len; i++) {
+      console.log("checkLen:", len);
+      let gd: any = document.querySelector("#grade" + i);
+      console.log("grade", gd.value)
+      let tt: any = document.querySelector("#total" + i);
+      console.log("obtmarks:", tt.value);
+      let o = parseInt(val);
+      let t = parseInt(tt.value)
+      // let c = 100;
+      let wt = (o/t);
+      let w = wt*100;
+      let f =w.toFixed(2);
+      
+      if(gd.value === "PERCENTAGE"){
+    examData.textValueMap[key] = f;
+      }
+      else examData.textValueMap[key] = val
+    this.setState({
+      examData: examData
+    });
+  } 
 
-    let mo: any = document.querySelector("#marksObtain");
-    let ttl: any = document.querySelector("#total");
-    let grd: any = document.querySelector("#grade");
-    console.log(grd.value);
-    //examData.ttlMarks[id] 
-
-    // if(grd.value === "PERCENTAGE"){
-      let aa = examData.exmMarks[mo.id] + examData.ttlMarks[ttl.id]
-      examData.textValueMap[id] = aa;
-      console.log(aa);
-      this.setState({examData:examData})
-    //}         
   }
-
+ 
+ 
   handleChange = (e: any) => {
     const { id, value } = e.nativeEvent.target;
     const { examData } = this.state;
@@ -399,7 +443,7 @@ createSubjects(subjects: any, selectedDepartmentId: any, selectedBatchId: any) {
       examData: examData
     });
   }
-
+  
 
   onClick = (e: any) => {
 
@@ -407,9 +451,11 @@ createSubjects(subjects: any, selectedDepartmentId: any, selectedBatchId: any) {
     const { examData } = this.state;
     
     e.preventDefault();
-    
-    for (let i = 0; i < examData.mutateResult.length; i++) {
+    let len = this.createGrid(this.state.examData.mutateResult).length;
+    for (let i = 0; i < len; i++) {
+      console.log("checkLen:", len);
       let dt: any = document.querySelector("#marksObtain" + i);
+      console.log("dt:", dt.value);
       if (examData.exmMarks[dt.id] === undefined || examData.exmMarks[dt.id] === null || examData.exmMarks[dt.id] === "") {
         alert("Please Enter marks");
         return;
@@ -439,12 +485,17 @@ createSubjects(subjects: any, selectedDepartmentId: any, selectedBatchId: any) {
             <td>{k.student.rollNo}</td>
             <td>{k.student.id}</td> 
                     
-            <td>{k.academicExamSetting.total}</td>
             <td>
-               <input  id={"marksObtain" + x}  name="marksObtain"  onChange={this.handleMarksObtainedChange} ></input>
+            <input id={"total" + x} defaultValue={k.academicExamSetting.total} ></input>
+            </td>
+            <td>
+            <input id={"grade" + x} defaultValue={k.academicExamSetting.gradeType}></input>
+            </td>
+            <td>
+               <input type="number" id={"marksObtain" + x}  name="marksObtain"  onChange={this.handletotalChange} ></input>
             </td>
             <td> 
-                {examData.textValueMap["exmMarks" + x]} 
+                {examData.textValueMap["marksObtain" + x]} 
               {/* <input   defaultValue={k.academicExamSetting.gradeType}
               ></input> */}
             </td>
@@ -543,6 +594,7 @@ createSubjects(subjects: any, selectedDepartmentId: any, selectedBatchId: any) {
                     <th>Roll No</th>
                     <th>Student Id</th>
                     <th>Total Marks</th>
+                    <th>Grade Type</th>
                     <th>Marks Obtained</th>
                     <th>Grade/Percentage</th>
                     <th>Comments</th>
@@ -562,7 +614,7 @@ createSubjects(subjects: any, selectedDepartmentId: any, selectedBatchId: any) {
                 <div>
 
                   <button className="btn btn-primary mr-1" id="btnSave" name="btnSave" onClick={this.onClick} >Save</button>
-                 
+                  <button className="btn btn-primary mr-1" id="btnReset" name="btnReset" onClick={this.reset} >Reset</button>
 
                 </div>
               </div>

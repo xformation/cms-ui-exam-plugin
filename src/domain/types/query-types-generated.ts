@@ -117,6 +117,7 @@ export type LoadExamSubjQueryCacheForAdmin = {
     academicExamSettings: Array<{
       id: number;
       examName: string;
+      total: number;
       batch: {
         id: number;
       };
