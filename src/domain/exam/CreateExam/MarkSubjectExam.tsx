@@ -44,6 +44,10 @@ type ExamState = {
   isSubjectSame: any,
   startDate: any,
   gradeType: any,
+  selectedGrade: any,
+  groupValue: any,
+  gradingId: any
+
 
 };
 
@@ -94,6 +98,9 @@ class MarkExam extends React.Component<ExamPageProps, ExamState>{
     this.state = {
       gradeType: '',
       noOfExams: 0,
+      selectedGrade:'',
+      groupValue: '',
+      gradingId: '',
       dayValue: [],
       dateofExam: "",
       isSubjectSame: false,
@@ -173,12 +180,22 @@ class MarkExam extends React.Component<ExamPageProps, ExamState>{
   checkForSelectedGrades(){
     var selectedGrades = localStorage.getItem("selectedGrades");
     if(selectedGrades){
-      selectedGrades = JSON.parse(selectedGrades);
-      console.log(selectedGrades);
+      let selectedGra = JSON.parse(selectedGrades);
+      this.setState({ selectedGrade: selectedGra});
+
+      
+      this.setState({ groupValue: selectedGra[0].groupvalue});
+      this.setState({ gradingId: selectedGra[0].id});
+      
+      console.log("holdvalue:", selectedGrades);
       localStorage.removeItem("selectedGrades");
       this.setState({
         gradeType: "GRADE"
       });
+    }
+    else{
+      this.setState({ gradingId: "7534"});
+      this.setState({ groupValue: "1"});
     }
   }
 
@@ -556,9 +573,9 @@ class MarkExam extends React.Component<ExamPageProps, ExamState>{
       "SEMESTER1",
       examData.section.id, 
       examData.branch.id,
-      "7534",
+      this.state.gradingId,
       examData.exmcountvalues["countvalue"+i],
-      3
+      this.state.groupValue
       );
     examData.payLoad.push(sd);
  }

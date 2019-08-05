@@ -6,6 +6,7 @@ import * as ExamListQueryTypeForAdminGql from './ExamListQueryTypeForAdmin.graph
 import * as AddReportMutationGql from './AddReportMutation.graphql';
 import { LoadExamSubjQueryCacheForAdmin, ExamListQueryTypeForAdmin,  AddReportMutation } from '../../types';
 import withExamSubjDataLoader from './withExamSubjDataLoader';
+import { type } from 'os';
 
 const w180 = {
   width: '180px'
@@ -47,14 +48,38 @@ type ExamState = {
 
 
 class SaData {
-  id: any;  
   marksObtain: any;
-  
-  constructor(id:any, marksObtain: any) {
-      this.id = id;
+  studentId: any;
+  typeOfGradingId : any;
+  academicExamSettingId: any;
+  departmentId: any;
+  sectionId: any;
+  batchId: any;
+  subjectId: any;
+  pOg: any;
+  comments: any
+  constructor(
+    marksObtain: any,
+    studentId: any,
+    typeOfGradingId : any,
+    academicExamSettingId: any,
+    departmentId: any,
+    sectionId: any,
+    batchId: any,
+    subjectId: any,
+    pOg: any,
+    comments: any
+     ) {
       this.marksObtain=marksObtain;
-      
-     
+      this.studentId = studentId;
+      this.typeOfGradingId = typeOfGradingId;
+      this.academicExamSettingId = academicExamSettingId;
+      this.departmentId = departmentId;
+      this.sectionId = sectionId;
+      this.batchId = batchId;
+      this.subjectId = subjectId;
+      this.pOg = pOg;
+      this.comments = comments;     
   }
 }
 class ExamReportSrc extends React.Component<ExamPageProps, ExamState>{
@@ -342,6 +367,7 @@ createSubjects(subjects: any, selectedDepartmentId: any, selectedBatchId: any) {
    
       
   }
+  
 
   reset() {
     const { examData } = this.state;
@@ -367,6 +393,10 @@ createSubjects(subjects: any, selectedDepartmentId: any, selectedBatchId: any) {
       examData: examData
     });
   }
+
+
+  
+
 
   checkAllRows(e: any) {
     const { examData } = this.state;
@@ -420,10 +450,11 @@ createSubjects(subjects: any, selectedDepartmentId: any, selectedBatchId: any) {
       let w = wt*100;
       let f =w.toFixed(2);
       
-      if(gd.value === "PERCENTAGE"){
-    examData.textValueMap[key] = f;
+      if(gd.value === "GRADE"){
+
+        examData.textValueMap[key] = val;
       }
-      else examData.textValueMap[key] = val
+      else examData.textValueMap[key] = f
     this.setState({
       examData: examData
     });
@@ -456,13 +487,41 @@ createSubjects(subjects: any, selectedDepartmentId: any, selectedBatchId: any) {
       console.log("checkLen:", len);
       let dt: any = document.querySelector("#marksObtain" + i);
       console.log("dt:", dt.value);
-      if (examData.exmMarks[dt.id] === undefined || examData.exmMarks[dt.id] === null || examData.exmMarks[dt.id] === "") {
+      if (examData.exmMarks[dt.id] === null || examData.exmMarks[dt.id] === "") {
         alert("Please Enter marks");
         return;
       }
     }
-     
-
+    let sadt = new SaData(
+         
+      23,
+      1251,
+      examData.typeOfGarding.id,
+      examData.academicExamSetting.id,
+      examData.department.id,
+      examData.section.id,
+      examData.batch.id,
+      examData.subject.id,
+      34,
+      'GOOOOD'
+      ); 
+      examData.payLoad.push(sadt);
+      console.log('total IDS : ', examData.selectedIds);
+    
+      let btn : any = document.querySelector("#btnSave");
+      btn.setAttribute("disabled", true);
+      return mutateUpd({
+        variables: { input: examData.payLoad },
+      }).then(data => {
+        btn.removeAttribute("disabled");
+        console.log('Update Result: ', data.data.addAcademicExamSettingData.statusDesc);
+        alert(data.data.addAcademicExamSettingData.statusDesc);
+      }).catch((error: any) => {
+        btn.removeAttribute("disabled");
+        console.log('there is some error while updating exam report data', error);
+        return Promise.reject(`there is some error while updating sexam report data: ${error}`);
+      });
+    
   }
 
   createGrid(ary: any){
@@ -543,7 +602,7 @@ createSubjects(subjects: any, selectedDepartmentId: any, selectedBatchId: any) {
               </thead>
               <tbody>
                 <tr>
-                 
+               
                   <td>
                     <select required name="department" id="department" onChange={this.onChange} value={examData.department.id} className="gf-form-input max-width-22">
                       {this.createDepartments(this.props.data.createExamFilterDataCache.departments, examData.branch.id)}

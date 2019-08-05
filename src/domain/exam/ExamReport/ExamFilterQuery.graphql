@@ -3,8 +3,7 @@ mutation getSubjectandStudents($filter: ExamReportFilterInput!) {
   id
     marksObtained
     comments
-    createdBy
-    updatedBy
+  
     typeOfGrading{
       id,
       minMarks,

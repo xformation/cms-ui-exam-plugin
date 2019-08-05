@@ -220,10 +220,7 @@ export type StudentReportQueryTypeForAdmin = {
     marksObtained: number;
     comments: String;
     actions: String;
-    createdBy: String;
-    createdOn: Date;
-    updatedOn: Date;
-    updatedBy: String;
+
     typeOfGradingId: any;
     studnet: {
       id: any;
@@ -246,33 +243,37 @@ export type StudentReportQueryTypeForAdmin = {
 };
 
 export type AddReportMutation = {
-  addStudentExamReport: Array<{
-    marksObtained: any;
-    comments: any;
-    createdOn: any;
-    createdBy: any;
-    updatedOn: any;
-    updatedBy: any;
-    studnet: {
-      id: any;
-      studentName: any;
-      rollNo: any;
-    };
-    academicExamSetting: {
-      id: any;
-    };
-    typeOfGrading: {
-      id: any;
-    };
-    batch: {
-      id: any;
-    };
-    academicyear: {
-      id: any;
-      year: any;
-    };
-  }>;
+  addAcademicExamSettingData: {
+    statusCode: string;
+    statusDesc: string;
+  };
 };
+
+// export type AddReportMutation = {
+//   addStudentExamReport: Array<{
+//     marksObtained: any;
+//     comments: any;
+
+//     studnet: {
+//       id: any;
+//       studentName: any;
+//       rollNo: any;
+//     };
+//     academicExamSetting: {
+//       id: any;
+//     };
+//     typeOfGrading: {
+//       id: any;
+//     };
+//     batch: {
+//       id: any;
+//     };
+//     academicyear: {
+//       id: any;
+//       year: any;
+//     };
+//   }>;
+// };
 export type AddTypeOfGrading = {
   addTypeOfGrading: Array<{
     id: number;
