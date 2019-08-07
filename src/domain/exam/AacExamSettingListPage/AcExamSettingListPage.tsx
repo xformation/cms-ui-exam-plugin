@@ -19,6 +19,8 @@ type AcExamSettingListPageProps = {
   data: QueryProps & AcExamSettingListQuery;
 };
 
+
+
 type ExamTableProps = {
   acExamSettings: any
 };
@@ -69,6 +71,39 @@ class AcExamSettingsTable extends React.Component<ExamTableProps, ExamTableState
     });
   }
 
+  // onClick = (e: any) => {
+  //   const { name, value } = e.nativeEvent.target;
+  //   const { data } = this.props;
+  //   const { studentData } = this.state;
+  //   e.preventDefault();
+
+  //   let studentFilterInputObject = {
+  //     branchId: studentData.branch.id,
+  //     departmentId: studentData.department.id,
+  //     batchId: studentData.batch.id,
+  //     sectionId: studentData.section.id,
+  //     gender: studentData.gender.id,
+  //     studentType: studentData.studentType.id
+  //   };
+
+
+  //   return mutate({
+  //     variables: { filter: studentFilterInputObject },
+  //   }).then(data => {
+  //     const sdt = data;
+  //     studentData.mutateResult = [];
+  //     studentData.mutateResult.push(sdt);
+  //     this.setState({
+  //       studentData: studentData
+  //     });
+  //     console.log('Student filter mutation result ::::: ', studentData.mutateResult);
+  //   }).catch((error: any) => {
+  //     console.log('there was an error sending the query result', error);
+  //     return Promise.reject(`Could not retrieve student data: ${error}`);
+  //   });
+
+  // }
+
   createExamRows(obj: any) {
     let consolidatedObj: any = {};
     const length = obj.length;
@@ -107,13 +142,20 @@ class AcExamSettingsTable extends React.Component<ExamTableProps, ExamTableState
           <td>{acExamSetting.sbjct}</td>
           <td>{acExamSetting.subExamDate}</td>
           <td>{acExamSetting.st}</td>
-          <td>{acExamSetting.ed}</td>
+          <td>{acExamSetting.ed}</td>         
           <td> <a >
             <i className="fa fa-pencil-square-o fa-1-5x" aria-hidden="true"></i>
           </a>
           <a >
             <i className="fa fa-trash-o fa-1-5x table-p" aria-hidden="true"></i>
-          </a></td>  
+          </a></td> 
+          <td> 
+          <Link
+            to={`/plugins/ems-exam/page/addexam`}
+            className="btn btn-primary m-r-1" style={w180} onClick={this.onClickContinueButton}>Details
+          </Link>
+          </td>
+          
           {/* <td> <button className="btn btn-primary" onClick={e => this.showDetail(acExamSetting)}>Details</button></td> */}
         </tr>
       );
@@ -143,13 +185,16 @@ class AcExamSettingsTable extends React.Component<ExamTableProps, ExamTableState
            <th>Sub-ExamDate</th>
            <th>START DATE</th>
            <th>END DATE</th>
-           <th>Actions</th>           
+           <th>Actions</th> 
+           <th>Details</th>
+           
+
             <span>
             
-          <Link
+          {/* <Link
             to={`/plugins/ems-exam/page/addexam`}
             className="btn btn-primary m-r-1" style={w180} onClick={this.onClickContinueButton}>Details
-          </Link>
+          </Link> */}
             
           </span>
            }
