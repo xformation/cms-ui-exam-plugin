@@ -18,13 +18,13 @@ export default function init() {
         <BrowserRouter>
           <Switch>
             <Route
-              path="/plugins/ems-exam/page/acExamSetting"
+              path="/plugins/ems-exam/page/examdetails"
               component={ExamDetailsTable}
             />
           </Switch>
         </BrowserRouter>
       </ApolloProvider>,
-      document.getElementById('detailsExam')
+      document.getElementById('mountdetails')
     );
   }, 100);
 }

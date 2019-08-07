@@ -24,7 +24,8 @@ type ExamTableProps = {
 };
 type ExamTableStates = {
   acExamSettings: any,
-  search: any
+  search: any,
+  selectedExams: any
 };
 class AcExamSettingsTable extends React.Component<ExamTableProps, ExamTableStates> {
 
@@ -33,14 +34,19 @@ class AcExamSettingsTable extends React.Component<ExamTableProps, ExamTableState
     this.state = {
       acExamSettings: props.acExamSettings,
       search: "",
+      selectedExams: []
       // enquiryData: {}
 
     };
     this.checkAllExams = this.checkAllExams.bind(this);
     this.onClickCheckbox = this.onClickCheckbox.bind(this);
     this.createExamRows=this.createExamRows.bind(this);
-    // this.createDetailsDiv = this.createDetailsDiv.bind(this);
+     this.onClickContinueButton = this.onClickContinueButton.bind(this);
 
+  }
+
+  onClickContinueButton(e: any){
+    localStorage.setItem("selectedExams", JSON.stringify(this.state.selectedExams));
   }
 
   checkAllExams(e: any) {
@@ -57,27 +63,35 @@ class AcExamSettingsTable extends React.Component<ExamTableProps, ExamTableState
       }
     });
   }
-  onClickCheckbox(index: any, e: any) {
-  
-    const { id } = e.nativeEvent.target;
-    let chkBox: any = document.querySelector("#" + id);
-    chkBox.checked = e.nativeEvent.target.checked;
+  onClickCheckbox(index: any, arr: any, e: any) {
+    this.setState({
+      selectedExams: arr
+    });
   }
 
-
-  createExamRows(acExamSettings: any) {
-    const length = acExamSettings.length;
-    const retVal = [];
-    for (let i = 0; i < length; i++) {
-      const acExamSetting = acExamSettings[i];
-     
-      console.log(acExamSetting.countvalue);
+  createExamRows(obj: any) {
+    let consolidatedObj: any = {};
+    const length = obj.length;
+    for (let counter = 0; counter < length; counter++) {
+      let acExamSetting = obj[counter];
+      let acExamSettingArr = consolidatedObj[acExamSetting.countvalue] || [];
+      acExamSettingArr.push(acExamSetting);
+      consolidatedObj[acExamSetting.countvalue] = acExamSettingArr;
+    }
+    const retVal = [];    
+    const keys = Object.keys(consolidatedObj);
+    const lengthKeys = keys.length;
+    for (let i = 0; i < lengthKeys; i++) {
+      let acExamSettingArr = consolidatedObj[keys[i]];
+      for (let j = 0; j < acExamSettingArr.length; j++) {
+        let acExamSetting = acExamSettingArr[j]; 
       retVal.push(
-        <tr key={acExamSetting.countvalue}>
-          <td>
-           
-            <input onClick={(e: any) => this.onClickCheckbox(i, e)} checked={acExamSetting.isChecked} type="checkbox" name="" id="" />
-          </td>
+        <tr>
+         {j === 0 &&
+              <td rowSpan={acExamSettingArr.length}>
+                <input onClick={(e: any) => this.onClickCheckbox(keys[i], acExamSettingArr, e)} type="radio" name="grades" id={"chk" + keys[i]} />
+              </td>
+            }
           <td>{acExamSetting.countvalue}</td>
           <td>
             <Link
@@ -103,21 +117,23 @@ class AcExamSettingsTable extends React.Component<ExamTableProps, ExamTableState
           {/* <td> <button className="btn btn-primary" onClick={e => this.showDetail(acExamSetting)}>Details</button></td> */}
         </tr>
       );
+      }
     }
     return retVal;
   }
 
   render() {
-    const { acExamSettings } = this.state;
+    const { acExamSettings, selectedExams} = this.state;
+    console.log(selectedExams);
     return (
       <div>     
 
         <table id="studentlistpage" className="striped-table fwidth bg-white">
           <thead>
             <tr>
-              <th>
-                <input type="checkbox" onClick={(e: any) => this.checkAllExams(e)} value="checkedall" name="" id="" />
-              </th>
+            <th>
+                <input type="radio" value="checkedall" name="" id="chkCheckedAll" />
+                    </th>
             <th>Id</th>
             <th>EXAM TYPE</th>
            <th>YEAR</th>          
@@ -127,7 +143,16 @@ class AcExamSettingsTable extends React.Component<ExamTableProps, ExamTableState
            <th>Sub-ExamDate</th>
            <th>START DATE</th>
            <th>END DATE</th>
-           <th>Actions</th>          
+           <th>Actions</th>           
+            <span>
+            
+          <Link
+            to={`/plugins/ems-exam/page/addexam`}
+            className="btn btn-primary m-r-1" style={w180} onClick={this.onClickContinueButton}>Details
+          </Link>
+            
+          </span>
+           }
             </tr>
           </thead>
           <tbody>
@@ -148,17 +173,13 @@ const AcExamSettingListPage = ({ data: { acExamSettings } }: AcExamSettingListPa
     <div className="plugin-bg-white p-1">
       <div className="m-b-1 eflex bg-heading-exam">
         <h4 className="ptl-06">Academic Year 2018-2019 </h4>
-
         <div>
-        <Link
-            to={`/plugins/ems-exam/page/acExamSetting`}
-            className="btn btn-primary m-r-1" style={w180}>Details
-          </Link>
+         
           <Link
             to={`/plugins/ems-exam/page/addexam`}
             className="btn btn-primary m-r-1" style={w180}>Add Exam
           </Link>
-         
+          
         </div>
       </div>
       <AcExamSettingsTable acExamSettings={acExamSettings} />

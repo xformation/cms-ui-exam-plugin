@@ -44,7 +44,7 @@
     },
     {
       "type": "page",
-      "name": "Acexamsetting",
+      "name": "Examdetails",
       "addToNav": true,
       "defaultNav": false,
       "component": "ExamDetailsPageUi"
