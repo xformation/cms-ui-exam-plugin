@@ -92,10 +92,10 @@ class ExamReportSrc extends React.Component<ExamPageProps, ExamState>{
       
       examData: {
         branch: {
-          id: 1001 
+          id: 1851 
         },
         academicyear: {
-          id: 1051  //1701 
+          id: 1701 // 1051  //1701 
         },
         department: {
           id: ""

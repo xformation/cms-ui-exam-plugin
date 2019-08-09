@@ -45,7 +45,7 @@
     {
       "type": "page",
       "name": "Examdetails",
-      "addToNav": true,
+      "addToNav": false,
       "defaultNav": false,
       "component": "ExamDetailsPageUi"
     },

@@ -24,8 +24,8 @@ const withExamSubjDataLoader = (TargetComponent: ReactFunctionOrComponentClass<T
           // branchId: match.params.branchId,
           // academicYearId: match.params.branchId,
           // teacherId: match.params.branchId
-          collegeId: 951, //1801,
-          academicYearId: 1051 // 1701,
+          collegeId:1801 , //951 1801,
+          academicYearId: 1701 // 1701 1051,
          
         }
       })

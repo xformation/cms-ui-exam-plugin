@@ -122,12 +122,12 @@ class AcExamSettingsTable extends React.Component<ExamTableProps, ExamTableState
         let acExamSetting = acExamSettingArr[j]; 
       retVal.push(
         <tr>
-         {j === 0 &&
+         {/* {j === 0 &&
               <td rowSpan={acExamSettingArr.length}>
                 <input onClick={(e: any) => this.onClickCheckbox(keys[i], acExamSettingArr, e)} type="radio" name="grades" id={"chk" + keys[i]} />
               </td>
-            }
-          <td>{acExamSetting.countvalue}</td>
+            } */}
+          {/* <td>{acExamSetting.countvalue}</td> */}
           <td>
             <Link
               className="table-link link-color"
@@ -143,7 +143,7 @@ class AcExamSettingsTable extends React.Component<ExamTableProps, ExamTableState
           <td>{acExamSetting.subExamDate}</td>
           <td>{acExamSetting.st}</td>
           <td>{acExamSetting.ed}</td>         
-          <td> <a >
+          {/* <td> <a >
             <i className="fa fa-pencil-square-o fa-1-5x" aria-hidden="true"></i>
           </a>
           <a >
@@ -154,7 +154,7 @@ class AcExamSettingsTable extends React.Component<ExamTableProps, ExamTableState
             to={`/plugins/ems-exam/page/addexam`}
             className="btn btn-primary m-r-1" style={w180} onClick={this.onClickContinueButton}>Details
           </Link>
-          </td>
+          </td> */}
           
           {/* <td> <button className="btn btn-primary" onClick={e => this.showDetail(acExamSetting)}>Details</button></td> */}
         </tr>
@@ -173,10 +173,10 @@ class AcExamSettingsTable extends React.Component<ExamTableProps, ExamTableState
         <table id="studentlistpage" className="striped-table fwidth bg-white">
           <thead>
             <tr>
-            <th>
+            {/* <th>
                 <input type="radio" value="checkedall" name="" id="chkCheckedAll" />
-                    </th>
-            <th>Id</th>
+                    </th> */}
+            {/* <th>Id</th> */}
             <th>EXAM TYPE</th>
            <th>YEAR</th>          
            <th>DEPARTMENT</th>           
@@ -185,8 +185,8 @@ class AcExamSettingsTable extends React.Component<ExamTableProps, ExamTableState
            <th>Sub-ExamDate</th>
            <th>START DATE</th>
            <th>END DATE</th>
-           <th>Actions</th> 
-           <th>Details</th>
+          
+           {/* <th>Details</th> */}
            
 
             <span>
@@ -197,7 +197,7 @@ class AcExamSettingsTable extends React.Component<ExamTableProps, ExamTableState
           </Link> */}
             
           </span>
-           }
+           
             </tr>
           </thead>
           <tbody>

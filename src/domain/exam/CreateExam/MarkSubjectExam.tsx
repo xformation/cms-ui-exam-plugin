@@ -106,12 +106,12 @@ class MarkExam extends React.Component<ExamPageProps, ExamState>{
       isSubjectSame: false,
       examData: {
         branch: {
-          id: 1001 
-          //1001
+          id: 1851   
+          //1851 1001
         },
         academicYear: {
-          id: 1051          
-          //1701 
+          id: 1701           
+          //1701 1051
         },
         department: {
           id: ""
