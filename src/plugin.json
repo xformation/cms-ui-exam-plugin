@@ -60,7 +60,7 @@
     {
       "type": "page",
       "name": "Grading",
-      "addToNav": true,
+      "addToNav": false,
       "defaultNav": false,
       "component": "Gradingui"
     }
