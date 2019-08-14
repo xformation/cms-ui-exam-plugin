@@ -296,13 +296,15 @@ class Grading extends React.Component<ExamPageProps, ExamState>{
           Admin - Academic Grading Setting
         </h3>
         <div className="p-1">
-          <span>
-            <a onClick={this.decreaseExamValue.bind(this)}>-</a>
+        Create Grade:
+          <span > 
+            <a onClick={this.decreaseExamValue.bind(this)}> - </a>
             &nbsp;{this.state.noOfExams}&nbsp;
-            <a onClick={this.increaseExamValue.bind(this)}>+</a>
+            <a onClick={this.increaseExamValue.bind(this)}> + </a>
           </span>
           <span>
-            <button className="btn btn-primary mr-1" style={{ width: '130px' }} id="btnCreateGradeGrid" name="btnCreateGradeGrid" onClick={this.createGradeGrid}>Create Grade</button>
+            {/* <button className="btn btn-primary mr-1" style={{ width: '130px' }} id="btnCreateGradeGrid" name="btnCreateGradeGrid" onClick={this.createGradeGrid}>Create Grade</button> */}
+           
           </span>
           <span>
             <button className="btn btn-primary mr-1" id="btnSave" name="btnSave" onClick={this.onClick}>Save</button>
@@ -310,13 +312,13 @@ class Grading extends React.Component<ExamPageProps, ExamState>{
           <span>
             <Link
               to={`/plugins/ems-exam/page/addexam`}
-              className="btn btn-primary mr-1" style={w180}>Back
+              className="btn btn-primary mr-1" >Back
                 </Link>
           </span>
           {
             selectedGrades.length > 0 &&
             <span>
-              <Link to={`/plugins/ems-exam/page/addexam`} className="btn btn-primary" style={w180} onClick={this.onClickContinueButton}>
+              <Link to={`/plugins/ems-exam/page/addexam`} className="btn btn-primary" onClick={this.onClickContinueButton}>
                 Continue
               </Link>
             </span>
