@@ -1,0 +1,6 @@
+#import "./findExamValuesOnGroupvalue.graphql"
+
+
+fragment examDetails on AcademicExamSetting {
+  ...findExamValuesOnGroupvalue
+}

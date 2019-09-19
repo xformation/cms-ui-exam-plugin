@@ -1,0 +1,42 @@
+fragment findExamValuesOnGroupvalue on AcademicExamSetting {
+  id
+  examName
+    semester    
+    startTime
+    endTime
+    gradeType
+    total
+    passing
+    actions
+    groupvalue
+    department{
+     
+      name
+    }
+    section{
+     
+      section
+    }
+    subject{
+  
+      subjectDesc
+    }
+    academicyear{
+    
+      year
+    }
+    batch{
+    
+      batch
+    }
+    branch{
+   
+      branchName
+    }
+    typeOfGrading{
+      id     
+    }
+    countvalue
+  }
+  
+}

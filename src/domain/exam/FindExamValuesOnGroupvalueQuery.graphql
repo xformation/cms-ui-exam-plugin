@@ -1,0 +1,7 @@
+#import "../gqlfragments/examDetails.graphql"
+
+query findExamValuesOnGroupvalue($findExamValuesOnGroupvalueId: Long!) {
+  findExamValuesOnGroupvalue(countvalue: $findExamValuesOnGroupvalueId){
+  ...examDetails
+  }
+}
