@@ -17,8 +17,8 @@ type ExamRootProps = RouteComponentProps<{
   academicYearId: string;
   collegeId: string;
 }> & {
-    data: QueryProps & TypeOfGradings;
-  };
+  data: QueryProps & TypeOfGradings;
+};
 
 type ExamPageProps = ExamRootProps & {
   mutate: MutationFunc<AddTypeOfGrading>;
@@ -45,13 +45,13 @@ class SaData {
   // academicyearId: any
   constructor(minMarks: any, maxMarks: any, grades: any, groupvalue: any) {
     //, branchId: any,
-    // academicyearId: any 
+    // academicyearId: any
     this.minMarks = minMarks
     this.maxMarks = maxMarks;
     this.grades = grades;
     this.groupvalue = groupvalue;
-    // this.branchId=branchId;     
-    // this.academicyearId=academicyearId;     
+    // this.branchId=branchId;
+    // this.academicyearId=academicyearId;
   }
 }
 
@@ -63,7 +63,7 @@ class Grading extends React.Component<ExamPageProps, ExamState>{
       gradeData: {
 
         branch: {
-          id: 1001  //1801 //1001 
+          id: 1001  //1801 //1001
         },
         academicYear: {
           id: 1051 //1701 //1051
@@ -113,7 +113,7 @@ class Grading extends React.Component<ExamPageProps, ExamState>{
     // this.createGrid();
   }
 
-  onClickContinueButton(e: any){
+  onClickContinueButton(e: any) {
     localStorage.setItem("selectedGrades", JSON.stringify(this.state.selectedGrades));
   }
 
@@ -296,33 +296,41 @@ class Grading extends React.Component<ExamPageProps, ExamState>{
           Admin - Academic Grading Setting
         </h3>
         <div className="p-1">
-        Create Grade:
-          <span > 
-            <a onClick={this.decreaseExamValue.bind(this)}> - </a>
-            &nbsp;{this.state.noOfExams}&nbsp;
-            <a onClick={this.increaseExamValue.bind(this)}> + </a>
-          </span>
-          <span>
-            {/* <button className="btn btn-primary mr-1" style={{ width: '130px' }} id="btnCreateGradeGrid" name="btnCreateGradeGrid" onClick={this.createGradeGrid}>Create Grade</button> */}
-           
-          </span>
-          <span>
-            <button className="btn btn-primary mr-1" id="btnSave" name="btnSave" onClick={this.onClick}>Save</button>
-          </span>
-          <span>
-            <Link
-              to={`/plugins/ems-exam/page/addexam`}
-              className="btn btn-primary mr-1" >Back
+          <div className="bg-heading p-1">
+            <div className="eflex">
+              <div className="e-flex m-t-0">
+                <h4 className="m-r-1">Create Grade:</h4>
+                <span >
+                  <a onClick={this.decreaseExamValue.bind(this)} className="btn btn-primary mr-1 btn-small"><i className="fa fa-minus" /></a>
+                  {this.state.noOfExams}
+                  <a onClick={this.increaseExamValue.bind(this)} className="btn btn-primary mr-1 btn-small m-l-1"><i className="fa fa-plus" /></a>
+                </span>
+              </div>
+              {/* <span>
+                <button className="btn btn-primary mr-1" style={{ width: '130px' }} id="btnCreateGradeGrid" name="btnCreateGradeGrid" onClick={this.createGradeGrid}>Create Grade</button>
+              </span> */}
+              <div>
+                <span>
+                  <button className="btn btn-primary mr-1" id="btnSave" name="btnSave" onClick={this.onClick}>Save</button>
+                </span>
+                <span>
+                  <Link
+                    to={`/plugins/ems-exam/page/addexam`}
+                    className="btn btn-primary" >Back
                 </Link>
-          </span>
-          {
-            selectedGrades.length > 0 &&
-            <span>
-              <Link to={`/plugins/ems-exam/page/addexam`} className="btn btn-primary" onClick={this.onClickContinueButton}>
-                Continue
+                </span>
+                {
+                  selectedGrades.length > 0 &&
+                  <span>
+                    <Link to={`/plugins/ems-exam/page/addexam`} className="btn btn-primary m-l-1" onClick={this.onClickContinueButton}>
+                      Continue
               </Link>
-            </span>
-          }
+                  </span>
+                }
+              </div>
+            </div>
+          </div>
+
           <div className="" id="detailGridTable">
             <table className="fwidth">
               <thead >
@@ -344,7 +352,7 @@ class Grading extends React.Component<ExamPageProps, ExamState>{
                 <thead >
                   <tr>
                     <th>
-                      <input type="radio" value="checkedall" name="" id="chkCheckedAll" />
+                      {/* <input type="radio" value="checkedall" name="" id="chkCheckedAll" /> */}
                     </th>
                     <th>Min Marks</th>
                     <th>Max Marks</th>

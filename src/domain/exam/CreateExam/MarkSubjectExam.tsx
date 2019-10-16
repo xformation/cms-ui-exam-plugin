@@ -3,7 +3,7 @@ import * as React from 'react';
 import { RouteComponentProps, Link } from 'react-router-dom';
 import { graphql, QueryProps, MutationFunc, compose } from "react-apollo";
 import * as AddExamMutationGql from './AddExamMutation.graphql';
-import { LoadExamSubjQueryCacheForAdmin,AddExamMutation } from '../../types';
+import { LoadExamSubjQueryCacheForAdmin, AddExamMutation } from '../../types';
 import withExamSubjDataLoader from './withExamSubjDataLoader';
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -24,7 +24,7 @@ type ExamRootProps = RouteComponentProps<{
 };
 
 type ExamPageProps = ExamRootProps & {
- 
+
   mutate: MutationFunc<AddExamMutation>;
 };
 
@@ -67,10 +67,10 @@ class SaData {
   semester: any;
   sectionId: any;
   branchId: any;
-  typeOfGradingId:any;
-  countvalue:any;
-  groupvalue:any;
-  constructor(examName: any, examDate: any, startTime: any, endTime: any, gradeType: any, total: any, passing: any, actions: any, academicyearId: any, subjectId: any, departmentId: any, batchId: any, semester: any, sectionId: any, branchId: any, typeOfGradingId:any, countvalue:any, groupvalue:any) {
+  typeOfGradingId: any;
+  countvalue: any;
+  groupvalue: any;
+  constructor(examName: any, examDate: any, startTime: any, endTime: any, gradeType: any, total: any, passing: any, actions: any, academicyearId: any, subjectId: any, departmentId: any, batchId: any, semester: any, sectionId: any, branchId: any, typeOfGradingId: any, countvalue: any, groupvalue: any) {
     this.examName = examName;
     this.semester = semester;
     this.examDate = examDate
@@ -98,7 +98,7 @@ class MarkExam extends React.Component<ExamPageProps, ExamState>{
     this.state = {
       gradeType: '',
       noOfExams: 0,
-      selectedGrade:'',
+      selectedGrade: '',
       groupValue: '',
       gradingId: '',
       dayValue: [],
@@ -106,11 +106,11 @@ class MarkExam extends React.Component<ExamPageProps, ExamState>{
       isSubjectSame: false,
       examData: {
         branch: {
-          id: 1851   
+          id: 1851
           //1851 1001
         },
         academicYear: {
-          id: 1701           
+          id: 1701
           //1701 1051
         },
         department: {
@@ -168,34 +168,34 @@ class MarkExam extends React.Component<ExamPageProps, ExamState>{
     this.handleNdTimeChange = this.handleNdTimeChange.bind(this);
     this.handlePassMarksChange = this.handlePassMarksChange.bind(this);
     this.handleTotalMarksChange = this.handleTotalMarksChange.bind(this);
-    this.handleExamDateChange  =this.handleExamDateChange.bind(this);
+    this.handleExamDateChange = this.handleExamDateChange.bind(this);
     this.isDatesOverlap = this.isDatesOverlap.bind(this);
     this.checkForSelectedGrades = this.checkForSelectedGrades.bind(this);
   }
 
-  componentDidMount(){
+  componentDidMount() {
     this.checkForSelectedGrades();
   }
- 
-  checkForSelectedGrades(){
-    var selectedGrades = localStorage.getItem("selectedGrades");
-    if(selectedGrades){
-      let selectedGra = JSON.parse(selectedGrades);
-      this.setState({ selectedGrade: selectedGra});
 
-      
-      this.setState({ groupValue: selectedGra[0].groupvalue});
-      this.setState({ gradingId: selectedGra[0].id});
-      
+  checkForSelectedGrades() {
+    var selectedGrades = localStorage.getItem("selectedGrades");
+    if (selectedGrades) {
+      let selectedGra = JSON.parse(selectedGrades);
+      this.setState({ selectedGrade: selectedGra });
+
+
+      this.setState({ groupValue: selectedGra[0].groupvalue });
+      this.setState({ gradingId: selectedGra[0].id });
+
       console.log("holdvalue:", selectedGrades);
       localStorage.removeItem("selectedGrades");
       this.setState({
         gradeType: "GRADE"
       });
     }
-    else{
-      this.setState({ gradingId: "7534"});
-      this.setState({ groupValue: "1"});
+    else {
+      this.setState({ gradingId: "7534" });
+      this.setState({ groupValue: "1" });
     }
   }
 
@@ -292,7 +292,7 @@ class MarkExam extends React.Component<ExamPageProps, ExamState>{
 
     const { examData } = this.state;
     e.preventDefault();
-    
+
     if (this.state.gradeType === "") {
       alert("Please select Grade Type");
       return;
@@ -410,7 +410,7 @@ class MarkExam extends React.Component<ExamPageProps, ExamState>{
     return isSubjectSame;
   }
 
-  handleChangeGrade(e:any) {
+  handleChangeGrade(e: any) {
     this.setState({
       gradeType: e.target.value
     });
@@ -446,7 +446,7 @@ class MarkExam extends React.Component<ExamPageProps, ExamState>{
     examData.exmDate[id] = value;
     this.setState({ examData: examData })
   }
-  isDatesOverlap(startTime: any, endTime: any){
+  isDatesOverlap(startTime: any, endTime: any) {
     if (endTime.isBefore(startTime)) {
       alert("End time should not be prior to start time.");
       return true;
@@ -474,7 +474,7 @@ class MarkExam extends React.Component<ExamPageProps, ExamState>{
     examData.exmTotalMarks[id] = value;
     this.setState({ examData: examData })
   }
-  
+
 
   onClick = (e: any) => {
 
@@ -521,82 +521,82 @@ class MarkExam extends React.Component<ExamPageProps, ExamState>{
       }
     }
     for (let i = 0; i < this.state.noOfExams; i++) {
-          let en: any = document.querySelector("#endTime" + i);
-          let dt: any = document.querySelector("#startTime" + i);
-          if (examData.exmNdTime[en.id] === undefined || examData.exmNdTime[en.id] === null || examData.exmNdTime[en.id] === "") {
-            alert("Please select end time");
-            return;
-        } 
-        if (examData.exmStTime[dt.id] >= examData.exmNdTime[en.id]) {
-          alert("Please enter valid end time");
-          return;
-      }        
-        }
-        
-        for (let i = 0; i < this.state.noOfExams; i++) {
-          let pm: any = document.querySelector("#passingMarks" + i);
-          if (examData.exmPassMarks[pm.id] === undefined || examData.exmPassMarks[pm.id] === null || examData.exmPassMarks[pm.id] === "") {
-            alert("Please select passing marks for an listed exam");
-            return;
-          }
-        }
-    
-        for (let i = 0; i < this.state.noOfExams; i++) {
-          let tm: any = document.querySelector("#totalMarks" + i);
-          let pm: any = document.querySelector("#passingMarks" + i);
-          if (examData.exmTotalMarks[tm.id] === undefined || examData.exmTotalMarks[tm.id] === null || examData.exmTotalMarks[tm.id] === "") {
-            alert("Please select total marks for an listed exam");
-            return;
-          }
-          if (examData.exmTotalMarks[tm.id] < examData.exmPassMarks[pm.id]) {
-            alert("Total marks should Greater than passing Marks");
-            return;
-          }
-        }
-   this.setState({examData:examData})
-   for (let x = 0; x < this.state.noOfExams; x++) {
-   let subOptions: any = document.querySelector("#subject" + x);
-   for(let i=0; i<this.state.noOfExams; i++) {    
-    let sd  = new SaData(
-      txtEsNm.value.trim(),
-     examData.exmDate["examDate"+i],
-      examData.exmStTime["startTime"+i],
-      examData.exmNdTime["endTime"+i], 
-      this.state.gradeType,
-      examData.exmTotalMarks["totalMarks"+i],
-      examData.exmPassMarks["passingMarks"+i],      
-      "ACTIVE",              
-      examData.academicYear.id, 
-      subOptions.options[subOptions.selectedIndex].value,
-      examData.department.id,
-      examData.batch.id,
-      "SEMESTER1",
-      examData.section.id, 
-      examData.branch.id,
-      this.state.gradingId,
-      examData.exmcountvalues["countvalue"+i],
-      this.state.groupValue
-      );
-    examData.payLoad.push(sd);
- }
-}
- this.setState({examData:examData})
+      let en: any = document.querySelector("#endTime" + i);
+      let dt: any = document.querySelector("#startTime" + i);
+      if (examData.exmNdTime[en.id] === undefined || examData.exmNdTime[en.id] === null || examData.exmNdTime[en.id] === "") {
+        alert("Please select end time");
+        return;
+      }
+      if (examData.exmStTime[dt.id] >= examData.exmNdTime[en.id]) {
+        alert("Please enter valid end time");
+        return;
+      }
+    }
 
-console.log('total IDS : ', examData.selectedIds);
-let btn : any = document.querySelector("#btnSave");
-btn.setAttribute("disabled", true);
-return mutate({
-  variables: { input: examData.payLoad },
-}).then(data => {
-  btn.removeAttribute("disabled");
-  console.log('Saved Result: ', data.data.addAcademicExamSetting);
-  alert("Added Succesfully");
-}).catch((error: any) => {
-  btn.removeAttribute("disabled");
-  console.log('there is some error ', error);
-  return Promise.reject(`there is some error while updating : ${error}`);
-});
-} 
+    for (let i = 0; i < this.state.noOfExams; i++) {
+      let pm: any = document.querySelector("#passingMarks" + i);
+      if (examData.exmPassMarks[pm.id] === undefined || examData.exmPassMarks[pm.id] === null || examData.exmPassMarks[pm.id] === "") {
+        alert("Please select passing marks for an listed exam");
+        return;
+      }
+    }
+
+    for (let i = 0; i < this.state.noOfExams; i++) {
+      let tm: any = document.querySelector("#totalMarks" + i);
+      let pm: any = document.querySelector("#passingMarks" + i);
+      if (examData.exmTotalMarks[tm.id] === undefined || examData.exmTotalMarks[tm.id] === null || examData.exmTotalMarks[tm.id] === "") {
+        alert("Please select total marks for an listed exam");
+        return;
+      }
+      if (examData.exmTotalMarks[tm.id] < examData.exmPassMarks[pm.id]) {
+        alert("Total marks should Greater than passing Marks");
+        return;
+      }
+    }
+    this.setState({ examData: examData })
+    for (let x = 0; x < this.state.noOfExams; x++) {
+      let subOptions: any = document.querySelector("#subject" + x);
+      for (let i = 0; i < this.state.noOfExams; i++) {
+        let sd = new SaData(
+          txtEsNm.value.trim(),
+          examData.exmDate["examDate" + i],
+          examData.exmStTime["startTime" + i],
+          examData.exmNdTime["endTime" + i],
+          this.state.gradeType,
+          examData.exmTotalMarks["totalMarks" + i],
+          examData.exmPassMarks["passingMarks" + i],
+          "ACTIVE",
+          examData.academicYear.id,
+          subOptions.options[subOptions.selectedIndex].value,
+          examData.department.id,
+          examData.batch.id,
+          "SEMESTER1",
+          examData.section.id,
+          examData.branch.id,
+          this.state.gradingId,
+          examData.exmcountvalues["countvalue" + i],
+          this.state.groupValue
+        );
+        examData.payLoad.push(sd);
+      }
+    }
+    this.setState({ examData: examData })
+
+    console.log('total IDS : ', examData.selectedIds);
+    let btn: any = document.querySelector("#btnSave");
+    btn.setAttribute("disabled", true);
+    return mutate({
+      variables: { input: examData.payLoad },
+    }).then(data => {
+      btn.removeAttribute("disabled");
+      console.log('Saved Result: ', data.data.addAcademicExamSetting);
+      alert("Added Succesfully");
+    }).catch((error: any) => {
+      btn.removeAttribute("disabled");
+      console.log('there is some error ', error);
+      return Promise.reject(`there is some error while updating : ${error}`);
+    });
+  }
 
 
 
@@ -606,35 +606,35 @@ return mutate({
     const retVal = [];
     for (let x = 0; x < this.state.noOfExams; x++) {
       let v = ary[x];
-        retVal.push(
-          <tbody>
-            <tr id="custom-width-input">
-           
-              <td>
-                <select name={"subject"} id={"subject" + x} onChange={this.onChange} value={examData.subject.id} className="gf-form-input max-width-22">
-                  {this.createSubjects(this.props.data.createExamFilterDataCache.subjects, examData.department.id, examData.batch.id)}
-                </select>
-              </td>
-              <td> 
-                <input type="date" value={examData.dateofExam} id={"examDate" + x} name="examDate" maxLength={8} onChange={this.handleChange} ></input> 
-              </td>                         
+      retVal.push(
+        <tbody>
+          <tr id="custom-width-input">
 
-              <td>{examData.textValueMap["examDate" + x]}</td>
+            <td>
+              <select name={"subject"} id={"subject" + x} onChange={this.onChange} value={examData.subject.id} className="gf-form-input max-width-22">
+                {this.createSubjects(this.props.data.createExamFilterDataCache.subjects, examData.department.id, examData.batch.id)}
+              </select>
+            </td>
+            <td>
+              <input type="date" value={examData.dateofExam} id={"examDate" + x} name="examDate" maxLength={8} onChange={this.handleChange} ></input>
+            </td>
 
-              <td> <input id={"startTime" + x} type="time" name="startTime" step='2' value={examData.startTime} onChange={this.handleStTimeChange} ></input> </td>
+            <td>{examData.textValueMap["examDate" + x]}</td>
 
-              <td> <input id={"endTime" + x} type="time" name="endTime" step='2' value={examData.endTime}  onChange={this.handleNdTimeChange} ></input> </td>
+            <td> <input id={"startTime" + x} type="time" name="startTime" step='2' value={examData.startTime} onChange={this.handleStTimeChange} ></input> </td>
 
-              <td> <input id={"passingMarks" + x} name="passingMarks" value={examData.passing} onChange={this.handlePassMarksChange} ></input> </td>
+            <td> <input id={"endTime" + x} type="time" name="endTime" step='2' value={examData.endTime} onChange={this.handleNdTimeChange} ></input> </td>
 
-              <td> <input id={"totalMarks" + x} name="totalMarks" value={examData.total} onChange={this.handleTotalMarksChange} ></input> </td>
-   
-            </tr>
-          </tbody>
-        );
+            <td> <input id={"passingMarks" + x} name="passingMarks" value={examData.passing} onChange={this.handlePassMarksChange} ></input> </td>
+
+            <td> <input id={"totalMarks" + x} name="totalMarks" value={examData.total} onChange={this.handleTotalMarksChange} ></input> </td>
+
+          </tr>
+        </tbody>
+      );
 
 
-      }
+    }
     return retVal;
   }
   render() {
@@ -646,36 +646,44 @@ return mutate({
         <h3 className="bg-heading p-1">
           <i className="fa fa-university stroke-transparent mr-1" aria-hidden="true" />{' '}
           Admin - Academic Exam Setting
-          
-          <label>
-            <input
-              type="radio"
-              value="PERCENTAGE"
-              checked={this.state.gradeType === "PERCENTAGE"}
-              onChange={this.handleChangeGrade}
-            />
-            Percentage
-          </label>
-          <label>
-            <input
-              type="radio"
-              value="GRADE"
-              checked={this.state.gradeType === "GRADE"}
-              onChange={this.handleChangeGrade}
-            />
-            Grade
-          </label>
-          
-            {
-              this.state.gradeType === "GRADE"  &&
-          <span>
-            <Link                
-                to={`/plugins/ems-exam/page/grading`}               
-                className="btn btn-primary" style={w180}>Continue
-                </Link>
-          </span>
-            }
         </h3>
+        <div className="bg-heading p-1 m-1">
+          <div className="e-flex align-baseline">
+            <h4 className="m-r-1">
+              Select type of grading.
+          </h4>
+            <label className="m-r-1">
+              <input
+                className="m-1"
+                type="radio"
+                value="PERCENTAGE"
+                checked={this.state.gradeType === "PERCENTAGE"}
+                onChange={this.handleChangeGrade}
+              />
+              Percentage
+          </label>
+            <label className="m-r-1">
+              <input
+                className="m-1"
+                type="radio"
+                value="GRADE"
+                checked={this.state.gradeType === "GRADE"}
+                onChange={this.handleChangeGrade}
+              />
+              Grade
+          </label>
+
+            {
+              this.state.gradeType === "GRADE" &&
+              <span>
+                <Link
+                  to={`/plugins/ems-exam/page/grading`}
+                  className="btn btn-primary">Continue
+                </Link>
+              </span>
+            }
+          </div>
+        </div>
         <div className="p-1">
           <form className="gf-form-group" onSubmit={this.onFormSubmit} >
             <table id="t-attendance" className="markAttendance">
@@ -718,9 +726,9 @@ return mutate({
                   </td>
 
                   <td>
-                    <a onClick={this.decreaseExamValue.bind(this)}>-</a>
-                    &nbsp;{this.state.noOfExams}&nbsp;
-                    <a onClick={this.increaseExamValue.bind(this)}>+</a>
+                    <a onClick={this.decreaseExamValue.bind(this)} className="btn btn-primary mr-1 btn-small"><i className="fa fa-minus" /></a>
+                    {this.state.noOfExams}
+                    <a onClick={this.increaseExamValue.bind(this)} className="btn btn-primary mr-1 btn-small m-l-1"><i className="fa fa-plus" /></a>
                   </td>
 
                   <td>
@@ -773,7 +781,7 @@ return mutate({
 }
 
 export default withExamSubjDataLoader(
-  compose(   
+  compose(
     graphql<AddExamMutation, ExamRootProps>(AddExamMutationGql, {
       name: "mutate",
     }),
