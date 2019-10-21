@@ -1,10 +1,10 @@
 import * as moment from 'moment';
 import * as React from 'react';
-import { RouteComponentProps, withRouter,  Link  } from 'react-router-dom';
+import { RouteComponentProps, withRouter, Link } from 'react-router-dom';
 import { graphql, QueryProps, MutationFunc, compose } from "react-apollo";
 import * as ExamListQueryTypeForAdminGql from './ExamListQueryTypeForAdmin.graphql';
 import * as AddReportMutationGql from './AddReportMutation.graphql';
-import { LoadExamSubjQueryCacheForAdmin, ExamListQueryTypeForAdmin,  AddReportMutation } from '../../types';
+import { LoadExamSubjQueryCacheForAdmin, ExamListQueryTypeForAdmin, AddReportMutation } from '../../types';
 import withExamSubjDataLoader from './withExamSubjDataLoader';
 import { type } from 'os';
 
@@ -25,8 +25,8 @@ type ExamRootProps = RouteComponentProps<{
 };
 
 type ExamPageProps = ExamRootProps & {
-   mutate: MutationFunc<ExamListQueryTypeForAdmin>;
-   mutateUpd: MutationFunc<AddReportMutation>;
+  mutate: MutationFunc<ExamListQueryTypeForAdmin>;
+  mutateUpd: MutationFunc<AddReportMutation>;
 };
 
 type ExamState = {
@@ -36,13 +36,13 @@ type ExamState = {
   departments: any,
   batches: any,
   academicExamSettings: any
-  subjects:any,
+  subjects: any,
   sections: any,
   dtPicker: any,
   submitted: any,
-  dateofExam:any,
-  dayValue:any,
-  duratn:number,
+  dateofExam: any,
+  dayValue: any,
+  duratn: number,
 
 };
 
@@ -50,7 +50,7 @@ type ExamState = {
 class SaData {
   marksObtain: any;
   studentId: any;
-  typeOfGradingId : any;
+  typeOfGradingId: any;
   academicExamSettingId: any;
   departmentId: any;
   sectionId: any;
@@ -61,7 +61,7 @@ class SaData {
   constructor(
     marksObtain: any,
     studentId: any,
-    typeOfGradingId : any,
+    typeOfGradingId: any,
     academicExamSettingId: any,
     departmentId: any,
     sectionId: any,
@@ -69,37 +69,37 @@ class SaData {
     subjectId: any,
     pOg: any,
     comments: any
-     ) {
-      this.marksObtain=marksObtain;
-      this.studentId = studentId;
-      this.typeOfGradingId = typeOfGradingId;
-      this.academicExamSettingId = academicExamSettingId;
-      this.departmentId = departmentId;
-      this.sectionId = sectionId;
-      this.batchId = batchId;
-      this.subjectId = subjectId;
-      this.pOg = pOg;
-      this.comments = comments;     
+  ) {
+    this.marksObtain = marksObtain;
+    this.studentId = studentId;
+    this.typeOfGradingId = typeOfGradingId;
+    this.academicExamSettingId = academicExamSettingId;
+    this.departmentId = departmentId;
+    this.sectionId = sectionId;
+    this.batchId = batchId;
+    this.subjectId = subjectId;
+    this.pOg = pOg;
+    this.comments = comments;
   }
 }
 class ExamReportSrc extends React.Component<ExamPageProps, ExamState>{
   constructor(props: any) {
     super(props);
     this.state = {
-      dayValue:[],
+      dayValue: [],
       duratn: 0,
-      dateofExam:"",
-      
+      dateofExam: "",
+
       examData: {
         branch: {
-          id: 1851 
+          id: 1851
         },
         academicyear: {
-          id: 1701 // 1051  //1701 
+          id: 1701 // 1051  //1701
         },
         department: {
           id: ""
-        },       
+        },
         batch: {
           id: ""
         },
@@ -109,14 +109,14 @@ class ExamReportSrc extends React.Component<ExamPageProps, ExamState>{
         academicExamSetting: {
           id: ""
         },
-        
+
         subject: {
           id: ""
         },
         examReport: {
           id: ""
         },
-        
+
         mutateResult: [],
         filtered: [],
         selectedIds: "",
@@ -125,9 +125,9 @@ class ExamReportSrc extends React.Component<ExamPageProps, ExamState>{
         exmMarks: {},
         exmTotal: {},
         exmPassMarks: {},
-        exmgrd:{},
-        txtCmtVal : {},
-        },
+        exmgrd: {},
+        txtCmtVal: {},
+      },
       branches: [],
       academicyears: [],
       departments: [],
@@ -137,7 +137,7 @@ class ExamReportSrc extends React.Component<ExamPageProps, ExamState>{
       dtPicker: [],
       subjects: [],
       submitted: false,
-      
+
     };
 
     this.createDepartments = this.createDepartments.bind(this);
@@ -145,7 +145,7 @@ class ExamReportSrc extends React.Component<ExamPageProps, ExamState>{
     this.createacademicExamSettings = this.createacademicExamSettings.bind(this);
     this.createSubjects = this.createSubjects.bind(this);
     this.createSections = this.createSections.bind(this);
-   this.handleChange = this.handleChange.bind(this);
+    this.handleChange = this.handleChange.bind(this);
     this.createGrid = this.createGrid.bind(this);
     // this.handleMarksObtainedChange = this.handleMarksObtainedChange.bind(this);
     this.handletotalChange = this.handletotalChange.bind(this);
@@ -155,29 +155,29 @@ class ExamReportSrc extends React.Component<ExamPageProps, ExamState>{
   createDepartments(departments: any, selectedBranchId: any) {
     let departmentsOptions = [<option key={0} value="">Select Department</option>];
     for (let i = 0; i < departments.length; i++) {
-    if (selectedBranchId == departments[i].branch.id ) {
+      if (selectedBranchId == departments[i].branch.id) {
         departmentsOptions.push(
-        <option key={departments[i].id} value={departments[i].id}>{departments[i].name}</option>
+          <option key={departments[i].id} value={departments[i].id}>{departments[i].name}</option>
         );
-    }
+      }
     }
     return departmentsOptions;
-}
-createBranches(branches: any) {
-  let branchesOptions = [<option key={0} value="">Select Branch</option>];
-  for (let i = 0; i < branches.length; i++) {
-      branchesOptions.push(
-          <option key={branches[i].id} value={branches[i].id}>{branches[i].branchName}</option>
-      );
   }
-  return branchesOptions;
-}
-createBatches(batches: any, selectedDepartmentId: any) {
+  createBranches(branches: any) {
+    let branchesOptions = [<option key={0} value="">Select Branch</option>];
+    for (let i = 0; i < branches.length; i++) {
+      branchesOptions.push(
+        <option key={branches[i].id} value={branches[i].id}>{branches[i].branchName}</option>
+      );
+    }
+    return branchesOptions;
+  }
+  createBatches(batches: any, selectedDepartmentId: any) {
     let batchesOptions = [<option key={0} value="">Select Year</option>];
     for (let i = 0; i < batches.length; i++) {
       let id = batches[i].id;
       let dptId = "" + batches[i].department.id;
-      if (dptId == selectedDepartmentId){
+      if (dptId == selectedDepartmentId) {
         batchesOptions.push(
           <option key={id} value={id}>{batches[i].batch}</option>
         );
@@ -185,7 +185,7 @@ createBatches(batches: any, selectedDepartmentId: any) {
     }
     return batchesOptions;
   }
-createSections(sections: any, selectedBatchId: any) {
+  createSections(sections: any, selectedBatchId: any) {
     let sectionsOptions = [<option key={0} value="">Select Section</option>];
     for (let i = 0; i < sections.length; i++) {
       let id = sections[i].id;
@@ -198,19 +198,19 @@ createSections(sections: any, selectedBatchId: any) {
     }
     return sectionsOptions;
   }
-createacademicExamSettings(academicExamSettings: any, selectedDepartmentId: any, selectedBatchId: any) {
+  createacademicExamSettings(academicExamSettings: any, selectedDepartmentId: any, selectedBatchId: any) {
     let examOptions = [<option key={0} value="">Select Exam</option>];
     for (let i = 0; i < academicExamSettings.length; i++) {
       let id = academicExamSettings[i].id;
       if (academicExamSettings[i].department.id == selectedDepartmentId && academicExamSettings[i].batch.id == selectedBatchId) {
         examOptions.push(
-          <option key={id} value={id}>{academicExamSettings[i].id}</option>
+          <option key={id} value={id}>{academicExamSettings[i].examName}</option>
         );
       }
     }
     return examOptions;
   }
-createSubjects(subjects: any, selectedDepartmentId: any, selectedBatchId: any) {
+  createSubjects(subjects: any, selectedDepartmentId: any, selectedBatchId: any) {
     let subjectsOptions = [<option key={0} value="">Select Subject</option>];
     for (let i = 0; i < subjects.length; i++) {
       let id = subjects[i].id;
@@ -222,8 +222,8 @@ createSubjects(subjects: any, selectedDepartmentId: any, selectedBatchId: any) {
     }
     return subjectsOptions;
   }
- 
-  
+
+
 
   onFormSubmit = (e: any) => {
     this.setState({
@@ -234,13 +234,13 @@ createSubjects(subjects: any, selectedDepartmentId: any, selectedBatchId: any) {
     const { examData } = this.state;
     e.preventDefault();
 
-    if ( examData.department.id && examData.batch.id && examData.section.id && examData.academicExamSetting.id && examData.subject.id) {
-     
-    
+    if (examData.department.id && examData.batch.id && examData.section.id && examData.academicExamSetting.id && examData.subject.id) {
+
+
       e.target.querySelector("#detailGridTable").removeAttribute("class");
 
 
-      let examInputData = {      
+      let examInputData = {
         departmentId: examData.department.id,
         batchId: examData.batch.id,
         sectionId: examData.section.id,
@@ -260,7 +260,7 @@ createSubjects(subjects: any, selectedDepartmentId: any, selectedBatchId: any) {
         this.setState({
           examData: examData
         });
-         console.log('Query Result ::::: ', examData.mutateResult);
+        console.log('Query Result ::::: ', examData.mutateResult);
 
         btn.removeAttribute("disabled");
 
@@ -274,7 +274,7 @@ createSubjects(subjects: any, selectedDepartmentId: any, selectedBatchId: any) {
       });
     }
 
-    
+
 
 
   }
@@ -282,7 +282,7 @@ createSubjects(subjects: any, selectedDepartmentId: any, selectedBatchId: any) {
   onChange = (e: any) => {
     const { name, value } = e.nativeEvent.target;
     const { examData } = this.state;
-     if (name === "department") {
+    if (name === "department") {
       this.setState({
         examData: {
           ...examData,
@@ -297,33 +297,33 @@ createSubjects(subjects: any, selectedDepartmentId: any, selectedBatchId: any) {
           },
           academicExamSetting: {
             id: ""
-          },         
+          },
           subject: {
             id: ""
           }
         }
       });
-    } else if (name === "batch") { 
+    } else if (name === "batch") {
       this.setState({
         examData: {
           ...examData,
           batch: {
             id: value
           },
-           section: {
+          section: {
             id: ""
           },
-          academicExamSetting:{
+          academicExamSetting: {
             id: ""
           },
           subject: {
             id: ""
           }
-         
+
         }
       });
     }
-       else if (name === "section") {
+    else if (name === "section") {
       this.setState({
         examData: {
           ...examData,
@@ -338,22 +338,22 @@ createSubjects(subjects: any, selectedDepartmentId: any, selectedBatchId: any) {
           }
         }
       });
-    } 
-      else if (name === "academicExamSetting") { 
-        this.setState({
-          examData: {
-            ...examData,
-            academicExamSetting: {
-              id: value
-            },
-            subject: {
-              id: ""
-            }
+    }
+    else if (name === "academicExamSetting") {
+      this.setState({
+        examData: {
+          ...examData,
+          academicExamSetting: {
+            id: value
+          },
+          subject: {
+            id: ""
           }
-        });
-      
-    } 
-    
+        }
+      });
+
+    }
+
     else if (name === "subject") {
       this.setState({
         examData: {
@@ -364,10 +364,10 @@ createSubjects(subjects: any, selectedDepartmentId: any, selectedBatchId: any) {
         }
       });
     }
-   
-      
+
+
   }
-  
+
 
   reset() {
     const { examData } = this.state;
@@ -395,7 +395,7 @@ createSubjects(subjects: any, selectedDepartmentId: any, selectedBatchId: any) {
   }
 
 
-  
+
 
 
   checkAllRows(e: any) {
@@ -418,9 +418,9 @@ createSubjects(subjects: any, selectedDepartmentId: any, selectedBatchId: any) {
     let chkBox: any = document.querySelector("#" + id);
     chkBox.checked = e.nativeEvent.target.checked;
   }
-  
- 
-   
+
+
+
   // handleMarksObtainedChange= (e: any) => {
   //   const { id, value } = e.nativeEvent.target;
   //   const { examData } = this.state;
@@ -428,7 +428,7 @@ createSubjects(subjects: any, selectedDepartmentId: any, selectedBatchId: any) {
   //   this.setState({examData:examData})
   // }
 
-  handletotalChange= (e: any) => {
+  handletotalChange = (e: any) => {
     const { mutateUpd } = this.props;
     console.log("handletotalchnage working");
     const { id, value } = e.nativeEvent.target;
@@ -446,23 +446,23 @@ createSubjects(subjects: any, selectedDepartmentId: any, selectedBatchId: any) {
       let o = parseInt(val);
       let t = parseInt(tt.value)
       // let c = 100;
-      let wt = (o/t);
-      let w = wt*100;
-      let f =w.toFixed(2);
-      
-      if(gd.value === "GRADE"){
+      let wt = (o / t);
+      let w = wt * 100;
+      let f = w.toFixed(2);
+
+      if (gd.value === "GRADE") {
 
         examData.textValueMap[key] = val;
       }
       else examData.textValueMap[key] = f
-    this.setState({
-      examData: examData
-    });
-  } 
+      this.setState({
+        examData: examData
+      });
+    }
 
   }
- 
- 
+
+
   handleChange = (e: any) => {
     const { id, value } = e.nativeEvent.target;
     const { examData } = this.state;
@@ -474,13 +474,13 @@ createSubjects(subjects: any, selectedDepartmentId: any, selectedBatchId: any) {
       examData: examData
     });
   }
-  
+
 
   onClick = (e: any) => {
 
     const { mutateUpd } = this.props;
     const { examData } = this.state;
-    
+
     e.preventDefault();
     let len = this.createGrid(this.state.examData.mutateResult).length;
     for (let i = 0; i < len; i++) {
@@ -493,7 +493,7 @@ createSubjects(subjects: any, selectedDepartmentId: any, selectedBatchId: any) {
       }
     }
     let sadt = new SaData(
-         
+
       23,
       1251,
       examData.typeOfGarding.id,
@@ -504,78 +504,78 @@ createSubjects(subjects: any, selectedDepartmentId: any, selectedBatchId: any) {
       examData.subject.id,
       34,
       'GOOOOD'
-      ); 
-      examData.payLoad.push(sadt);
-      console.log('total IDS : ', examData.selectedIds);
-    
-      let btn : any = document.querySelector("#btnSave");
-      btn.setAttribute("disabled", true);
-      return mutateUpd({
-        variables: { input: examData.payLoad },
-      }).then(data => {
-        btn.removeAttribute("disabled");
-        console.log('Update Result: ', data.data.addAcademicExamSettingData.statusDesc);
-        alert(data.data.addAcademicExamSettingData.statusDesc);
-      }).catch((error: any) => {
-        btn.removeAttribute("disabled");
-        console.log('there is some error while updating exam report data', error);
-        return Promise.reject(`there is some error while updating sexam report data: ${error}`);
-      });
-    
+    );
+    examData.payLoad.push(sadt);
+    console.log('total IDS : ', examData.selectedIds);
+
+    let btn: any = document.querySelector("#btnSave");
+    btn.setAttribute("disabled", true);
+    return mutateUpd({
+      variables: { input: examData.payLoad },
+    }).then(data => {
+      btn.removeAttribute("disabled");
+      console.log('Update Result: ', data.data.addAcademicExamSettingData.statusDesc);
+      alert(data.data.addAcademicExamSettingData.statusDesc);
+    }).catch((error: any) => {
+      btn.removeAttribute("disabled");
+      console.log('there is some error while updating exam report data', error);
+      return Promise.reject(`there is some error while updating sexam report data: ${error}`);
+    });
+
   }
 
-  createGrid(ary: any){
+  createGrid(ary: any) {
     const { examData } = this.state;
     const retVal = [];
     const len = ary.length;
     for (let pd = 0; pd < len; pd++) {
       let v = ary[pd];
-      for(let x= 0; x< v.data.getSubjectandStudents.length; x++){
+      for (let x = 0; x < v.data.getSubjectandStudents.length; x++) {
         let k = v.data.getSubjectandStudents[x];
-   
+
         retVal.push(
           <tbody>
             <tr key={examData.id} id="custom-width-input">
-            <td>
-              <input onClick={(e: any) => this.onClickCheckbox(x, e)} checked={examData.isChecked} type="checkbox" name="" id={"chk" + examData.id} />
-            </td>
-            <td>{k.id}</td>      
-            <td>{k.student.studentName}</td>
-            <td>{k.student.rollNo}</td>
-            <td>{k.student.id}</td> 
-                    
-            <td>
-            <input id={"total" + x} defaultValue={k.academicExamSetting.total} ></input>
-            </td>
-            <td>
-            <input id={"grade" + x} defaultValue={k.academicExamSetting.gradeType}></input>
-            </td>
-            <td>
-               <input type="number" id={"marksObtain" + x}  name="marksObtain"  onChange={this.handletotalChange} ></input>
-            </td>
-            <td> 
-                {examData.textValueMap["marksObtain" + x]} 
-              {/* <input   defaultValue={k.academicExamSetting.gradeType}
-              ></input> */}
-            </td>
-            <td>
-                <input type="text" id={"t" + k.studentId} defaultValue={k.comments} maxLength={255} onChange={this.handleChange} ></input>
-            </td>
+              <td>
+                <input onClick={(e: any) => this.onClickCheckbox(x, e)} checked={examData.isChecked} type="checkbox" name="" id={"chk" + examData.id} />
+              </td>
+              <td>{k.id}</td>
+              <td>{k.student.studentName}</td>
+              <td>{k.student.rollNo}</td>
+              <td>{k.student.id}</td>
 
-          </tr>
+              <td>
+                <input id={"total" + x} defaultValue={k.academicExamSetting.total} ></input>
+              </td>
+              <td>
+                <input id={"grade" + x} defaultValue={k.academicExamSetting.gradeType}></input>
+              </td>
+              <td>
+                <input type="number" id={"marksObtain" + x} name="marksObtain" onChange={this.handletotalChange} ></input>
+              </td>
+              <td>
+                {examData.textValueMap["marksObtain" + x]}
+                {/* <input   defaultValue={k.academicExamSetting.gradeType}
+              ></input> */}
+              </td>
+              <td>
+                <input type="text" id={"t" + k.studentId} defaultValue={k.comments} maxLength={255} onChange={this.handleChange} ></input>
+              </td>
+
+            </tr>
           </tbody>
         );
-        
-        
+
+
       }
     }
     return retVal;
   }
- 
+
 
   render() {
     const { data: { createExamFilterDataCache, refetch }, mutate } = this.props;
-    const { examData, departments, batches, sections, academicExamSettings, subjects,     submitted } = this.state;
+    const { examData, departments, batches, sections, academicExamSettings, subjects, submitted } = this.state;
 
     return (
       <section className="plugin-bg-white">
@@ -583,26 +583,26 @@ createSubjects(subjects: any, selectedDepartmentId: any, selectedBatchId: any) {
           <i className="fa fa-university stroke-transparent mr-1" aria-hidden="true" />{' '}
           Admin - Academic Exam Setting
         </h3>
-       
-       
+
+
         <div className="p-1">
           <form className="gf-form-group" onSubmit={this.onFormSubmit} >
             <table id="t-attendance" className="markAttendance">
               <thead>
                 <tr>
-                  
+
                   <th>Department</th>
                   <th>Year</th>
                   <th>Section</th>
                   <th>Exams</th>
                   <th>Subjects</th>
                   <th>Exam Report</th>
-                 
+
                 </tr>
               </thead>
               <tbody>
                 <tr>
-               
+
                   <td>
                     <select required name="department" id="department" onChange={this.onChange} value={examData.department.id} className="gf-form-input max-width-22">
                       {this.createDepartments(this.props.data.createExamFilterDataCache.departments, examData.branch.id)}
@@ -625,12 +625,11 @@ createSubjects(subjects: any, selectedDepartmentId: any, selectedBatchId: any) {
                   </td>
                   <td>
                     <select required name="subject" id="subject" onChange={this.onChange} value={examData.subject.subjectDesc} className="gf-form-input max-width-22">
-                      {this.createSubjects(this.props.data.createExamFilterDataCache.subjects, examData.department.id,examData.batch.id)}
+                      {this.createSubjects(this.props.data.createExamFilterDataCache.subjects, examData.department.id, examData.batch.id)}
                     </select>
                   </td>
                   <td>
-                    <button className="btn btn-primary" type="submit" id="btnTakeAtnd" name="btnTakeAtnd" style={{ width: '130px' }}>Create Exam</button>
-
+                    <button className="btn btn-primary" type="submit" id="btnTakeAtnd" name="btnTakeAtnd" style={{ width: '150px' }}>Create Exam Report</button>
                   </td>
 
                 </tr>
@@ -638,17 +637,17 @@ createSubjects(subjects: any, selectedDepartmentId: any, selectedBatchId: any) {
             </table>
             <div className="container-fluid p-1 ">
 
-          
-          </div>
+
+            </div>
 
             <div className="hide" id="detailGridTable">
               <table className="fwidth">
                 <thead >
                   <tr>
                     <th>
-                  <input type="checkbox" onClick={(e: any) => this.checkAllRows(e)} value="checkedall" name="" id="" />
-              </th>
-              <th>Id</th>
+                      <input type="checkbox" onClick={(e: any) => this.checkAllRows(e)} value="checkedall" name="" id="" />
+                    </th>
+                    <th>Id</th>
                     <th>Student Name</th>
                     <th>Roll No</th>
                     <th>Student Id</th>
@@ -657,15 +656,15 @@ createSubjects(subjects: any, selectedDepartmentId: any, selectedBatchId: any) {
                     <th>Marks Obtained</th>
                     <th>Grade/Percentage</th>
                     <th>Comments</th>
-                 
+
                   </tr>
                 </thead>
-                
-                  {
-                    this.createGrid(this.state.examData.mutateResult)
-                    
-                  }
-               
+
+                {
+                  this.createGrid(this.state.examData.mutateResult)
+
+                }
+
               </table>
 
               <div className="d-flex fwidth justify-content-between pt-2">
@@ -698,8 +697,8 @@ export default withExamSubjDataLoader(
   compose(
     graphql<ExamListQueryTypeForAdmin, ExamRootProps>(ExamListQueryTypeForAdminGql, {
       name: "mutate"
-     }),
-     graphql<AddReportMutation, ExamRootProps>(AddReportMutationGql, {
+    }),
+    graphql<AddReportMutation, ExamRootProps>(AddReportMutationGql, {
       name: "mutateUpd",
     }),
 

@@ -1,8 +1,8 @@
 import * as React from 'react';
 
-import {RouteComponentProps, Link } from 'react-router-dom';
+import { RouteComponentProps, Link } from 'react-router-dom';
 import { graphql, QueryProps } from 'react-apollo';
-import {AcExamSettingListQuery} from  '../../types';
+import { AcExamSettingListQuery } from '../../types';
 
 import * as AcExamSettingListQueryGql from './AcExamSettingListQuery.graphql';
 import withLoadingHandler from '../../../components/withLoadingHandler';
@@ -42,12 +42,12 @@ class AcExamSettingsTable extends React.Component<ExamTableProps, ExamTableState
     };
     this.checkAllExams = this.checkAllExams.bind(this);
     this.onClickCheckbox = this.onClickCheckbox.bind(this);
-    this.createExamRows=this.createExamRows.bind(this);
-     this.onClickContinueButton = this.onClickContinueButton.bind(this);
+    this.createExamRows = this.createExamRows.bind(this);
+    this.onClickContinueButton = this.onClickContinueButton.bind(this);
 
   }
 
-  onClickContinueButton(e: any){
+  onClickContinueButton(e: any) {
     localStorage.setItem("selectedExams", JSON.stringify(this.state.selectedExams));
   }
 
@@ -113,91 +113,91 @@ class AcExamSettingsTable extends React.Component<ExamTableProps, ExamTableState
       acExamSettingArr.push(acExamSetting);
       consolidatedObj[acExamSetting.countvalue] = acExamSettingArr;
     }
-    const retVal = [];    
+    const retVal = [];
     const keys = Object.keys(consolidatedObj);
     const lengthKeys = keys.length;
     for (let i = 0; i < lengthKeys; i++) {
       let acExamSettingArr = consolidatedObj[keys[i]];
       for (let j = 0; j < acExamSettingArr.length; j++) {
-        let acExamSetting = acExamSettingArr[j]; 
-      retVal.push(
-        <tr>
-         {/* {j === 0 &&
+        let acExamSetting = acExamSettingArr[j];
+        retVal.push(
+          <tr>
+            {/* {j === 0 &&
               <td rowSpan={acExamSettingArr.length}>
                 <input onClick={(e: any) => this.onClickCheckbox(keys[i], acExamSettingArr, e)} type="radio" name="grades" id={"chk" + keys[i]} />
               </td>
             } */}
-          {/* <td>{acExamSetting.countvalue}</td> */}
-          <td>
-            <Link
-              className="table-link link-color"
-              to={`/plugins/ems-exam/page/acExamSetting?countvalue=${acExamSetting.countvalue}`}
-            >
-             {acExamSetting.examName}
-            </Link>
-          </td>
-          <td>{acExamSetting.bctch}</td>
-          <td>{acExamSetting.departmnt}</td>
-          <td>{acExamSetting.sectn}</td>
-          <td>{acExamSetting.sbjct}</td>
-          <td>{acExamSetting.subExamDate}</td>
-          <td>{acExamSetting.st}</td>
-          <td>{acExamSetting.ed}</td>         
-          {/* <td> <a >
+            {/* <td>{acExamSetting.countvalue}</td> */}
+            <td>
+              <Link
+                className="table-link link-color"
+                to={`/plugins/ems-exam/page/acExamSetting?countvalue=${acExamSetting.countvalue}`}
+              >
+                {acExamSetting.examName}
+              </Link>
+            </td>
+            <td>{acExamSetting.bctch}</td>
+            <td>{acExamSetting.departmnt}</td>
+            <td>{acExamSetting.sectn}</td>
+            <td>{acExamSetting.sbjct}</td>
+            <td>{acExamSetting.subExamDate}</td>
+            <td>{acExamSetting.st}</td>
+            <td>{acExamSetting.ed}</td>
+            {/* <td> <a >
             <i className="fa fa-pencil-square-o fa-1-5x" aria-hidden="true"></i>
           </a>
           <a >
             <i className="fa fa-trash-o fa-1-5x table-p" aria-hidden="true"></i>
-          </a></td> 
-          <td> 
+          </a></td>
+          <td>
           <Link
             to={`/plugins/ems-exam/page/addexam`}
             className="btn btn-primary m-r-1" style={w180} onClick={this.onClickContinueButton}>Details
           </Link>
           </td> */}
-          
-          {/* <td> <button className="btn btn-primary" onClick={e => this.showDetail(acExamSetting)}>Details</button></td> */}
-        </tr>
-      );
+
+            {/* <td> <button className="btn btn-primary" onClick={e => this.showDetail(acExamSetting)}>Details</button></td> */}
+          </tr>
+        );
       }
     }
     return retVal;
   }
 
   render() {
-    const { acExamSettings, selectedExams} = this.state;
+    const { acExamSettings, selectedExams } = this.state;
     console.log(selectedExams);
     return (
-      <div>     
+      <div>
 
         <table id="studentlistpage" className="striped-table fwidth bg-white">
           <thead>
             <tr>
-            {/* <th>
+              {/* <th>
                 <input type="radio" value="checkedall" name="" id="chkCheckedAll" />
                     </th> */}
-            {/* <th>Id</th> */}
-            <th>EXAM TYPE</th>
-           <th>YEAR</th>          
-           <th>DEPARTMENT</th>           
-            <th>SECTION</th>
-           <th>SUBJECT</th>
-           <th>Sub-ExamDate</th>
-           <th>START DATE</th>
-           <th>END DATE</th>
-          
-           {/* <th>Details</th> */}
-           
+              {/* <th>Id</th> */}
+              <th className="width-8">EXAM TYPE</th>
+              <th className="width-8">YEAR</th>
+              <th className="width-12">DEPARTMENT</th>
+              <th>SECTION</th>
+              <th>SUBJECT</th>
+              <th className="width-10">Sub-ExamDate</th>
+              <th className="width-8">START DATE</th>
+              <th className="width-8">END DATE</th>
 
-            <span>
-            
-          {/* <Link
+              {/* <th>Details</th> */}
+
+
+              <span>
+
+                {/* <Link
             to={`/plugins/ems-exam/page/addexam`}
             className="btn btn-primary m-r-1" style={w180} onClick={this.onClickContinueButton}>Details
           </Link> */}
-            
-          </span>
-           
+
+              </span>
+
             </tr>
           </thead>
           <tbody>
@@ -219,19 +219,19 @@ const AcExamSettingListPage = ({ data: { acExamSettings } }: AcExamSettingListPa
       <div className="m-b-1 eflex bg-heading-exam">
         <h4 className="ptl-06">Academic Year 2018-2019 </h4>
         <div>
-         
+
           <Link
             to={`/plugins/ems-exam/page/addexam`}
             className="btn btn-primary m-r-1" style={w180}>Add Exam
           </Link>
-          
+
         </div>
       </div>
       <AcExamSettingsTable acExamSettings={acExamSettings} />
     </div>
   </section>
 );
-      
-  export default graphql<AcExamSettingListQuery, AcExamSettingListPageOwnProps, AcExamSettingListPageProps>(
-    AcExamSettingListQueryGql
-  )(withLoadingHandler(AcExamSettingListPage));
+
+export default graphql<AcExamSettingListQuery, AcExamSettingListPageOwnProps, AcExamSettingListPageProps>(
+  AcExamSettingListQueryGql
+)(withLoadingHandler(AcExamSettingListPage));
