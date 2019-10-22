@@ -18,14 +18,21 @@ type TargetComponentProps = {
 };
 
 const withExamSubjDataLoader = (TargetComponent: ReactFunctionOrComponentClass<TargetComponentProps>) => {
+  const params = new URLSearchParams(location.search);
+  let ayId = params.get('ayid') ;
+  if(ayId == null || ayId == undefined) {
+    ayId = "0";
+  } 
+
+  let bId = params.get('bid');
+  if(bId == null || bId == undefined){
+    bId ="0";
+  }
     return graphql<LoadExamSubjQueryCacheForAdmin, withExamSubjPageDataLoaderProps, TargetComponentProps>(LoadExamSubjQueryGql, {
       options: ({ match }) => ({
         variables: {
-          // branchId: match.params.branchId,
-          // academicYearId: match.params.branchId,
-          // teacherId: match.params.branchId
-          collegeId: 1801, //1801,951
-          academicYearId: 1701 // 1701,1051 
+          academicyearId: ayId,
+          branchId: bId
          
         }
       })

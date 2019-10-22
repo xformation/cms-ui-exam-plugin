@@ -1,6 +1,6 @@
-query createExamFilterDataCache($collegeId:String!, $academicYearId:String!){
-    createExamFilterDataCache(collegeId:$collegeId, academicYearId:$academicYearId  ) {
-     branches{ id,branchName},
+query createExamFilterDataCache($branchId:String!, $academicYearId:String!){
+    createExamFilterDataCache(branchId:$branchId, academicYearId:$academicYearId  ) {
+   
      departments{
         id,name, branch{ id }, academicyear{id } },
      batches{ id, batch,department{id}},

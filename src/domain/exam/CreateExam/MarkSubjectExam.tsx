@@ -18,7 +18,8 @@ interface type {
 
 type ExamRootProps = RouteComponentProps<{
   academicYearId: string;
-  collegeId: string;
+  branchId: string;
+  // collegeId: string;
 }> & {
   data: QueryProps & LoadExamSubjQueryCacheForAdmin;
 };
@@ -95,6 +96,7 @@ class SaData {
 class MarkExam extends React.Component<ExamPageProps, ExamState>{
   constructor(props: any) {
     super(props);
+    const params = new URLSearchParams(location.search);
     this.state = {
       gradeType: '',
       noOfExams: 0,
@@ -106,19 +108,20 @@ class MarkExam extends React.Component<ExamPageProps, ExamState>{
       isSubjectSame: false,
       examData: {
         branch: {
-          id: 1851
+          id: params.get('bid')
           //1851 1001
         },
         academicYear: {
-          id: 1701
+          id: params.get('ayid')
           //1701 1051
         },
         department: {
-          id: ""
+          id: params.get('dptid')
         },
         batch: {
           id: ""
         },
+       
         semester: {
           id: ""
         },
@@ -155,7 +158,7 @@ class MarkExam extends React.Component<ExamPageProps, ExamState>{
 
     };
 
-    this.createDepartments = this.createDepartments.bind(this);
+    //  this.createDepartments = this.createDepartments.bind(this);
     this.createBatches = this.createBatches.bind(this);
     this.createSemesters = this.createSemesters.bind(this);
     this.createSubjects = this.createSubjects.bind(this);
@@ -199,32 +202,33 @@ class MarkExam extends React.Component<ExamPageProps, ExamState>{
     }
   }
 
-  createDepartments(departments: any, selectedBranchId: any) {
-    let departmentsOptions = [<option key={0} value="">Select Department</option>];
-    for (let i = 0; i < departments.length; i++) {
-      if (selectedBranchId == departments[i].branch.id) {
-        departmentsOptions.push(
-          <option key={departments[i].id} value={departments[i].id}>{departments[i].name}</option>
-        );
-      }
-    }
-    return departmentsOptions;
-  }
+  // createDepartments(departments: any, selectedBranchId: any) {
+  //   let departmentsOptions = [<option key={0} value="">Select Department</option>];
+  //   for (let i = 0; i < departments.length; i++) {
+  //     if (selectedBranchId == departments[i].branch.id) {
+  //       departmentsOptions.push(
+  //         <option key={departments[i].id} value={departments[i].id}>{departments[i].name}</option>
+  //       );
+  //     }
+  //   }
+  //   return departmentsOptions;
+  // }
 
-  createBranches(branches: any) {
-    let branchesOptions = [<option key={0} value="">Select Branch</option>];
-    for (let i = 0; i < branches.length; i++) {
-      branchesOptions.push(
-        <option key={branches[i].id} value={branches[i].id}>{branches[i].branchName}</option>
-      );
-    }
-    return branchesOptions;
-  }
-
+  // createBranches(branches: any) {
+  //   let branchesOptions = [<option key={0} value="">Select Branch</option>];
+  //   for (let i = 0; i < branches.length; i++) {
+  //     branchesOptions.push(
+  //       <option key={branches[i].id} value={branches[i].id}>{branches[i].branchName}</option>
+  //     );
+  //   }
+  //   return branchesOptions;
+  // }
+ 
   createBatches(batches: any, selectedDepartmentId: any) {
     let batchesOptions = [<option key={0} value="">Select Year</option>];
     for (let i = 0; i < batches.length; i++) {
       let id = batches[i].id;
+      // let d = params.get('dptid');
       let dptId = "" + batches[i].department.id;
       if (dptId == selectedDepartmentId) {
         batchesOptions.push(
@@ -235,6 +239,7 @@ class MarkExam extends React.Component<ExamPageProps, ExamState>{
     return batchesOptions;
   }
 
+  
   createSubjects(subjects: any, selectedDepartmentId: any, selectedBatchId: any) {
     let subjectsOptions = [<option key={0} value="">Select Subject</option>];
     for (let i = 0; i < subjects.length; i++) {
@@ -272,7 +277,6 @@ class MarkExam extends React.Component<ExamPageProps, ExamState>{
     }
     return sectionsOptions;
   }
-
   increaseExamValue() {
     if (this.state.noOfExams < 5) {
       this.setState({ noOfExams: this.state.noOfExams + 1 })
@@ -313,25 +317,27 @@ class MarkExam extends React.Component<ExamPageProps, ExamState>{
   onChange = (e: any) => {
     const { id, name, value } = e.nativeEvent.target;
     const { examData } = this.state;
-    if (name === "department") {
-      this.setState({
-        examData: {
-          ...examData,
-          department: {
-            id: value
-          },
-          batch: {
-            id: ""
-          },
-          section: {
-            id: ""
-          },
-          semester: {
-            id: ""
-          }
-        }
-      });
-    } else if (name === "batch") {
+    // if (name === "department") {
+    //   this.setState({
+    //     examData: {
+    //       ...examData,
+    //       department: {
+    //         id: value
+    //       },
+    //       batch: {
+    //         id: ""
+    //       },
+    //       section: {
+    //         id: ""
+    //       },
+    //       semester: {
+    //         id: ""
+    //       }
+    //     }
+    //   });
+    // } 
+    // else 
+    if (name === "batch") {
       this.setState({
         examData: {
           ...examData,
@@ -566,7 +572,7 @@ class MarkExam extends React.Component<ExamPageProps, ExamState>{
           examData.exmTotalMarks["totalMarks" + i],
           examData.exmPassMarks["passingMarks" + i],
           "ACTIVE",
-          examData.academicYear.id,
+           examData.academicYear.id,
           subOptions.options[subOptions.selectedIndex].value,
           examData.department.id,
           examData.batch.id,
@@ -610,11 +616,11 @@ class MarkExam extends React.Component<ExamPageProps, ExamState>{
         <tbody>
           <tr id="custom-width-input">
 
-            <td>
+            {/* <td>
               <select name={"subject"} id={"subject" + x} onChange={this.onChange} value={examData.subject.id} className="gf-form-input max-width-22">
                 {this.createSubjects(this.props.data.createExamFilterDataCache.subjects, examData.department.id, examData.batch.id)}
               </select>
-            </td>
+            </td> */}
             <td>
               <input type="date" value={examData.dateofExam} id={"examDate" + x} name="examDate" maxLength={8} onChange={this.handleChange} ></input>
             </td>
@@ -690,7 +696,7 @@ class MarkExam extends React.Component<ExamPageProps, ExamState>{
               <thead>
                 <tr>
 
-                  <th>Department</th>
+                  {/* <th>Department</th> */}
                   <th>Year</th>
                   <th>Semester</th>
                   <th>Section</th>
@@ -701,11 +707,11 @@ class MarkExam extends React.Component<ExamPageProps, ExamState>{
               <tbody>
                 <tr>
 
-                  <td>
+                  {/* <td>
                     <select required name="department" id="department" onChange={this.onChange} value={examData.department.id} className="gf-form-input max-width-22">
                       {this.createDepartments(this.props.data.createExamFilterDataCache.departments, examData.branch.id)}
                     </select>
-                  </td>
+                  </td> */}
 
                   <td>
                     <select required name="batch" id="batch" onChange={this.onChange} value={examData.batch.id} className="gf-form-input max-width-22">

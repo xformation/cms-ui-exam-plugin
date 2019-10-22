@@ -15,7 +15,7 @@ interface type {
 
 type ExamRootProps = RouteComponentProps<{
   academicYearId: string;
-  collegeId: string;
+  branchId: string;
 }> & {
   data: QueryProps & TypeOfGradings;
 };
@@ -58,15 +58,16 @@ class SaData {
 class Grading extends React.Component<ExamPageProps, ExamState>{
   constructor(props: any) {
     super(props);
+    const params = new URLSearchParams(location.search);
     this.state = {
       noOfExams: 0,
       gradeData: {
 
         branch: {
-          id: 1001  //1801 //1001
+          id: params.get('bid')
         },
         academicYear: {
-          id: 1051 //1701 //1051
+          id: params.get('ayid')
         },
         grade: {
           id: ""

@@ -19,7 +19,7 @@ interface type {
 
 type ExamRootProps = RouteComponentProps<{
   academicyearId: string;
-  collegeId: string;
+  branchId: string;
 }> & {
   data: QueryProps & LoadExamSubjQueryCacheForAdmin;
 };
@@ -85,6 +85,7 @@ class SaData {
 class ExamReportSrc extends React.Component<ExamPageProps, ExamState>{
   constructor(props: any) {
     super(props);
+    const params = new URLSearchParams(location.search);
     this.state = {
       dayValue: [],
       duratn: 0,
@@ -92,10 +93,10 @@ class ExamReportSrc extends React.Component<ExamPageProps, ExamState>{
 
       examData: {
         branch: {
-          id: 1851
+          id: params.get('bid')
         },
         academicyear: {
-          id: 1701 // 1051  //1701
+          id: params.get('ayid') // 1051  //1701
         },
         department: {
           id: ""
