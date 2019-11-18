@@ -1,7 +1,0 @@
-#import "../gqlfragments/acexamsettingDetails.graphql"
-
-query acExamSetting($acExamSettingId: Long!) {
-  acExamSetting(id: $acExamSettingId){
-  ...acExamSettingDetails
-  }
-}

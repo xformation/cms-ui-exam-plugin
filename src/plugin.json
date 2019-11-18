@@ -23,39 +23,12 @@
   "includes": [
     {
       "type": "page",
-      "name": "Home",
-      "addToNav": false,
-      "defaultNav": false,
-      "component": "MarkExam"
-    },
-    {
-      "type": "page",
-      "name": "AddExam",
-      "addToNav": true,
-      "defaultNav": false,
-      "component": "MarkExam"
-    },
-    {
-      "type": "page",
-      "name": "Exams",
+      "name": "examtab",
       "addToNav": true,
       "defaultNav": true,
-      "component": "AcExamSettingPage"
+      "component": "ExamTab"
     },
-    {
-      "type": "page",
-      "name": "Examdetails",
-      "addToNav": false,
-      "defaultNav": false,
-      "component": "ExamDetailsPageUi"
-    },
-    {
-      "type": "page",
-      "name": "Report",
-      "addToNav": true,
-      "defaultNav": false,
-      "component": "ExamReport"
-    },
+
 
     {
       "type": "page",

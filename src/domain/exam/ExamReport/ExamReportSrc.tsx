@@ -2,10 +2,12 @@ import * as moment from 'moment';
 import * as React from 'react';
 import { RouteComponentProps, withRouter, Link } from 'react-router-dom';
 import { graphql, QueryProps, MutationFunc, compose } from "react-apollo";
-import * as ExamListQueryTypeForAdminGql from './ExamListQueryTypeForAdmin.graphql';
-import * as AddReportMutationGql from './AddReportMutation.graphql';
-import { LoadExamSubjQueryCacheForAdmin, ExamListQueryTypeForAdmin, AddReportMutation } from '../../types';
-import withExamSubjDataLoader from './withExamSubjDataLoader';
+//import * as ExamListQueryTypeForAdminGql from './ExamListQueryTypeForAdmin.graphql';
+//import * as AddReportMutationGql from './AddReportMutation.graphql';
+//import { LoadExamSubjQueryCacheForAdmin, ExamListQueryTypeForAdmin, AddReportMutation } from '../../types';
+//import withExamSubjDataLoader from './withExamSubjDataLoader';
+import { CREATE_FILTER_DATA_CACHE, ADD_EXAM_REPORT, GET_EXAM_DATA} from '../_queries';
+import withLoadingHandler from '../withLoadingHandler';
 import { type } from 'os';
 
 const w180 = {
@@ -17,17 +19,17 @@ interface type {
 }
 
 
-type ExamRootProps = RouteComponentProps<{
-  academicyearId: string;
-  collegeId: string;
-}> & {
-  data: QueryProps & LoadExamSubjQueryCacheForAdmin;
-};
+//type ExamRootProps = RouteComponentProps<{
+//  academicyearId: string;
+//  collegeId: string;
+//}> & {
+//  data: QueryProps & LoadExamSubjQueryCacheForAdmin;
+//};
 
-type ExamPageProps = ExamRootProps & {
-  mutate: MutationFunc<ExamListQueryTypeForAdmin>;
-  mutateUpd: MutationFunc<AddReportMutation>;
-};
+//type ExamPageProps = ExamRootProps & {
+//  mutate: MutationFunc<ExamListQueryTypeForAdmin>;
+//  mutateUpd: MutationFunc<AddReportMutation>;
+//};
 
 type ExamState = {
   examData: any,
@@ -82,7 +84,7 @@ class SaData {
     this.comments = comments;
   }
 }
-class ExamReportSrc extends React.Component<ExamPageProps, ExamState>{
+class ExamReportSrc extends React.Component<any, ExamState>{
   constructor(props: any) {
     super(props);
     this.state = {
@@ -252,7 +254,7 @@ class ExamReportSrc extends React.Component<ExamPageProps, ExamState>{
       btn.setAttribute("disabled", true);
       return mutate({
         variables: { filter: examInputData },
-      }).then(data => {
+      }).then((data: any )=> {
         const sdt = data;
         examData.mutateResult = [];
         examData.mutateResult.push(sdt);
@@ -512,7 +514,7 @@ class ExamReportSrc extends React.Component<ExamPageProps, ExamState>{
     btn.setAttribute("disabled", true);
     return mutateUpd({
       variables: { input: examData.payLoad },
-    }).then(data => {
+    }).then((data: any) => {
       btn.removeAttribute("disabled");
       console.log('Update Result: ', data.data.addAcademicExamSettingData.statusDesc);
       alert(data.data.addAcademicExamSettingData.statusDesc);
@@ -692,18 +694,35 @@ class ExamReportSrc extends React.Component<ExamPageProps, ExamState>{
   }
 }
 
-export default withExamSubjDataLoader(
+//export default withExamSubjDataLoader(
+
+//  compose(
+//    graphql<ExamListQueryTypeForAdmin, ExamRootProps>(ExamListQueryTypeForAdminGql, {
+//     name: "mutate"
+//   }),
+//    graphql<AddReportMutation, ExamRootProps>(AddReportMutationGql, {
+//      name: "mutateUpd",
+//    }),
+
+
+//  )
+
+//    (ExamReportSrc) as any
+//);
+
+export default graphql(CREATE_FILTER_DATA_CACHE, {
+  options: ({ }) => ({
+    variables: {
+      collegeId:1801,
+      academicYearId: 1701
+    }
+  })
+}) (withLoadingHandler(
 
   compose(
-    graphql<ExamListQueryTypeForAdmin, ExamRootProps>(ExamListQueryTypeForAdminGql, {
-      name: "mutate"
-    }),
-    graphql<AddReportMutation, ExamRootProps>(AddReportMutationGql, {
-      name: "mutateUpd",
-    }),
-
-
+    graphql(ADD_EXAM_REPORT, { name: "addAcademicExamSettingData" }),
+    graphql(GET_EXAM_DATA, { name: "getSubjectandStudents" }),
   )
 
     (ExamReportSrc) as any
-);
+));

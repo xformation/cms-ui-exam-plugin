@@ -1,35 +1,41 @@
 import * as React from 'react';
 
 import { RouteComponentProps, Link } from 'react-router-dom';
-import { graphql, QueryProps } from 'react-apollo';
-import { AcExamSettingListQuery } from '../../types';
-
-import * as AcExamSettingListQueryGql from './AcExamSettingListQuery.graphql';
-import withLoadingHandler from '../../../components/withLoadingHandler';
+import { graphql, QueryProps, MutationFunc, compose } from "react-apollo";
+//import { AcExamSettingListQuery } from '../../types';
+//import * as AcExamSettingListQueryGql from './AcExamSettingListQuery.graphql';
+//import withLoadingHandler from '../../../components/withLoadingHandler';
+import withLoadingHandler from '../withLoadingHandler';
+import { EXAM_SETTING_LIST } from '../_queries/ExamSettingList';
 
 const w180 = {
   width: '180px',
   marginRight: '10px',
 };
 
-
+//// type AcExamSettingListPageOwnProps = RouteComponentProps<{
+//   academicYearId: string;
+//   collegeId: string;
+// }> & {
+//   data: QueryProps & LoadExamSubjQueryCacheForAdmin;
+// };
 
 type AcExamSettingListPageOwnProps = RouteComponentProps<{}>;
 type AcExamSettingListPageProps = {
-  data: QueryProps & AcExamSettingListQuery;
+data: QueryProps & AcExamSettingListQuery;
 };
 
 
 
-type ExamTableProps = {
-  acExamSettings: any
-};
+//type ExamTableProps = {
+//  acExamSettings: any
+//};
 type ExamTableStates = {
   acExamSettings: any,
   search: any,
   selectedExams: any
 };
-class AcExamSettingsTable extends React.Component<ExamTableProps, ExamTableStates> {
+class AcExamSettingList extends React.Component<any, ExamTableStates> {
 
   constructor(props: any) {
     super(props);
@@ -129,12 +135,12 @@ class AcExamSettingsTable extends React.Component<ExamTableProps, ExamTableState
             } */}
             {/* <td>{acExamSetting.countvalue}</td> */}
             <td>
-              <Link
+              {/* <Link
                 className="table-link link-color"
                 to={`/plugins/ems-exam/page/acExamSetting?countvalue=${acExamSetting.countvalue}`}
               >
                 {acExamSetting.examName}
-              </Link>
+              </Link> */}
             </td>
             <td>{acExamSetting.bctch}</td>
             <td>{acExamSetting.departmnt}</td>
@@ -209,29 +215,41 @@ class AcExamSettingsTable extends React.Component<ExamTableProps, ExamTableState
   }
 }
 
-const AcExamSettingListPage = ({ data: { acExamSettings } }: AcExamSettingListPageProps) => (
-  <section className="customCss">
-    <h3 className="bg-heading-exam p-1 m-b-0">
-      <i className="fa fa-university stroke-transparent mr-1" aria-hidden="true" />{' '}
-      Admin - Academic Exam Setting Management
-      </h3>
-    <div className="plugin-bg-white p-1">
-      <div className="m-b-1 eflex bg-heading-exam">
-        <h4 className="ptl-06">Academic Year 2018-2019 </h4>
-        <div>
+// const AcExamSettingListPage = ({ data: { acExamSettings } }) => (<section className="customCss">
+//   <h3 className="bg-heading-exam p-1 m-b-0">
+//     <i className="fa fa-university stroke-transparent mr-1" aria-hidden="true" />{' '}
+//     Admin - Academic Exam Setting Management
+//   </h3>
+//   <div className="plugin-bg-white p-1">
+//     <div className="m-b-1 eflex bg-heading-exam">
+//       <h4 className="ptl-06">Academic Year 2018-2019 </h4>
+//       <div>
 
-          <Link
-            to={`/plugins/ems-exam/page/addexam`}
-            className="btn btn-primary m-r-1" style={w180}>Add Exam
-          </Link>
+//         <Link to={`/plugins/ems-exam/page/addexam`} className="btn btn-primary m-r-1" style={w180}>Add Exam
+//         </Link>
 
-        </div>
-      </div>
-      <AcExamSettingsTable acExamSettings={acExamSettings} />
-    </div>
-  </section>
-);
+//       </div>
+//     </div>
+//     <AcExamSettingListPage acExamSettings={acExamSettings} />
+//   </div>
+// </section>);
 
-export default graphql<AcExamSettingListQuery, AcExamSettingListPageOwnProps, AcExamSettingListPageProps>(
-  AcExamSettingListQueryGql
-)(withLoadingHandler(AcExamSettingListPage));
+//export default graphql<AcExamSettingListQuery, AcExamSettingListPageOwnProps, AcExamSettingListPageProps>(
+//  AcExamSettingListQueryGql
+//)(withLoadingHandler(AcExamSettingListPage));
+
+export default graphql(EXAM_SETTING_LIST, {
+  options: ({ }) => ({
+    variables: {
+      collegeId:1801,
+      academicYearId: 1701
+    }
+  })
+}) (withLoadingHandler(
+  
+  compose(
+    graphql(EXAM_SETTING_LIST, { name: "acexamsettingList" }),
+  )
+
+    (AcExamSettingList) as any
+));

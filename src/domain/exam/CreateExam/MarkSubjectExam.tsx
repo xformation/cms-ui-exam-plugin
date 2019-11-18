@@ -2,9 +2,11 @@ import * as moment from 'moment';
 import * as React from 'react';
 import { RouteComponentProps, Link } from 'react-router-dom';
 import { graphql, QueryProps, MutationFunc, compose } from "react-apollo";
-import * as AddExamMutationGql from './AddExamMutation.graphql';
-import { LoadExamSubjQueryCacheForAdmin, AddExamMutation } from '../../types';
-import withExamSubjDataLoader from './withExamSubjDataLoader';
+// import * as AddExamMutationGql from './AddExamMutation.graphql';
+// import { LoadExamSubjQueryCacheForAdmin, AddExamMutation } from '../../types';
+// import withExamSubjDataLoader from './withExamSubjDataLoader';
+import { ADD_EXAM_SETTING, LOAD_EXAM_DATA_CACHE} from '../_queries';
+import withLoadingHandler from '../withLoadingHandler';
 import "react-datepicker/dist/react-datepicker.css";
 
 
@@ -16,17 +18,17 @@ interface type {
   checked: boolean;
 }
 
-type ExamRootProps = RouteComponentProps<{
-  academicYearId: string;
-  collegeId: string;
-}> & {
-  data: QueryProps & LoadExamSubjQueryCacheForAdmin;
-};
+// type ExamRootProps = RouteComponentProps<{
+//   academicYearId: string;
+//   collegeId: string;
+// }> & {
+//   data: QueryProps & LoadExamSubjQueryCacheForAdmin;
+// };
 
-type ExamPageProps = ExamRootProps & {
+// type ExamPageProps = ExamRootProps & {
 
-  mutate: MutationFunc<AddExamMutation>;
-};
+//   mutate: MutationFunc<AddExamMutation>;
+// };
 
 type ExamState = {
   examData: any,
@@ -92,7 +94,7 @@ class SaData {
   }
 }
 
-class MarkExam extends React.Component<ExamPageProps, ExamState>{
+class MarkExam extends React.Component<any, ExamState>{
   constructor(props: any) {
     super(props);
     this.state = {
@@ -587,7 +589,7 @@ class MarkExam extends React.Component<ExamPageProps, ExamState>{
     btn.setAttribute("disabled", true);
     return mutate({
       variables: { input: examData.payLoad },
-    }).then(data => {
+    }).then((data: any) => {
       btn.removeAttribute("disabled");
       console.log('Saved Result: ', data.data.addAcademicExamSetting);
       alert("Added Succesfully");
@@ -676,10 +678,10 @@ class MarkExam extends React.Component<ExamPageProps, ExamState>{
             {
               this.state.gradeType === "GRADE" &&
               <span>
-                <Link
+                {/* <Link
                   to={`/plugins/ems-exam/page/grading`}
                   className="btn btn-primary">Continue
-                </Link>
+                </Link> */}
               </span>
             }
           </div>
@@ -780,11 +782,27 @@ class MarkExam extends React.Component<ExamPageProps, ExamState>{
   }
 }
 
-export default withExamSubjDataLoader(
+// export default withExamSubjDataLoader(
+//   compose(
+//     graphql<AddExamMutation, ExamRootProps>(AddExamMutationGql, {
+//       name: "mutate",
+//     }),
+//   )
+//     (MarkExam) as any
+// );
+
+export default graphql(LOAD_EXAM_DATA_CACHE, {
+  options: ({ }) => ({
+    variables: {
+      collegeId:1801,
+      academicYearId: 1701
+    }
+  })
+}) (withLoadingHandler(
+
   compose(
-    graphql<AddExamMutation, ExamRootProps>(AddExamMutationGql, {
-      name: "mutate",
-    }),
+    graphql(ADD_EXAM_SETTING, { name: "addAcademicExamSetting" }),
   )
+
     (MarkExam) as any
-);
+));

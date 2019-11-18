@@ -1,3 +1,6 @@
+import gql from 'graphql-tag';
+
+export const ADD_EXAM_SETTING = gql`
 mutation addAcademicExamSetting($input: [AddAcademicExamSettingInput!]!) {
   addAcademicExamSetting(input: $input) {
     academicExamSetting {
@@ -41,3 +44,5 @@ mutation addAcademicExamSetting($input: [AddAcademicExamSettingInput!]!) {
     }
   }
 }
+
+`;

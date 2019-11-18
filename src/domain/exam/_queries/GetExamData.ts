@@ -1,3 +1,7 @@
+import gql from 'graphql-tag';
+
+export const GET_EXAM_DATA = gql`
+
 mutation getSubjectandStudents($filter: ExamReportFilterInput!) {
   getSubjectandStudents(filter: $filter) {
   id
@@ -28,3 +32,4 @@ academicyear{
       }
   }
 }
+`;
