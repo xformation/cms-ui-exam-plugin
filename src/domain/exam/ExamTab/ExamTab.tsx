@@ -3,7 +3,7 @@ import * as React from 'react';
 import { TabContent, TabPane, Nav, NavItem, NavLink } from 'reactstrap';
 import MarkExam from '../CreateExam/MarkSubjectExam';
 import ExamReportSrc from '../ExamReport/ExamReportSrc';
-import AcExamSettingList from '../AacExamSettingListPage/AcExamSettingListPage';
+import AcExamListPage from '../AacExamSettingListPage/AcExamSettingListPage';
 // import { FaUserGraduate } from 'react-icons/fa';
 import './tabs.css';
 
@@ -30,7 +30,7 @@ export default class ExamTab extends React.Component<any, any> {
         <div className="tab-flex p-1">
           {/* <img src="../../img/students.png" alt="" /> */}
           {/* <h5><FaUserGraduate className="m-1 fa-2x" /></h5> */}
-          <h5 className="p-1">Fee</h5>
+          <h5 className="p-1">Exam</h5>
         </div>
         <Nav tabs className="pl-3 pl-3 mb-4 mt-4 boxShadow">
           <NavItem className="cursor-pointer">
@@ -70,7 +70,7 @@ export default class ExamTab extends React.Component<any, any> {
         <TabContent activeTab={activeTab} className="border-right">
 
           <TabPane tabId={0}>
-            <AcExamSettingList />
+            <AcExamListPage />
           </TabPane>
           <TabPane tabId={1}>
             <MarkExam />

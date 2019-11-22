@@ -678,10 +678,10 @@ class MarkExam extends React.Component<any, ExamState>{
             {
               this.state.gradeType === "GRADE" &&
               <span>
-                {/* <Link
+                <Link
                   to={`/plugins/ems-exam/page/grading`}
                   className="btn btn-primary">Continue
-                </Link> */}
+                </Link>
               </span>
             }
           </div>

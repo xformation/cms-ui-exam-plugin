@@ -382,15 +382,6 @@ class ExamReportSrc extends React.Component<any, ExamState>{
     txtCn.value = "";
     // txtDs.value = "";
     examData.markObtain = "";
-    // feeSetupData.description = "";
-    // feeSetupData.feeCategory.id = "";
-    // feeSetupData.operationType = "";
-    // this.setState({
-    //   endDate: "",
-    //   startDate: ""
-
-    //    feeSetupData : feeSetupData
-    // });
     this.setState({
       examData: examData
     });

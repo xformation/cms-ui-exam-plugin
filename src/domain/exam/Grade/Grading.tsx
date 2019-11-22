@@ -3,7 +3,11 @@ import { RouteComponentProps, Link } from 'react-router-dom';
 import { graphql, QueryProps, MutationFunc, compose } from "react-apollo";
 import * as AddTypeOfGradingGql from './AddTypeOfGrading.graphql';
 import { TypeOfGradings, AddTypeOfGrading } from '../../types';
-import withGradingDataLoader from './withGradingDataLoader';
+// import withGradingDataLoader from './withGradingDataLoader';
+import { ADD_TYPE_OF_GRADING, TYPE_OF_GRADINGS, CREATE_FILTER_DATA_CACHE } from '../_queries';
+import withLoadingHandler from '../withLoadingHandler';
+// import { ADD_TYPE_OF_GRADING, TYPE_OF_GRADINGS } from '../_queries';
+
 
 const w180 = {
   width: '180px'
@@ -13,18 +17,18 @@ interface type {
   checked: boolean;
 }
 
-type ExamRootProps = RouteComponentProps<{
-  academicYearId: string;
-  collegeId: string;
-}> & {
-  data: QueryProps & TypeOfGradings;
-};
+// type ExamRootProps = RouteComponentProps<{
+//   academicYearId: string;
+//   collegeId: string;
+// }> & {
+//   data: QueryProps & TypeOfGradings;
+// };
 
-type ExamPageProps = ExamRootProps & {
-  mutate: MutationFunc<AddTypeOfGrading>;
-};
+// type ExamPageProps = ExamRootProps & {
+//   mutate: MutationFunc<AddTypeOfGrading>;
+// };
 
-type ExamState = {
+type ExamGradeState = {
   gradeData: any,
   branches: any,
   academicYears: any,
@@ -35,7 +39,7 @@ type ExamState = {
   selectedGrades: any
 };
 
-class SaData {
+class GradePage {
 
   minMarks: any;
   maxMarks: any;
@@ -55,7 +59,7 @@ class SaData {
   }
 }
 
-class Grading extends React.Component<ExamPageProps, ExamState>{
+class Grading extends React.Component<any, ExamGradeState>{
   constructor(props: any) {
     super(props);
     this.state = {
@@ -124,7 +128,7 @@ class Grading extends React.Component<ExamPageProps, ExamState>{
   onChange = (e: any) => {
     const { id, name, value } = e.nativeEvent.target;
     const { gradeData } = this.state;
-
+    
   }
 
 
@@ -199,7 +203,7 @@ class Grading extends React.Component<ExamPageProps, ExamState>{
     this.setState({ gradeData: gradeData })
 
     for (let i = 0; i < this.state.noOfExams; i++) {
-      let sd = new SaData(gradeData.exmMinMarks["minMarks" + i], gradeData.exmMaxMarks["maxMarks" + i], gradeData.exmgradesMarks["grades" + i], gradeData.exmgroupvalues["groupvalue" + i]);
+      let sd = new GradePage(gradeData.exmMinMarks["minMarks" + i], gradeData.exmMaxMarks["maxMarks" + i], gradeData.exmgradesMarks["grades" + i], gradeData.exmgroupvalues["groupvalue" + i]);
       // ,gradeData.academicYear.id, gradeData.branch.id
       gradeData.payLoad.push(sd);
     }
@@ -210,7 +214,7 @@ class Grading extends React.Component<ExamPageProps, ExamState>{
     btn.setAttribute("disabled", true);
     return mutate({
       variables: { input: gradeData.payLoad },
-    }).then(data => {
+    }).then((data: { data: { addTypeOfGrading: any; }; }) => {
       btn.removeAttribute("disabled");
       console.log('Saved Result: ', data.data.addTypeOfGrading);
       alert("Added Succesfully");
@@ -221,9 +225,12 @@ class Grading extends React.Component<ExamPageProps, ExamState>{
     });
   }
   onClickCheckbox(index: any, arr: any, e: any) {
-    this.setState({
-      selectedGrades: arr
-    });
+    // this.setState({
+    //   selectedGrades: arr
+    // });
+    const { id } = e.nativeEvent.target;
+    let chkBox: any = document.querySelector("#" + id);
+    chkBox.checked = e.nativeEvent.target.checked;
   }
 
   createGradeRow(obj: any) {
@@ -286,7 +293,7 @@ class Grading extends React.Component<ExamPageProps, ExamState>{
   }
 
   render() {
-    const { data: { refetch }, mutate } = this.props;
+    // const { data: { refetch }, mutate } = this.props;
     const { gradeData, submitted, selectedGrades } = this.state;
 
     return (
@@ -322,9 +329,9 @@ class Grading extends React.Component<ExamPageProps, ExamState>{
                 {
                   selectedGrades.length > 0 &&
                   <span>
-                    <Link to={`/plugins/ems-exam/page/addexam`} className="btn btn-primary m-l-1" onClick={this.onClickContinueButton}>
+                    {/* <Link to={`/plugins/ems-exam/page/addexam`} className="btn btn-primary m-l-1" onClick={this.onClickContinueButton}>
                       Continue
-              </Link>
+              </Link> */}
                   </span>
                 }
               </div>
@@ -373,12 +380,27 @@ class Grading extends React.Component<ExamPageProps, ExamState>{
   }
 }
 
-export default withGradingDataLoader(
+// export default withGradingDataLoader(
 
+//   compose(
+//     graphql<AddTypeOfGrading, ExamRootProps>(AddTypeOfGradingGql, {
+//       name: "mutate",
+//     }),
+//   )
+//     (Grading) as any
+// );
+export default graphql(CREATE_FILTER_DATA_CACHE,{
+  options: ({ }) => ({
+    variables: {
+      collegeId:1801,
+      academicYearId: 1701
+    }
+  })
+}) (withLoadingHandler(
   compose(
-    graphql<AddTypeOfGrading, ExamRootProps>(AddTypeOfGradingGql, {
-      name: "mutate",
-    }),
+    graphql(ADD_TYPE_OF_GRADING, { name: "mutate" }),
+    graphql(TYPE_OF_GRADINGS, { name: "mutate" }),
   )
+
     (Grading) as any
-);
+));
