@@ -8,7 +8,8 @@ import { graphql, QueryProps, MutationFunc, compose } from "react-apollo";
 import { ADD_EXAM_SETTING, LOAD_EXAM_DATA_CACHE} from '../_queries';
 import withLoadingHandler from '../withLoadingHandler';
 import "react-datepicker/dist/react-datepicker.css";
-
+import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import Grading from '../Grade/Grading'
 
 const w180 = {
   width: '180px'
@@ -48,8 +49,8 @@ type ExamState = {
   gradeType: any,
   selectedGrade: any,
   groupValue: any,
-  gradingId: any
-
+  gradingId: any,
+  isModalOpen: any
 
 };
 
@@ -98,6 +99,7 @@ class MarkExam extends React.Component<any, ExamState>{
   constructor(props: any) {
     super(props);
     this.state = {
+      isModalOpen: false,
       gradeType: '',
       noOfExams: 0,
       selectedGrade: '',
@@ -600,7 +602,12 @@ class MarkExam extends React.Component<any, ExamState>{
     });
   }
 
-
+  showModal(e: any, bShow: boolean) {
+    e && e.preventDefault();
+    this.setState(() => ({
+        isModalOpen: bShow
+    }));
+  }
 
 
   createGrid(ary: any) {
@@ -641,7 +648,7 @@ class MarkExam extends React.Component<any, ExamState>{
   }
   render() {
     const { data: { createExamFilterDataCache, refetch }, mutate } = this.props;
-    const { examData, departments, batches, subjects, semesters, sections, submitted } = this.state;
+    const { examData, departments, batches, subjects, semesters, sections, submitted, isModalOpen } = this.state;
 
     return (
       <section className="plugin-bg-white">
@@ -677,13 +684,23 @@ class MarkExam extends React.Component<any, ExamState>{
 
             {
               this.state.gradeType === "GRADE" &&
-              <span>
-                <Link
-                  to={`/plugins/ems-exam/page/grading`}
-                  className="btn btn-primary">Continue
-                </Link>
-              </span>
+              // <span>
+              //   <Link
+              //     to={`/plugins/ems-exam/page/grading`}
+              //     className="btn btn-primary">Continue
+              //   </Link>
+              // </span>
+              <button className="btn btn-primary" onClick={e => this.showModal(e, true)}>Continue</button>
             }
+            <Modal isOpen={isModalOpen} className="react-strap-modal-container">
+                <ModalHeader>Add New Grade</ModalHeader>
+                <ModalBody className="modal-content">
+                  <div className="m-t-1 text-center">
+                      <Grading></Grading>
+                      <button className="btn btn-danger border-bottom" onClick={(e) => this.showModal(e, false)}>Cancel</button>
+                  </div>
+                </ModalBody>
+            </Modal>
           </div>
         </div>
         <div className="p-1">

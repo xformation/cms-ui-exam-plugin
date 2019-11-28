@@ -9,9 +9,14 @@ import withLoadingHandler from '../withLoadingHandler';
 // import { ADD_TYPE_OF_GRADING, TYPE_OF_GRADINGS } from '../_queries';
 
 
-const w180 = {
-  width: '180px'
+const w50 = {
+  width: '50px'
 };
+
+const ht = {
+  height: '100px',
+  overflow: 'scroll'
+}
 
 interface type {
   checked: boolean;
@@ -235,6 +240,9 @@ class Grading extends React.Component<any, ExamGradeState>{
 
   createGradeRow(obj: any) {
     let consolidatedObj: any = {};
+    if (obj === undefined || obj === null){
+      return;
+    }
     const length = obj.length;
     for (let counter = 0; counter < length; counter++) {
       let grade = obj[counter];
@@ -277,13 +285,13 @@ class Grading extends React.Component<any, ExamGradeState>{
         <tbody>
           <tr>
             <td>
-              <input type="number" id={"minMarks" + i} name="minMarks" value={gradeData.minMarks} onChange={this.handleMinMarksChange} ></input>
+              <input style={w50} type="number" id={"minMarks" + i} name="minMarks" value={gradeData.minMarks} onChange={this.handleMinMarksChange} ></input>
             </td>
             <td>
-              <input type="number" id={"maxMarks" + i} name="maxMarks" value={gradeData.maxMarks} onChange={this.handleMaxMarksChange} ></input>
+              <input style={w50} type="number" id={"maxMarks" + i} name="maxMarks" value={gradeData.maxMarks} onChange={this.handleMaxMarksChange} ></input>
             </td>
             <td>
-              <input type="text" id={"grades" + i} name="grades" value={gradeData.grades} onChange={this.handleGradesChange} ></input>
+              <input style={w50} type="text" id={"grades" + i} name="grades" value={gradeData.grades} onChange={this.handleGradesChange} ></input>
             </td>
           </tr>
         </tbody>
@@ -298,10 +306,10 @@ class Grading extends React.Component<any, ExamGradeState>{
 
     return (
       <section className="plugin-bg-white">
-        <h3 className="bg-heading p-1">
+        {/* <h3 className="bg-heading p-1">
           <i className="fa fa-university stroke-transparent mr-1" aria-hidden="false" />{' '}
           Admin - Academic Grading Setting
-        </h3>
+        </h3> */}
         <div className="p-1">
           <div className="bg-heading p-1">
             <div className="eflex">
@@ -321,10 +329,10 @@ class Grading extends React.Component<any, ExamGradeState>{
                   <button className="btn btn-primary mr-1" id="btnSave" name="btnSave" onClick={this.onClick}>Save</button>
                 </span>
                 <span>
-                  <Link
+                  {/* <Link
                     to={`/plugins/ems-exam/page/addexam`}
                     className="btn btn-primary" >Back
-                </Link>
+                </Link> */}
                 </span>
                 {
                   selectedGrades.length > 0 &&
