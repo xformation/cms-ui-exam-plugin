@@ -5,7 +5,7 @@ import { graphql, QueryProps, MutationFunc, compose } from "react-apollo";
 // import * as AddExamMutationGql from './AddExamMutation.graphql';
 // import { LoadExamSubjQueryCacheForAdmin, AddExamMutation } from '../../types';
 // import withExamSubjDataLoader from './withExamSubjDataLoader';
-import { ADD_EXAM_SETTING, LOAD_EXAM_DATA_CACHE} from '../_queries';
+import { ADD_EXAM_SETTING,  CREATE_FILTER_DATA_CACHE} from '../_queries';
 import withLoadingHandler from '../withLoadingHandler';
 import "react-datepicker/dist/react-datepicker.css";
 import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
@@ -95,7 +95,7 @@ class SaData {
   }
 }
 
-class MarkExam extends React.Component<any, ExamState>{
+export class MarkExam extends React.Component<any, ExamState>{
   constructor(props: any) {
     super(props);
     this.state = {
@@ -110,7 +110,7 @@ class MarkExam extends React.Component<any, ExamState>{
       isSubjectSame: false,
       examData: {
         branch: {
-          id: 1851
+          id: 1901
           //1851 1001
         },
         academicYear: {
@@ -198,7 +198,7 @@ class MarkExam extends React.Component<any, ExamState>{
       });
     }
     else {
-      this.setState({ gradingId: "7534" });
+      this.setState({ gradingId: "2501" });
       this.setState({ groupValue: "1" });
     }
   }
@@ -652,10 +652,10 @@ class MarkExam extends React.Component<any, ExamState>{
 
     return (
       <section className="plugin-bg-white">
-        <h3 className="bg-heading p-1">
+        {/* <h3 className="bg-heading p-1">
           <i className="fa fa-university stroke-transparent mr-1" aria-hidden="true" />{' '}
           Admin - Academic Exam Setting
-        </h3>
+        </h3> */}
         <div className="bg-heading p-1 m-1">
           <div className="e-flex align-baseline">
             <h4 className="m-r-1">
@@ -808,10 +808,10 @@ class MarkExam extends React.Component<any, ExamState>{
 //     (MarkExam) as any
 // );
 
-export default graphql(LOAD_EXAM_DATA_CACHE, {
+export default graphql(CREATE_FILTER_DATA_CACHE, {
   options: ({ }) => ({
     variables: {
-      collegeId:1801,
+      collegeId:1851,
       academicYearId: 1701
     }
   })

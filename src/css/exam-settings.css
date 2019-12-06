@@ -1,0 +1,46 @@
+/********************************* AcExamSettingListPage *******************************/
+
+.info-container .logo {
+  width: 100px;
+  height: 18px;
+}
+
+.info-container .background {
+  width: 500px;
+}
+
+/******************************** ExamReportSrc ********************************/
+
+.react-strap-modal-container > .modal-content {
+  padding: 0px !important;
+}
+
+.react-strap-modal-container .modal-header {
+  background: #1c95ea;
+  border-bottom: 1px solid #c7d0d9;
+  box-shadow: none !important;
+}
+
+.react-strap-modal-container .modal-header .modal-title {
+  margin-bottom: 0px;
+  padding: 17px 10px;
+  color: white;
+}
+
+/******************************** MarkSubjectExam ********************************/
+
+.react-strap-modal-container > .modal-content {
+  padding: 0px !important;
+}
+
+.react-strap-modal-container .modal-header {
+  background: #1c95ea;
+  border-bottom: 1px solid #c7d0d9;
+  box-shadow: none !important;
+}
+
+.react-strap-modal-container .modal-header .modal-title {
+  margin-bottom: 0px;
+  padding: 17px 10px;
+  color: white;
+}

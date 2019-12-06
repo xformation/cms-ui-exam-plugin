@@ -8,6 +8,7 @@ import { graphql, QueryProps, MutationFunc, compose } from "react-apollo";
 //import withExamSubjDataLoader from './withExamSubjDataLoader';
 import { CREATE_FILTER_DATA_CACHE, ADD_EXAM_REPORT, GET_EXAM_DATA} from '../_queries';
 import withLoadingHandler from '../withLoadingHandler';
+
 import { type } from 'os';
 
 const w180 = {
@@ -19,12 +20,12 @@ interface type {
 }
 
 
-//type ExamRootProps = RouteComponentProps<{
+// type ExamRootProps = RouteComponentProps<{
 //  academicyearId: string;
 //  collegeId: string;
-//}> & {
+// }> & {
 //  data: QueryProps & LoadExamSubjQueryCacheForAdmin;
-//};
+// };
 
 //type ExamPageProps = ExamRootProps & {
 //  mutate: MutationFunc<ExamListQueryTypeForAdmin>;
@@ -84,7 +85,7 @@ class SaData {
     this.comments = comments;
   }
 }
-class ExamReportSrc extends React.Component<any, ExamState>{
+export class ExamReportSrc extends React.Component<any, ExamState>{
   constructor(props: any) {
     super(props);
     this.state = {
@@ -94,7 +95,7 @@ class ExamReportSrc extends React.Component<any, ExamState>{
 
       examData: {
         branch: {
-          id: 1851
+          id: 1901
         },
         academicyear: {
           id: 1701 // 1051  //1701
@@ -488,7 +489,7 @@ class ExamReportSrc extends React.Component<any, ExamState>{
     let sadt = new SaData(
 
       23,
-      1251,
+      2351,
       examData.typeOfGarding.id,
       examData.academicExamSetting.id,
       examData.department.id,
@@ -572,10 +573,10 @@ class ExamReportSrc extends React.Component<any, ExamState>{
 
     return (
       <section className="plugin-bg-white">
-        <h3 className="bg-heading p-1">
+        {/* <h3 className="bg-heading p-1">
           <i className="fa fa-university stroke-transparent mr-1" aria-hidden="true" />{' '}
           Admin - Academic Exam Setting
-        </h3>
+        </h3> */}
 
 
         <div className="p-1">
@@ -704,7 +705,7 @@ class ExamReportSrc extends React.Component<any, ExamState>{
 export default graphql(CREATE_FILTER_DATA_CACHE, {
   options: ({ }) => ({
     variables: {
-      collegeId:1801,
+      collegeId:1851,
       academicYearId: 1701
     }
   })

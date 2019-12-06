@@ -43,7 +43,7 @@ type ExamTableState = {
   pageSize: any
 };
 
-class AcExamListPage extends React.Component<any, ExamTableState> {
+export class AcExamListPage extends React.Component<any, ExamTableState> {
 
   constructor(props: any) {
     super(props);
@@ -208,44 +208,20 @@ render() {
   const{ examData } = this.state;
 
   return (
-    <section className="customCss">
-      <h3 className="plugin-bg-white p-1">
-        <i className="fa fa-university stroke-transparent mr-1" aria-hidden="true" />{' '}
-        Admin - Academic Exam Setting Management
-     </h3>
-      <div className="container-fluid p-1 ">
-        <div className="m-b-1 bg-heading-bgStudent studentListFlex">
-        <div className="plugin-bg-white p-1">
-      <div className="m-b-1 eflex bg-heading-exam">
-        <h4 className="ptl-06">Academic Year 2018-2019 </h4>
-        
-          {/* <Link
-            to={`/plugins/ems-exam/page/addexam`}
-            className="btn btn-primary m-r-1" style={w180}>Add Exam
-          </Link> */}
 
-      </div>
-     
-    </div>
-          <div className="">
-            <h4 className="">Exam Type</h4>
-          </div>
-         
-        </div>
-        
+<section className="customCss">
       <div className="student-flex">
-            
-
-
-          <div className="margin-bott max-width-22">
+      <div className="bg-heading p-1 m-1"> 
+          <div className="margin-bott max-width-32">
               <label htmlFor="">Search</label>
               <input type="text" name="search" value={examData.search} onChange={this.onChange} />
           </div>
-          <div className="m-b-1 bg-heading-bg studentSearch">
+          </div>
+          <div className="m-r-1 bg-heading-bg studentSearch">
               <button className="btn btn-primary max-width-13" id="btnFind" name="btnFind" onClick={this.onClick} style={w180}>Search Exam</button>
             </div>
           </div>
-         
+          
 
           <table id="examlistpage" className="striped-table fwidth bg-white">
             <thead>
@@ -268,7 +244,6 @@ render() {
             </tbody>
           </table>
          
-      </div>
       </section>
 
   );
@@ -276,24 +251,24 @@ render() {
 }
 const AcExamSettingListPage = ({ data: { acExamSettings } }: any) => (
   <section className="customCss">
-    <h3 className="bg-heading-exam p-1 m-b-0">
+    {/* <h3 className="bg-heading-exam p-1 m-b-0">
       <i className="fa fa-university stroke-transparent mr-1" aria-hidden="true" />{' '}
       Admin - Academic Exam Setting Management
-      </h3>
-    <div className="plugin-bg-white p-1">
-      <div className="m-b-1 eflex bg-heading-exam">
-        <h4 className="ptl-06">Academic Year 2018-2019 </h4>
-        <div>
+      </h3> */}
+    {/* <div className="plugin-bg-white p-1"> */}
+      {/* <div className="m-b-1 eflex bg-heading-exam"> */}
+        {/* <h4 className="ptl-06">Academic Year 2018-2019 </h4> */}
+        {/* <div> */}
 
           {/* <Link
             to={`/plugins/ems-exam/page/addexam`}
             className="btn btn-primary m-r-1" style={w180}>Add Exam
           </Link> */}
 
-        </div>
-      </div>
+        {/* </div> */}
+      {/* </div> */}
       <AcExamListPage acExamSettings={acExamSettings} />
-    </div>
+    {/* </div> */}
   </section>
 );
   
