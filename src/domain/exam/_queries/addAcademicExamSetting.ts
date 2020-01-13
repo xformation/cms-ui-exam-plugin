@@ -1,0 +1,46 @@
+import gql from 'graphql-tag';
+
+export const ADD_EXAM_SETTING = gql`
+  mutation addAcademicExamSetting($input: [AddAcademicExamSettingInput!]!) {
+    addAcademicExamSetting(input: $input) {
+      academicExamSetting {
+        id
+        examName
+        semester
+        examDate
+        startTime
+        endTime
+        gradeType
+        total
+        passing
+        actions
+        countvalue
+        department {
+          id
+          name
+        }
+        section {
+          id
+          section
+        }
+
+        subject {
+          id
+          subjectDesc
+        }
+        academicyear {
+          id
+          year
+        }
+        batch {
+          id
+          batch
+        }
+        branch {
+          id
+          branchName
+        }
+      }
+    }
+  }
+`;

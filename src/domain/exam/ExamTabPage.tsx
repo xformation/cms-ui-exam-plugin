@@ -1,12 +1,12 @@
 import * as React from 'react';
 // import { graphql, QueryProps, MutationFunc, compose } from 'react-apollo';
 import { TabContent, TabPane, Nav, NavItem, NavLink } from 'reactstrap';
-import MarkExam from '../ExamSettings/MarkSubjectExam';
-import ExamReportSrc from '../ExamSettings/ExamReportSrc';
-import AcExamListPage from '../ExamSettings/AcExamSettingListPage';
+import MarkExam from './ExamSettings/MarkSubjectExam';
+import ExamReportSrc from './ExamSettings/ExamReportSrc';
+import AcExamListPage from './ExamSettings/AcExamSettingListPage';
 // import { FaUserGraduate } from 'react-icons/fa';
-import './tabs.css';
-import ExamSettings from '../ExamSettings';
+import '../../css/tabs.css';
+import ExamSettings from './ExamSettings';
 
 
 export default class ExamTab extends React.Component<any, any> {

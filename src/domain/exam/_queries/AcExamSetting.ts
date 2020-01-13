@@ -1,22 +1,18 @@
 import gql from 'graphql-tag';
 
-export const EXAM_SETTING_LIST = gql`
-
-query acexamsettingList {
-  acExamSettings {
+export const AcExamSetting = gql`
+  fragment acExamSetting on AcExamSetting {
     id
     examName
-     action
+    action
     sbjct
     examDate
     departmnt
     bctch
-    brnch
     sectn
     st
     ed
     subExamDate
     countvalue
-  }
   }
 `;

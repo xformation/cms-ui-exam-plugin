@@ -1,36 +1,102 @@
 import * as React from 'react';
-// import { graphql, QueryProps, MutationFunc, compose } from 'react-apollo';
-import { withRouter, RouteComponentProps, Link } from 'react-router-dom';
+// import { withRouter, RouteComponentProps, Link } from 'react-router-dom';
 import { TabContent, TabPane, Nav, NavItem, NavLink } from 'reactstrap';
+import {withApollo} from 'react-apollo';
 
 import '../../../css/exam-settings.css';
-import {AcExamListPage} from './AcExamSettingListPage';
-import {ExamReportSrc}  from './ExamReportSrc';
-import {MarkExam} from './MarkSubjectExam';
+import AcExamListPage from './AcExamSettingListPage';
+import ExamReportSrc  from './ExamReportSrc';
+import MarkExam from './MarkSubjectExam';
+import { GET_DEPARTMENT_LIST, GET_BATCH_LIST, GET_EXAM_SETTING_LIST, GET_SECTION_LIST, CREATE_FILTER_DATA_CACHE, GET_EXAM_DATA } from '../_queries';
 
-export default class ExamSettings extends React.Component<any, any> {
+
+class ExamSettings extends React.Component<any, any> {
     constructor(props: any) {
         super(props);
         this.state = {
             activeTab: 0,
+            examList: null,
+            departmentList: null,
+            batchList: null,
+            sectionList: null,
+            
         };
         this.toggleTab = this.toggleTab.bind(this);
+        this.getacExamSettingsList = this.getacExamSettingsList.bind(this);
+        this.getDepartmentList = this.getDepartmentList.bind(this);
+        this.getBatchList = this.getBatchList.bind(this);
+        this.getSectionList = this.getSectionList.bind(this);
     }
 
-    toggleTab(tabNo: any) {
+    async toggleTab(tabNo: any) {
+        this.setState({
+            examList: null,
+            activeTab: tabNo,
+        });
+        let bid = 34;
+        let aid = 56;
+
+        if(tabNo === 1 || tabNo === 2){
+            this.getacExamSettingsList(bid, aid);
+
+        }
         this.setState({
             activeTab: tabNo,
         });
     }
 
+    async getacExamSettingsList(bid: any, aid: any){
+        const { data } = await this.props.client.query({
+            query: GET_EXAM_SETTING_LIST,
+            fetchPolicy: 'no-cache'
+        })
+
+        this.setState({
+            examList: data
+        });
+    }
+
+    async getDepartmentList(bid: any, aid: any){
+        const { data } = await this.props.client.query({
+            query: GET_DEPARTMENT_LIST,
+            fetchPolicy: 'no-cache'
+        })
+
+        this.setState({
+            departmentList: data
+        });
+    }
+
+    async getBatchList(bid: any, aid: any){
+        const { data } = await this.props.client.query({
+            query: GET_BATCH_LIST,
+            fetchPolicy: 'no-cache'
+        })
+
+        this.setState({
+            batchList: data
+        });
+    }
+
+    async getSectionList(bid: any, aid: any){
+        const { data } = await this.props.client.query({
+            query: GET_SECTION_LIST,
+            fetchPolicy: 'no-cache'
+        })
+
+        this.setState({
+            sectionList: data
+        });
+    }
+
     render() {
-        const { activeTab } = this.state;
+        const { activeTab, examList, departmentList, batchList, sectionList} = this.state;
         return (
             <section className="tab-container row vertical-tab-container">
                 <Nav tabs className="pl-3 pl-3 mb-4 mt-4 col-sm-2">
                     <NavItem className="cursor-pointer">
                         <NavLink className={`vertical-nav-link ${activeTab === 0 ? 'side-active' : ''}`} onClick={() => { this.toggleTab(0); }} >
-                            Search Exams
+                         Exams List
                         </NavLink>
                     </NavItem>
                     <NavItem className="cursor-pointer">
@@ -46,12 +112,21 @@ export default class ExamSettings extends React.Component<any, any> {
                 </Nav>
                 <TabContent activeTab={activeTab} className="col-sm-9 border-left p-t-1">
                     <TabPane tabId={0}>
-                        <AcExamListPage />
+                        {/* <AcExamListPage /> */}
+                        {
+                            examList !== null && departmentList !== null && batchList !== null &&  sectionList != null && (
+                                <AcExamListPage data={examList.getacExamSettingsList} departmentList={departmentList.getDepartmentList} batchList={batchList.getBatchList} sectionList={sectionList.getSectionList}/>
+                            )
+                        }
                     </TabPane>
+
                     <TabPane tabId={1}>
+                        Test
                         {/* <MarkExam /> */}
                     </TabPane>
+
                     <TabPane tabId={2}>
+                        Test
                     {/* <ExamReportSrc /> */}
                     </TabPane>
                 </TabContent>
@@ -59,3 +134,5 @@ export default class ExamSettings extends React.Component<any, any> {
         );
     }
 }
+
+export default withApollo(ExamSettings)

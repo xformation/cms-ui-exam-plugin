@@ -1,7 +1,7 @@
 import * as moment from 'moment';
 import * as React from 'react';
 import { RouteComponentProps, Link } from 'react-router-dom';
-import { graphql, QueryProps, MutationFunc, compose } from "react-apollo";
+import { graphql, QueryProps, MutationFunc, compose, withApollo } from "react-apollo";
 // import * as AddExamMutationGql from './AddExamMutation.graphql';
 // import { LoadExamSubjQueryCacheForAdmin, AddExamMutation } from '../../types';
 // import withExamSubjDataLoader from './withExamSubjDataLoader';
@@ -9,7 +9,7 @@ import { ADD_EXAM_SETTING,  CREATE_FILTER_DATA_CACHE} from '../_queries';
 import withLoadingHandler from '../withLoadingHandler';
 import "react-datepicker/dist/react-datepicker.css";
 import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
-import Grading from '../Grade/Grading'
+import Grading from '../ExamSettings/Grading'
 
 const w180 = {
   width: '180px'
@@ -808,18 +808,4 @@ export class MarkExam extends React.Component<any, ExamState>{
 //     (MarkExam) as any
 // );
 
-export default graphql(CREATE_FILTER_DATA_CACHE, {
-  options: ({ }) => ({
-    variables: {
-      collegeId:1851,
-      academicYearId: 1701
-    }
-  })
-}) (withLoadingHandler(
-
-  compose(
-    graphql(ADD_EXAM_SETTING, { name: "addAcademicExamSetting" }),
-  )
-
-    (MarkExam) as any
-));
+export default withApollo(MarkExam)
