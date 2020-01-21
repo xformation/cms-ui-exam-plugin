@@ -4,7 +4,7 @@ import {TabContent, TabPane, Nav, NavItem, NavLink} from 'reactstrap';
 import {withApollo} from 'react-apollo';
 
 import '../../../css/exam-settings.css';
-import AcExamListPage from './AcExamSettingListPage';
+import AcExamListPage from './ExamGrid';
 import ExamReportSrc from './ExamReportSrc';
 import {
   GET_DEPARTMENT_LIST,
@@ -13,8 +13,10 @@ import {
   GET_SECTION_LIST,
   CREATE_FILTER_DATA_CACHE,
   GET_EXAM_DATA,
+  ACEXAMLIST,
 } from '../_queries';
 import MarkSubjectExam from './MarkSubjectExam';
+import ExamGrid from './ExamGrid';
 
 class ExamSettings extends React.Component<any, any> {
   constructor(props: any) {
@@ -27,7 +29,7 @@ class ExamSettings extends React.Component<any, any> {
       sectionList: null,
     };
     this.toggleTab = this.toggleTab.bind(this);
-    this.getacExamSettingsList = this.getacExamSettingsList.bind(this);
+    this.acExamSettings = this.acExamSettings.bind(this);
     this.getDepartmentList = this.getDepartmentList.bind(this);
     this.getBatchList = this.getBatchList.bind(this);
     this.getSectionList = this.getSectionList.bind(this);
@@ -41,17 +43,17 @@ class ExamSettings extends React.Component<any, any> {
     let bid = 34;
     let aid = 56;
 
-    if (tabNo === 1 || tabNo === 2) {
-      this.getacExamSettingsList(bid, aid);
-    }
+    // if (tabNo === 1 || tabNo === 2) {
+    this.acExamSettings();
+
     this.setState({
       activeTab: tabNo,
     });
   }
 
-  async getacExamSettingsList(bid: any, aid: any) {
+  async acExamSettings() {
     const {data} = await this.props.client.query({
-      query: GET_EXAM_SETTING_LIST,
+      query: ACEXAMLIST,
       fetchPolicy: 'no-cache',
     });
 
@@ -94,7 +96,7 @@ class ExamSettings extends React.Component<any, any> {
   }
 
   render() {
-    const {activeTab, examList, departmentList, batchList, sectionList} = this.state;
+    const {activeTab, examList} = this.state;
     return (
       <section className="tab-container row vertical-tab-container">
         <Nav tabs className="pl-3 pl-3 mb-4 mt-4 col-sm-2">
@@ -132,21 +134,10 @@ class ExamSettings extends React.Component<any, any> {
         <TabContent activeTab={activeTab} className="col-sm-9 border-left p-t-1">
           <TabPane tabId={0}>
             {/* <AcExamListPage /> */}
-            {examList !== null &&
-              departmentList !== null &&
-              batchList !== null &&
-              sectionList != null && (
-                <AcExamListPage
-                  data={examList.getacExamSettingsList}
-                  departmentList={departmentList.getDepartmentList}
-                  batchList={batchList.getBatchList}
-                  sectionList={sectionList.getSectionList}
-                />
-              )}
+            {examList !== null && <ExamGrid data={examList.acExamSettings} />}
           </TabPane>
 
           <TabPane tabId={1}>
-            Test
             <MarkSubjectExam />
           </TabPane>
 
