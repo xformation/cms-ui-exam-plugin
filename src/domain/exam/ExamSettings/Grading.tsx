@@ -1,22 +1,25 @@
 import * as React from 'react';
-import { RouteComponentProps, Link } from 'react-router-dom';
-import { graphql, QueryProps, MutationFunc, compose } from "react-apollo";
+import {RouteComponentProps, Link} from 'react-router-dom';
+import {graphql, QueryProps, MutationFunc, compose} from 'react-apollo';
 import * as AddTypeOfGradingGql from './AddTypeOfGrading.graphql';
-import { TypeOfGradings, AddTypeOfGrading } from '../../types';
+import {TypeOfGradings, AddTypeOfGrading} from '../../types';
 // import withGradingDataLoader from './withGradingDataLoader';
-import { ADD_TYPE_OF_GRADING, TYPE_OF_GRADINGS, CREATE_FILTER_DATA_CACHE } from '../_queries';
+import {
+  ADD_TYPE_OF_GRADING,
+  TYPE_OF_GRADINGS,
+  CREATE_FILTER_DATA_CACHE,
+} from '../_queries';
 import withLoadingHandler from '../withLoadingHandler';
 // import { ADD_TYPE_OF_GRADING, TYPE_OF_GRADINGS } from '../_queries';
 
-
 const w50 = {
-  width: '50px'
+  width: '50px',
 };
 
 const ht = {
   height: '100px',
-  overflow: 'scroll'
-}
+  overflow: 'scroll',
+};
 
 interface type {
   checked: boolean;
@@ -34,18 +37,17 @@ interface type {
 // };
 
 type ExamGradeState = {
-  gradeData: any,
-  branches: any,
-  academicYears: any,
-  dtPicker: any,
-  submitted: any,
-  noOfExams: number,
-  add: any,
-  selectedGrades: any
+  gradeData: any;
+  branches: any;
+  academicYears: any;
+  dtPicker: any;
+  submitted: any;
+  noOfExams: number;
+  add: any;
+  selectedGrades: any;
 };
 
 class GradePage {
-
   minMarks: any;
   maxMarks: any;
   grades: any;
@@ -55,7 +57,7 @@ class GradePage {
   constructor(minMarks: any, maxMarks: any, grades: any, groupvalue: any) {
     //, branchId: any,
     // academicyearId: any
-    this.minMarks = minMarks
+    this.minMarks = minMarks;
     this.maxMarks = maxMarks;
     this.grades = grades;
     this.groupvalue = groupvalue;
@@ -64,25 +66,24 @@ class GradePage {
   }
 }
 
-class Grading extends React.Component<any, ExamGradeState>{
+class Grading extends React.Component<any, ExamGradeState> {
   constructor(props: any) {
     super(props);
     this.state = {
       noOfExams: 0,
       gradeData: {
-
         branch: {
-          id: 1001  //1801 //1001
+          id: 1951, //1801 //1001
         },
         academicYear: {
-          id: 1051 //1701 //1051
+          id: 1701, //1701 //1051
         },
         grade: {
-          id: ""
+          id: '',
         },
         mutateResult: [],
         filtered: [],
-        selectedIds: "",
+        selectedIds: '',
         payLoad: [],
         textValueMap: {},
         exmMinMarks: {},
@@ -96,7 +97,7 @@ class Grading extends React.Component<any, ExamGradeState>{
       dtPicker: [],
       submitted: false,
       add: false,
-      selectedGrades: []
+      selectedGrades: [],
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -110,137 +111,148 @@ class Grading extends React.Component<any, ExamGradeState>{
 
   increaseExamValue() {
     // if(this.state.noOfExams < 5){
-    this.setState({ noOfExams: this.state.noOfExams + 1 })
+    this.setState({noOfExams: this.state.noOfExams + 1});
     // this.createGrid();
     // }
   }
 
   decreaseExamValue() {
     if (this.state.noOfExams > 0) {
-      this.setState({ noOfExams: this.state.noOfExams - 1 })
+      this.setState({noOfExams: this.state.noOfExams - 1});
     }
     // this.createGrid();
   }
 
   onClickContinueButton(e: any) {
-    localStorage.setItem("selectedGrades", JSON.stringify(this.state.selectedGrades));
+    // localStorage.setItem("selectedGrades", JSON.stringify(this.state.selectedGrades));
   }
 
   createGradeGrid = (e: any) => {
     this.createGrid();
-  }
+  };
 
   onChange = (e: any) => {
-    const { id, name, value } = e.nativeEvent.target;
-    const { gradeData } = this.state;
-    
-  }
-
-
+    const {id, name, value} = e.nativeEvent.target;
+    const {gradeData} = this.state;
+  };
 
   handleChange = (e: any) => {
-    const { id, value } = e.nativeEvent.target;
-    const { gradeData } = this.state;
+    const {id, value} = e.nativeEvent.target;
+    const {gradeData} = this.state;
     const key = id;
     const val = value;
     e.preventDefault();
 
-    this.setState({ gradeData: gradeData })
-  }
-
-
+    this.setState({gradeData: gradeData});
+  };
 
   handleMinMarksChange = (e: any) => {
-    const { id, value } = e.nativeEvent.target;
-    const { gradeData } = this.state;
+    const {id, value} = e.nativeEvent.target;
+    const {gradeData} = this.state;
     gradeData.exmMinMarks[id] = value;
-    this.setState({ gradeData: gradeData })
-
-  }
+    this.setState({gradeData: gradeData});
+  };
   handleMaxMarksChange = (e: any) => {
-    const { id, value } = e.nativeEvent.target;
-    const { gradeData } = this.state;
+    const {id, value} = e.nativeEvent.target;
+    const {gradeData} = this.state;
     gradeData.exmMaxMarks[id] = value;
-    this.setState({ gradeData: gradeData })
-  }
+    this.setState({gradeData: gradeData});
+  };
   handleGradesChange = (e: any) => {
-    const { id, value } = e.nativeEvent.target;
-    const { gradeData } = this.state;
+    const {id, value} = e.nativeEvent.target;
+    const {gradeData} = this.state;
     e.nativeEvent.target.value = e.nativeEvent.target.value.toUpperCase();
     gradeData.exmgradesMarks[id] = value;
-    this.setState({ gradeData: gradeData })
-  }
+    this.setState({gradeData: gradeData});
+  };
 
   onClick = (e: any) => {
-    const { mutate } = this.props;
-    const { gradeData } = this.state;
+    const {mutate} = this.props;
+    const {gradeData} = this.state;
     e.preventDefault();
 
     for (let i = 0; i < this.state.noOfExams; i++) {
-      let minm: any = document.querySelector("#minMarks" + i);
-      if (gradeData.exmMinMarks[minm.id] === undefined || gradeData.exmMinMarks[minm.id] === null || gradeData.exmMinMarks[minm.id] === "") {
-        alert("Please enter Minimum marks for an listed exam");
+      let minm: any = document.querySelector('#minMarks' + i);
+      if (
+        gradeData.exmMinMarks[minm.id] === undefined ||
+        gradeData.exmMinMarks[minm.id] === null ||
+        gradeData.exmMinMarks[minm.id] === ''
+      ) {
+        alert('Please enter Minimum marks for an listed exam');
         return;
       }
     }
     for (let i = 0; i < this.state.noOfExams; i++) {
-      let maxm: any = document.querySelector("#maxMarks" + i);
-      let minm: any = document.querySelector("#minMarks" + i);
-      if (gradeData.exmMaxMarks[maxm.id] === undefined || gradeData.exmMaxMarks[maxm.id] === null || gradeData.exmMaxMarks[maxm.id] === "") {
-        alert("Please enter Maximum marks for an listed exam");
+      let maxm: any = document.querySelector('#maxMarks' + i);
+      let minm: any = document.querySelector('#minMarks' + i);
+      if (
+        gradeData.exmMaxMarks[maxm.id] === undefined ||
+        gradeData.exmMaxMarks[maxm.id] === null ||
+        gradeData.exmMaxMarks[maxm.id] === ''
+      ) {
+        alert('Please enter Maximum marks for an listed exam');
         return;
       }
-      if (gradeData.exmMaxMarks[maxm.id] < gradeData.exmMinMarks[minm.id]) {
-        alert("Minimum Marks should not be more than maximum marks");
-        return;
-      }
-
-
+      // if (gradeData.exmMaxMarks[maxm.id] < gradeData.exmMinMarks[minm.id]) {
+      //   alert('Minimum Marks should not be more than maximum marks');
+      //   return;
+      // }
     }
     for (let i = 0; i < this.state.noOfExams; i++) {
-      let dt: any = document.querySelector("#grades" + i);
-      if (gradeData.exmgradesMarks[dt.id] === undefined || gradeData.exmgradesMarks[dt.id] === null || gradeData.exmgradesMarks[dt.id] === "") {
-        alert("Please enter grade for an listed exam");
+      let dt: any = document.querySelector('#grades' + i);
+      if (
+        gradeData.exmgradesMarks[dt.id] === undefined ||
+        gradeData.exmgradesMarks[dt.id] === null ||
+        gradeData.exmgradesMarks[dt.id] === ''
+      ) {
+        alert('Please enter grade for an listed exam');
         return;
       }
     }
 
-    this.setState({ gradeData: gradeData })
+    this.setState({gradeData: gradeData});
 
     for (let i = 0; i < this.state.noOfExams; i++) {
-      let sd = new GradePage(gradeData.exmMinMarks["minMarks" + i], gradeData.exmMaxMarks["maxMarks" + i], gradeData.exmgradesMarks["grades" + i], gradeData.exmgroupvalues["groupvalue" + i]);
+      let sd = new GradePage(
+        gradeData.exmMinMarks['minMarks' + i],
+        gradeData.exmMaxMarks['maxMarks' + i],
+        gradeData.exmgradesMarks['grades' + i],
+        gradeData.exmgroupvalues['groupvalue' + i]
+      );
       // ,gradeData.academicYear.id, gradeData.branch.id
       gradeData.payLoad.push(sd);
     }
-    this.setState({ gradeData: gradeData })
+    this.setState({gradeData: gradeData});
 
     console.log('total IDS : ', gradeData.selectedIds);
-    let btn: any = document.querySelector("#btnSave");
-    btn.setAttribute("disabled", true);
+    let btn: any = document.querySelector('#btnSave');
+    btn.setAttribute('disabled', true);
     return mutate({
-      variables: { input: gradeData.payLoad },
-    }).then((data: { data: { addTypeOfGrading: any; }; }) => {
-      btn.removeAttribute("disabled");
-      console.log('Saved Result: ', data.data.addTypeOfGrading);
-      alert("Added Succesfully");
-    }).catch((error: any) => {
-      btn.removeAttribute("disabled");
-      console.log('there is some error ', error);
-      return Promise.reject(`there is some error while updating : ${error}`);
-    });
-  }
+      variables: {input: gradeData.payLoad},
+    })
+      .then((data: {data: {addTypeOfGrading: any}}) => {
+        btn.removeAttribute('disabled');
+        console.log('Saved Result: ', data.data.addTypeOfGrading);
+        alert('Added Succesfully');
+      })
+      .catch((error: any) => {
+        btn.removeAttribute('disabled');
+        console.log('there is some error ', error);
+        return Promise.reject(`there is some error while updating : ${error}`);
+      });
+  };
   onClickCheckbox(index: any, arr: any, e: any) {
     // this.setState({
     //   selectedGrades: arr
     // });
-    const { id } = e.nativeEvent.target;
-    let chkBox: any = document.querySelector("#" + id);
+    const {id} = e.nativeEvent.target;
+    let chkBox: any = document.querySelector('#' + id);
     chkBox.checked = e.nativeEvent.target.checked;
   }
 
   createGradeRow(obj: any) {
     let consolidatedObj: any = {};
-    if (obj === undefined || obj === null){
+    if (obj === undefined || obj === null) {
       return;
     }
     const length = obj.length;
@@ -259,11 +271,16 @@ class Grading extends React.Component<any, ExamGradeState>{
         let grade = gradesArr[j];
         retVal.push(
           <tr>
-            {j === 0 &&
+            {j === 0 && (
               <td rowSpan={gradesArr.length}>
-                <input onClick={(e: any) => this.onClickCheckbox(keys[i], gradesArr, e)} type="radio" name="grades" id={"chk" + keys[i]} />
+                <input
+                  onClick={(e: any) => this.onClickCheckbox(keys[i], gradesArr, e)}
+                  type="radio"
+                  name="grades"
+                  id={'chk' + keys[i]}
+                />
               </td>
-            }
+            )}
             <td>{grade.minMarks}</td>
             <td>{grade.maxMarks}</td>
             <td>{grade.grades}</td>
@@ -275,9 +292,8 @@ class Grading extends React.Component<any, ExamGradeState>{
     return retVal;
   }
 
-
   createGrid() {
-    const { gradeData } = this.state;
+    const {gradeData} = this.state;
     const retVal = [];
 
     for (let i = 0; i < this.state.noOfExams; i++) {
@@ -285,13 +301,34 @@ class Grading extends React.Component<any, ExamGradeState>{
         <tbody>
           <tr>
             <td>
-              <input style={w50} type="number" id={"minMarks" + i} name="minMarks" value={gradeData.minMarks} onChange={this.handleMinMarksChange} ></input>
+              <input
+                style={w50}
+                type="number"
+                id={'minMarks' + i}
+                name="minMarks"
+                value={gradeData.minMarks}
+                onChange={this.handleMinMarksChange}
+              />
             </td>
             <td>
-              <input style={w50} type="number" id={"maxMarks" + i} name="maxMarks" value={gradeData.maxMarks} onChange={this.handleMaxMarksChange} ></input>
+              <input
+                style={w50}
+                type="number"
+                id={'maxMarks' + i}
+                name="maxMarks"
+                value={gradeData.maxMarks}
+                onChange={this.handleMaxMarksChange}
+              />
             </td>
             <td>
-              <input style={w50} type="text" id={"grades" + i} name="grades" value={gradeData.grades} onChange={this.handleGradesChange} ></input>
+              <input
+                style={w50}
+                type="text"
+                id={'grades' + i}
+                name="grades"
+                value={gradeData.grades}
+                onChange={this.handleGradesChange}
+              />
             </td>
           </tr>
         </tbody>
@@ -302,7 +339,7 @@ class Grading extends React.Component<any, ExamGradeState>{
 
   render() {
     // const { data: { refetch }, mutate } = this.props;
-    const { gradeData, submitted, selectedGrades } = this.state;
+    const {gradeData, submitted, selectedGrades} = this.state;
 
     return (
       <section className="plugin-bg-white">
@@ -315,10 +352,20 @@ class Grading extends React.Component<any, ExamGradeState>{
             <div className="eflex">
               <div className="e-flex m-t-0">
                 <h4 className="m-r-1">Create Grade:</h4>
-                <span >
-                  <a onClick={this.decreaseExamValue.bind(this)} className="btn btn-primary mr-1 btn-small"><i className="fa fa-minus" /></a>
+                <span>
+                  <a
+                    onClick={this.decreaseExamValue.bind(this)}
+                    className="btn btn-primary mr-1 btn-small"
+                  >
+                    <i className="fa fa-minus" />
+                  </a>
                   {this.state.noOfExams}
-                  <a onClick={this.increaseExamValue.bind(this)} className="btn btn-primary mr-1 btn-small m-l-1"><i className="fa fa-plus" /></a>
+                  <a
+                    onClick={this.increaseExamValue.bind(this)}
+                    className="btn btn-primary mr-1 btn-small m-l-1"
+                  >
+                    <i className="fa fa-plus" />
+                  </a>
                 </span>
               </div>
               {/* <span>
@@ -326,7 +373,14 @@ class Grading extends React.Component<any, ExamGradeState>{
               </span> */}
               <div>
                 <span>
-                  <button className="btn btn-primary mr-1" id="btnSave" name="btnSave" onClick={this.onClick}>Save</button>
+                  <button
+                    className="btn btn-primary mr-1"
+                    id="btnSave"
+                    name="btnSave"
+                    onClick={this.onClick}
+                  >
+                    Save
+                  </button>
                 </span>
                 <span>
                   {/* <Link
@@ -334,21 +388,20 @@ class Grading extends React.Component<any, ExamGradeState>{
                     className="btn btn-primary" >Back
                 </Link> */}
                 </span>
-                {
-                  selectedGrades.length > 0 &&
+                {selectedGrades.length > 0 && (
                   <span>
                     {/* <Link to={`/plugins/ems-exam/page/addexam`} className="btn btn-primary m-l-1" onClick={this.onClickContinueButton}>
                       Continue
               </Link> */}
                   </span>
-                }
+                )}
               </div>
             </div>
           </div>
 
           <div className="" id="detailGridTable">
             <table className="fwidth">
-              <thead >
+              <thead>
                 <tr>
                   <th>Min Marks</th>
                   <th>Max Marks</th>
@@ -364,7 +417,7 @@ class Grading extends React.Component<any, ExamGradeState>{
           <div className="" id="detailGrid">
             <div className="" id="detailGridTable">
               <table className="fwidth">
-                <thead >
+                <thead>
                   <tr>
                     <th>
                       {/* <input type="radio" value="checkedall" name="" id="chkCheckedAll" /> */}
@@ -380,9 +433,7 @@ class Grading extends React.Component<any, ExamGradeState>{
               </table>
             </div>
           </div>
-
         </div>
-
       </section>
     );
   }
@@ -397,18 +448,16 @@ class Grading extends React.Component<any, ExamGradeState>{
 //   )
 //     (Grading) as any
 // );
-export default graphql(CREATE_FILTER_DATA_CACHE,{
-  options: ({ }) => ({
+export default graphql(CREATE_FILTER_DATA_CACHE, {
+  options: ({}) => ({
     variables: {
-      collegeId:1801,
-      academicYearId: 1701
-    }
-  })
-}) (withLoadingHandler(
-  compose(
-    graphql(ADD_TYPE_OF_GRADING, { name: "mutate" }),
-    graphql(TYPE_OF_GRADINGS, { name: "mutate" }),
-  )
-
-    (Grading) as any
-));
+      collegeId: 1801,
+      academicYearId: 1701,
+    },
+  }),
+})(
+  withLoadingHandler(compose(
+    graphql(ADD_TYPE_OF_GRADING, {name: 'mutate'}),
+    graphql(TYPE_OF_GRADINGS, {name: 'mutate'})
+  )(Grading) as any)
+);

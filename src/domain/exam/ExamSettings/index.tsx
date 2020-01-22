@@ -17,6 +17,7 @@ import {
 } from '../_queries';
 import MarkSubjectExam from './MarkSubjectExam';
 import ExamGrid from './ExamGrid';
+import Grading from './Grading';
 
 class ExamSettings extends React.Component<any, any> {
   constructor(props: any) {
@@ -130,6 +131,16 @@ class ExamSettings extends React.Component<any, any> {
               Report
             </NavLink>
           </NavItem>
+          <NavItem className="cursor-pointer">
+            <NavLink
+              className={`vertical-nav-link ${activeTab === 3 ? 'side-active' : ''}`}
+              onClick={() => {
+                this.toggleTab(3);
+              }}
+            >
+              Grading
+            </NavLink>
+          </NavItem>
         </Nav>
         <TabContent activeTab={activeTab} className="col-sm-9 border-left p-t-1">
           <TabPane tabId={0}>
@@ -143,6 +154,10 @@ class ExamSettings extends React.Component<any, any> {
 
           <TabPane tabId={2}>
             <ExamReportSrc />
+          </TabPane>
+
+          <TabPane tabId={3}>
+            <Grading />
           </TabPane>
         </TabContent>
       </section>
