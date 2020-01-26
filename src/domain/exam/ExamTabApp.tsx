@@ -4,7 +4,9 @@ import { ApolloProvider } from 'react-apollo';
 import { gQLClient } from '../../graphQLClient';
 import ExamTab from './ExamTabPage';
 // import '../../../css/custom.css';
-import '../../css/dark.css';
+// import '../../css/dark.css';
+import "../../css/tabs.css";
+import "../../css/light.css";
 
 export default function init() {
   setTimeout(function () {

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {RouteComponentProps, Link} from 'react-router-dom';
-import {graphql, QueryProps, MutationFunc, compose} from 'react-apollo';
+import {graphql, QueryProps, MutationFunc, compose, withApollo} from 'react-apollo';
 import * as AddTypeOfGradingGql from './AddTypeOfGrading.graphql';
 import {TypeOfGradings, AddTypeOfGrading} from '../../types';
 // import withGradingDataLoader from './withGradingDataLoader';
@@ -45,6 +45,9 @@ type ExamGradeState = {
   noOfExams: number;
   add: any;
   selectedGrades: any;
+  user: any;
+  examFilterCacheList: any;
+  typesOfGradingList: any;
 };
 
 class GradePage {
@@ -66,11 +69,22 @@ class GradePage {
   }
 }
 
-class Grading extends React.Component<any, ExamGradeState> {
-  constructor(props: any) {
+export interface GradingProps extends React.HTMLAttributes<HTMLElement> {
+  [data: string]: any;
+  user?: any;
+  examFilterCacheList?: any;
+  typesOfGradingList?: any;
+  onCloseModel?: any;
+  onSelectGrade?: any;
+}
+class Grading extends React.Component<GradingProps, ExamGradeState> {
+  constructor(props: GradingProps) {
     super(props);
     this.state = {
       noOfExams: 0,
+      user: this.props.user,
+      examFilterCacheList: this.props.examFilterCacheList,
+      typesOfGradingList: this.props.typesOfGradingList,
       gradeData: {
         branch: {
           id: 1951, //1801 //1001
@@ -107,6 +121,8 @@ class Grading extends React.Component<any, ExamGradeState> {
     this.handleGradesChange = this.handleGradesChange.bind(this);
     this.onClickContinueButton = this.onClickContinueButton.bind(this);
     this.createGradeGrid = this.createGradeGrid.bind(this);
+    this.closeModal = this.closeModal.bind(this);
+    this.doSave = this.doSave.bind(this);
   }
 
   increaseExamValue() {
@@ -123,7 +139,8 @@ class Grading extends React.Component<any, ExamGradeState> {
     // this.createGrid();
   }
 
-  onClickContinueButton(e: any) {
+  onClickContinueButton = (e: any) => {
+    this.props.onSelectGrade(this.state.selectedGrades);
     // localStorage.setItem("selectedGrades", JSON.stringify(this.state.selectedGrades));
   }
 
@@ -227,30 +244,61 @@ class Grading extends React.Component<any, ExamGradeState> {
     console.log('total IDS : ', gradeData.selectedIds);
     let btn: any = document.querySelector('#btnSave');
     btn.setAttribute('disabled', true);
-    return mutate({
-      variables: {input: gradeData.payLoad},
-    })
-      .then((data: {data: {addTypeOfGrading: any}}) => {
-        btn.removeAttribute('disabled');
+    this.doSave();
+    btn.removeAttribute('disabled');
+    // return mutate({
+    //   variables: {input: gradeData.payLoad},
+    // })
+    //   .then((data: {data: {addTypeOfGrading: any}}) => {
+    //     btn.removeAttribute('disabled');
+    //     console.log('Saved Result: ', data.data.addTypeOfGrading);
+    //     alert('Added Succesfully');
+    //   })
+    //   .catch((error: any) => {
+    //     btn.removeAttribute('disabled');
+    //     console.log('there is some error ', error);
+    //     return Promise.reject(`there is some error while updating : ${error}`);
+    //   });
+  }
+
+  async doSave(){
+    const {gradeData, typesOfGradingList} = this.state;
+
+    await this.props.client.mutate({
+      mutation: ADD_TYPE_OF_GRADING,
+      variables: { 
+          input: gradeData.payLoad
+      },
+    }).then((data: {data: {addTypeOfGrading: any}}) => {
         console.log('Saved Result: ', data.data.addTypeOfGrading);
+        const temp = [];
+        for(let i=0; i<typesOfGradingList.length; i++){
+          temp.push(typesOfGradingList[i]);
+        }
+        temp.push(data.data.addTypeOfGrading.typeOfGrading);
+        console.log("Temp grading : ",temp);
+        this.setState({
+          typesOfGradingList: temp
+        });
         alert('Added Succesfully');
       })
       .catch((error: any) => {
-        btn.removeAttribute('disabled');
-        console.log('there is some error ', error);
+       console.log('there is some error ', error);
         return Promise.reject(`there is some error while updating : ${error}`);
       });
-  };
+  }
+
   onClickCheckbox(index: any, arr: any, e: any) {
-    // this.setState({
-    //   selectedGrades: arr
-    // });
+    this.setState({
+      selectedGrades: arr
+    });
     const {id} = e.nativeEvent.target;
     let chkBox: any = document.querySelector('#' + id);
     chkBox.checked = e.nativeEvent.target.checked;
   }
 
   createGradeRow(obj: any) {
+    console.log("types of grading ::::: ", obj);
     let consolidatedObj: any = {};
     if (obj === undefined || obj === null) {
       return;
@@ -273,12 +321,7 @@ class Grading extends React.Component<any, ExamGradeState> {
           <tr>
             {j === 0 && (
               <td rowSpan={gradesArr.length}>
-                <input
-                  onClick={(e: any) => this.onClickCheckbox(keys[i], gradesArr, e)}
-                  type="radio"
-                  name="grades"
-                  id={'chk' + keys[i]}
-                />
+                <input onClick={(e: any) => this.onClickCheckbox(keys[i], gradesArr, e)} type="radio" name="grades" id={'chk' + keys[i]} />
               </td>
             )}
             <td>{grade.minMarks}</td>
@@ -301,34 +344,13 @@ class Grading extends React.Component<any, ExamGradeState> {
         <tbody>
           <tr>
             <td>
-              <input
-                style={w50}
-                type="number"
-                id={'minMarks' + i}
-                name="minMarks"
-                value={gradeData.minMarks}
-                onChange={this.handleMinMarksChange}
-              />
+              <input style={w50} type="number" id={'minMarks' + i} name="minMarks" value={gradeData.minMarks} onChange={this.handleMinMarksChange} />
             </td>
             <td>
-              <input
-                style={w50}
-                type="number"
-                id={'maxMarks' + i}
-                name="maxMarks"
-                value={gradeData.maxMarks}
-                onChange={this.handleMaxMarksChange}
-              />
+              <input style={w50} type="number" id={'maxMarks' + i} name="maxMarks" value={gradeData.maxMarks} onChange={this.handleMaxMarksChange} />
             </td>
             <td>
-              <input
-                style={w50}
-                type="text"
-                id={'grades' + i}
-                name="grades"
-                value={gradeData.grades}
-                onChange={this.handleGradesChange}
-              />
+              <input style={w50} type="text" id={'grades' + i} name="grades" value={gradeData.grades} onChange={this.handleGradesChange} />
             </td>
           </tr>
         </tbody>
@@ -337,9 +359,13 @@ class Grading extends React.Component<any, ExamGradeState> {
     return retVal;
   }
 
+  closeModal(bShow: boolean) {
+    this.props.onCloseModel(bShow);
+  }
+
   render() {
     // const { data: { refetch }, mutate } = this.props;
-    const {gradeData, submitted, selectedGrades} = this.state;
+    const {gradeData, submitted, selectedGrades, typesOfGradingList} = this.state;
 
     return (
       <section className="plugin-bg-white">
@@ -347,15 +373,14 @@ class Grading extends React.Component<any, ExamGradeState> {
           <i className="fa fa-university stroke-transparent mr-1" aria-hidden="false" />{' '}
           Admin - Academic Grading Setting
         </h3> */}
-        <div className="p-1">
+        <div className="">
           <div className="bg-heading p-1">
             <div className="eflex">
               <div className="e-flex m-t-0">
                 <h4 className="m-r-1">Create Grade:</h4>
                 <span>
                   <a
-                    onClick={this.decreaseExamValue.bind(this)}
-                    className="btn btn-primary mr-1 btn-small"
+                    onClick={this.decreaseExamValue.bind(this)} className="btn btn-primary mr-1 btn-small"
                   >
                     <i className="fa fa-minus" />
                   </a>
@@ -367,18 +392,13 @@ class Grading extends React.Component<any, ExamGradeState> {
                     <i className="fa fa-plus" />
                   </a>
                 </span>
-              </div>
+              {/* </div> */}
               {/* <span>
                 <button className="btn btn-primary mr-1" style={{ width: '130px' }} id="btnCreateGradeGrid" name="btnCreateGradeGrid" onClick={this.createGradeGrid}>Create Grade</button>
               </span> */}
-              <div>
+              {/* <div> */}
                 <span>
-                  <button
-                    className="btn btn-primary mr-1"
-                    id="btnSave"
-                    name="btnSave"
-                    onClick={this.onClick}
-                  >
+                  <button className="btn btn-primary mr-1" id="btnSave" name="btnSave" onClick={this.onClick} >
                     Save
                   </button>
                 </span>
@@ -415,7 +435,7 @@ class Grading extends React.Component<any, ExamGradeState> {
             <h4 className="p-1 py-2 mb-0">Grading</h4>
           </div>
           <div className="" id="detailGrid">
-            <div className="" id="detailGridTable">
+            <div className="" id="detailGridTable" style={{height:"150px", overflow:"auto"}}>
               <table className="fwidth">
                 <thead>
                   <tr>
@@ -429,11 +449,15 @@ class Grading extends React.Component<any, ExamGradeState> {
                   </tr>
                 </thead>
                 {/* this.createFeeCategoryRowFromCache(this.props.data.createFeeSetupDataCache.feeCategory) */}
-                {this.createGradeRow(this.props.data.typeOfGradings)}
+                {this.createGradeRow(typesOfGradingList)}
               </table>
             </div>
           </div>
         </div>
+        <button className="btn btn-primary border-bottom" onClick={(e) => this.onClickContinueButton(e)}>Ok</button>
+        &nbsp;&nbsp;&nbsp;
+        <button className="btn btn-danger border-bottom" onClick={(e) => this.closeModal(false)}>Cancel</button>
+        
       </section>
     );
   }
@@ -448,16 +472,20 @@ class Grading extends React.Component<any, ExamGradeState> {
 //   )
 //     (Grading) as any
 // );
-export default graphql(CREATE_FILTER_DATA_CACHE, {
-  options: ({}) => ({
-    variables: {
-      collegeId: 1801,
-      academicYearId: 1701,
-    },
-  }),
-})(
-  withLoadingHandler(compose(
-    graphql(ADD_TYPE_OF_GRADING, {name: 'mutate'}),
-    graphql(TYPE_OF_GRADINGS, {name: 'mutate'})
-  )(Grading) as any)
-);
+
+
+// export default graphql(CREATE_FILTER_DATA_CACHE, {
+//   options: ({}) => ({
+//     variables: {
+//       collegeId: 1801,
+//       academicYearId: 1701,
+//     },
+//   }),
+// })(
+//   withLoadingHandler(compose(
+//     graphql(ADD_TYPE_OF_GRADING, {name: 'mutate'}),
+//     graphql(TYPE_OF_GRADINGS, {name: 'mutate'})
+//   )(Grading) as any)
+// );
+
+export default withApollo(Grading)

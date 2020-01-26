@@ -7,14 +7,32 @@ import AcExamListPage from './ExamSettings/ExamGrid';
 // import { FaUserGraduate } from 'react-icons/fa';
 import '../../css/tabs.css';
 import ExamSettings from './ExamSettings';
+import {config} from '../../config';
 
 export default class ExamTab extends React.Component<any, any> {
   constructor(props: any) {
     super(props);
     this.state = {
       activeTab: 0,
+      user: null,
     };
     this.toggleTab = this.toggleTab.bind(this);
+  }
+
+  async componentDidMount(){
+    try{
+      const response = await fetch(config.LOGGED_IN_USER_URL);
+      if (!response.ok) {
+        console.log("exam plugin. Response error : ",response.statusText);
+        return;
+      }
+      const json = await response.json();
+      this.setState({ user: json });
+    }catch(error){
+      console.log("exam plugin. Fetch user error: ",error);
+    }
+
+    console.log("exam plugin. USER -- ",this.state.user); 
   }
 
   toggleTab(tabNo: any) {
@@ -24,20 +42,12 @@ export default class ExamTab extends React.Component<any, any> {
   }
 
   render() {
-    const {activeTab} = this.state;
+    const {activeTab, user} = this.state;
     return (
       <section className="tab-container">
-        <div>
-          <h5 />
-        </div>
         <Nav tabs className="pl-3 pl-3 mb-4 mt-4 bottom-box-shadow">
           <NavItem className="cursor-pointer">
-            <NavLink
-              className={`${activeTab === 0 ? 'active' : ''}`}
-              onClick={() => {
-                this.toggleTab(0);
-              }}
-            >
+            <NavLink className={`${activeTab === 0 ? 'active' : ''}`} onClick={() => { this.toggleTab(0); }} >
               Exam
             </NavLink>
           </NavItem>
@@ -45,7 +55,12 @@ export default class ExamTab extends React.Component<any, any> {
 
         <TabContent activeTab={activeTab} className="border-right">
           <TabPane tabId={0}>
-            <ExamSettings />
+            {
+                user !== null && (
+                  <ExamSettings user={user}/>
+                )
+            }
+            
           </TabPane>
         </TabContent>
       </section>

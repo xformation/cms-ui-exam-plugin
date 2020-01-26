@@ -15,31 +15,13 @@ export const ADD_EXAM_SETTING = gql`
         passing
         actions
         countvalue
-        department {
-          id
-          name
-        }
-        section {
-          id
-          section
-        }
+        departmentId
+        sectionId
 
-        subject {
-          id
-          subjectDesc
-        }
-        academicyear {
-          id
-          year
-        }
-        batch {
-          id
-          batch
-        }
-        branch {
-          id
-          branchName
-        }
+        subjectId
+        academicyearId
+        batchId
+        branchId
       }
     }
   }

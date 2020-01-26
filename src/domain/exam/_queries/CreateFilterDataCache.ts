@@ -1,8 +1,8 @@
 import gql from 'graphql-tag';
 
 export const CREATE_FILTER_DATA_CACHE = gql`
-  query createExamFilterDataCache($collegeId: String!, $academicYearId: String!) {
-    createExamFilterDataCache(collegeId: $collegeId, academicYearId: $academicYearId) {
+  query createExamFilterDataCache($branchId: String!, $academicYearId: String!) {
+    createExamFilterDataCache(branchId: $branchId, academicYearId: $academicYearId) {
       branches {
         id
         branchName
@@ -35,12 +35,8 @@ export const CREATE_FILTER_DATA_CACHE = gql`
         id
         examName
         countvalue
-        department {
-          id
-        }
-        batch {
-          id
-        }
+        departmentId
+        batchId
       }
       subjects {
         id

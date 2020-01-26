@@ -1,13 +1,16 @@
 import * as moment from 'moment';
 import * as React from 'react';
 import {RouteComponentProps, Link} from 'react-router-dom';
-import {graphql, QueryProps, MutationFunc, compose} from 'react-apollo';
+import {graphql, QueryProps, MutationFunc, compose, withApollo} from 'react-apollo';
 import * as AddExamMutationGql from './AddExamMutation.graphql';
 import {LoadExamSubjQueryCacheForAdmin, AddExamMutation} from '../../types';
 // import withExamSubjDataLoader from './withExamSubjDataLoader';
 import 'react-datepicker/dist/react-datepicker.css';
 import withLoadingHandler from '../withLoadingHandler';
-import {ADD_EXAM_SETTING, CREATE_FILTER_DATA_CACHE} from '../_queries';
+import {ADD_EXAM_SETTING, CREATE_FILTER_DATA_CACHE, TYPE_OF_GRADINGS} from '../_queries';
+import wsCmsBackendServiceSingletonClient from '../../../wsCmsBackendServiceClient';
+import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import Grading from './Grading';
 
 const w180 = {
   width: '180px',
@@ -17,18 +20,9 @@ interface type {
   checked: boolean;
 }
 
-// type ExamRootProps = RouteComponentProps<{
-//   academicYearId: string;
-//   collegeId: string;
-// }> & {
-//   data: QueryProps & LoadExamSubjQueryCacheForAdmin;
-// };
-
-// type ExamPageProps = ExamRootProps & {
-//   mutate: MutationFunc<AddExamMutation>;
-// };
-
 type ExamState = {
+  isModalOpen: any;
+  user: any;
   examData: any;
   branches: any;
   academicYears: any;
@@ -47,6 +41,12 @@ type ExamState = {
   selectedGrade: any;
   groupValue: any;
   gradingId: any;
+
+  branchId: any;
+  academicYearId: any;
+  departmentId: any;
+  examFilterCacheList: any;
+  typesOfGradingList: any;
 };
 
 class SaData {
@@ -109,10 +109,24 @@ class SaData {
   }
 }
 
-class MarkSubjectExam extends React.Component<any, ExamState> {
-  constructor(props: any) {
+export interface MarkSubjectExamProps extends React.HTMLAttributes<HTMLElement> {
+  [data: string]: any;
+  user?: any;
+  examFilterCacheList?: any;
+  typesOfGradingList?: any;
+}
+
+class MarkSubjectExam<T = {[data: string]: any}> extends React.Component<MarkSubjectExamProps, ExamState> {
+  constructor(props: MarkSubjectExamProps) {
     super(props);
     this.state = {
+      isModalOpen: false,
+      user: this.props.user,
+      typesOfGradingList: this.props.typesOfGradingList,
+      branchId: null,
+      academicYearId: null,
+      departmentId: null,
+      examFilterCacheList: this.props.examFilterCacheList,
       gradeType: '',
       noOfExams: 0,
       selectedGrade: '',
@@ -122,17 +136,17 @@ class MarkSubjectExam extends React.Component<any, ExamState> {
       dateofExam: '',
       isSubjectSame: false,
       examData: {
-        branch: {
-          id: 1951,
-          //1851 1001
-        },
-        academicYear: {
-          id: 1701,
-          //1701 1051
-        },
-        department: {
-          id: '',
-        },
+        // branch: {
+        //   id: 1951,
+        //   //1851 1001
+        // },
+        // academicYear: {
+        //   id: 1701,
+        //   //1701 1051
+        // },
+        // department: {
+        //   id: '',
+        // },
         batch: {
           id: '',
         },
@@ -169,7 +183,7 @@ class MarkSubjectExam extends React.Component<any, ExamState> {
       submitted: false,
       startDate: '',
     };
-
+    this.registerSocket = this.registerSocket.bind(this);
     this.createDepartments = this.createDepartments.bind(this);
     this.createBatches = this.createBatches.bind(this);
     this.createSemesters = this.createSemesters.bind(this);
@@ -185,7 +199,40 @@ class MarkSubjectExam extends React.Component<any, ExamState> {
     this.handleTotalMarksChange = this.handleTotalMarksChange.bind(this);
     this.handleExamDateChange = this.handleExamDateChange.bind(this);
     this.isDatesOverlap = this.isDatesOverlap.bind(this);
+    this.closeModal = this.closeModal.bind(this);
+    this.setSelectedGrade = this.setSelectedGrade.bind(this);
+    this.doSave = this.doSave.bind(this);
     // this.checkForSelectedGrades = this.checkForSelectedGrades.bind(this);
+  }
+
+  async componentDidMount(){
+    await this.registerSocket();
+  }
+
+  registerSocket() {
+    const socket = wsCmsBackendServiceSingletonClient.getInstance();
+
+    socket.onmessage = (response: any) => {
+        let message = JSON.parse(response.data);
+        console.log("MarkSubjectExam. message received from server ::: ", message);
+        this.setState({
+            branchId: message.selectedBranchId,
+            academicYearId: message.selectedAcademicYearId,
+            departmentId: message.selectedDepartmentId,
+        });
+        console.log("MarkSubjectExam. branchId: ",this.state.branchId);
+        console.log("MarkSubjectExam. departmentId: ",this.state.departmentId);  
+        console.log("MarkSubjectExam. ayId: ",this.state.academicYearId);  
+    }
+
+    socket.onopen = () => {
+        console.log("MarkSubjectExam. Opening websocekt connection to cmsbackend. User : ",this.state.user.login);
+        socket.send(this.state.user.login);
+    }
+
+    window.onbeforeunload = () => {
+        console.log("MarkSubjectExam. Closing websocket connection with cms backend service");
+    }
   }
 
   // componentDidMount() {
@@ -268,9 +315,7 @@ class MarkSubjectExam extends React.Component<any, ExamState> {
 
   createSubjects(subjects: any, selectedDepartmentId: any, selectedBatchId: any) {
     let subjectsOptions = [
-      <option key={0} value="">
-        Select Subject
-      </option>,
+      <option key={0} value=""> Select Subject </option>,
     ];
     for (let i = 0; i < subjects.length; i++) {
       let id = subjects[i].id;
@@ -355,10 +400,10 @@ class MarkSubjectExam extends React.Component<any, ExamState> {
       return;
     }
 
-    if (examData.department.id && examData.batch.id && examData.section.id) {
+    if (this.state.departmentId && examData.batch.id && examData.section.id) {
       e.target.querySelector('#detailGridTable').removeAttribute('class');
       let btn = e.target.querySelector("button[type='submit']");
-      btn.setAttribute('disabled', true);
+      // btn.setAttribute('disabled', true);
     }
   };
 
@@ -369,9 +414,9 @@ class MarkSubjectExam extends React.Component<any, ExamState> {
       this.setState({
         examData: {
           ...examData,
-          department: {
-            id: value,
-          },
+          // department: {
+          //   id: value,
+          // },
           batch: {
             id: '',
           },
@@ -536,9 +581,7 @@ class MarkSubjectExam extends React.Component<any, ExamState> {
 
   onClick = (e: any) => {
     const {mutate} = this.props;
-    const {examData} = this.state;
-    e.preventDefault();
-
+    const {examData, branchId, academicYearId, departmentId} = this.state;
     e.preventDefault();
 
     let txtEsNm: any = document.querySelector('#examName');
@@ -642,14 +685,14 @@ class MarkSubjectExam extends React.Component<any, ExamState> {
           examData.exmTotalMarks['totalMarks' + i],
           examData.exmPassMarks['passingMarks' + i],
           'ACTIVE',
-          examData.academicYear.id,
+          academicYearId,
           subOptions.options[subOptions.selectedIndex].value,
-          examData.department.id,
+          departmentId,
           examData.batch.id,
           'SEMESTER1',
           examData.section.id,
-          examData.branch.id,
-          this.state.gradingId,
+          branchId,
+          this.state.selectedGrade,
           examData.exmcountvalues['countvalue' + i],
           this.state.groupValue
         );
@@ -661,23 +704,65 @@ class MarkSubjectExam extends React.Component<any, ExamState> {
     console.log('total IDS : ', examData.selectedIds);
     let btn: any = document.querySelector('#btnSave');
     btn.setAttribute('disabled', true);
-    return mutate({
-      variables: {input: examData.payLoad},
-    })
-      .then((data: any) => {
-        btn.removeAttribute('disabled');
-        console.log('Saved Result: ', data.data.addAcademicExamSetting);
-        alert('Added Succesfully');
-      })
-      .catch((error: any) => {
-        btn.removeAttribute('disabled');
-        console.log('there is some error ', error);
-        return Promise.reject(`there is some error while updating : ${error}`);
-      });
+    this.doSave();
+    btn.removeAttribute('disabled');
+    // return mutate({
+    //   variables: {input: examData.payLoad},
+    // })
+    //   .then((data: any) => {
+    //     btn.removeAttribute('disabled');
+    //     console.log('Saved Result: ', data.data.addAcademicExamSetting);
+    //     alert('Added Succesfully');
+    //   })
+    //   .catch((error: any) => {
+    //     btn.removeAttribute('disabled');
+    //     console.log('there is some error ', error);
+    //     return Promise.reject(`there is some error while updating : ${error}`);
+    //   });
   };
 
-  createGrid(ary: any) {
+  async doSave(){
     const {examData} = this.state;
+    await this.props.client.mutate({
+      mutation: ADD_EXAM_SETTING,
+      variables: { 
+          input: examData.payLoad
+      },
+    })
+    .then((data: any) => {
+          console.log('Saved Result: ', data.data.addAcademicExamSetting);
+          alert('Added Succesfully');
+        })
+        .catch((error: any) => {
+          console.log('there is some error ', error);
+          return Promise.reject(`there is some error while updating : ${error}`);
+        });
+  }
+
+  showModal(e: any, bShow: boolean) {
+    e && e.preventDefault();
+    this.setState(() => ({
+        isModalOpen: bShow
+    }));
+  }
+
+  closeModal(bShow: boolean) {
+    this.setState({
+      isModalOpen: bShow
+    });
+  }
+
+  setSelectedGrade(selectedGrades: any) {
+    console.log("SELECTED GRADE :::: ",selectedGrades[0]);
+    this.setState({
+      selectedGrade: selectedGrades[0].id,
+      groupValue: selectedGrades[0].groupvalue,
+      isModalOpen: false
+    });
+  }
+
+  createGrid(ary: any) {
+    const {examData, examFilterCacheList, departmentId} = this.state;
     const retVal = [];
     for (let x = 0; x < this.state.noOfExams; x++) {
       let v = ary[x];
@@ -685,65 +770,31 @@ class MarkSubjectExam extends React.Component<any, ExamState> {
         <tbody>
           <tr id="custom-width-input">
             <td>
-              <select
-                name={'subject'}
-                id={'subject' + x}
-                onChange={this.onChange}
-                value={examData.subject.id}
-                className="gf-form-input max-width-22"
-              >
-                {this.createSubjects(
-                  this.props.data.createExamFilterDataCache.subjects,
-                  examData.department.id,
-                  examData.batch.id
-                )}
+              <select name={'subject'} id={'subject' + x} onChange={this.onChange} value={examData.subject.id} className="gf-form-input max-width-22" >
+                {
+                  this.createSubjects( examFilterCacheList.subjects, departmentId, examData.batch.id )
+                }
               </select>
             </td>
             <td>
-              <input
-                type="date"
-                value={examData.dateofExam}
-                id={'examDate' + x}
-                name="examDate"
-                maxLength={8}
-                onChange={this.handleChange}
-              />
+              <input type="date" value={examData.dateofExam} id={'examDate' + x} name="examDate" maxLength={10} onChange={this.handleChange} />
             </td>
 
             <td>{examData.textValueMap['examDate' + x]}</td>
 
             <td>
               {' '}
-              <input
-                id={'startTime' + x}
-                type="time"
-                name="startTime"
-                step="2"
-                value={examData.startTime}
-                onChange={this.handleStTimeChange}
-              />{' '}
+              <input id={'startTime' + x} type="time" name="startTime" step="2" value={examData.startTime} onChange={this.handleStTimeChange} />{' '}
             </td>
 
             <td>
               {' '}
-              <input
-                id={'endTime' + x}
-                type="time"
-                name="endTime"
-                step="2"
-                value={examData.endTime}
-                onChange={this.handleNdTimeChange}
-              />{' '}
+              <input id={'endTime' + x} type="time" name="endTime" step="2" value={examData.endTime} onChange={this.handleNdTimeChange} />{' '}
             </td>
 
             <td>
               {' '}
-              <input
-                id={'passingMarks' + x}
-                name="passingMarks"
-                value={examData.passing}
-                onChange={this.handlePassMarksChange}
-              />{' '}
+              <input id={'passingMarks' + x} name="passingMarks" value={examData.passing} onChange={this.handlePassMarksChange} />{' '}
             </td>
 
             <td>
@@ -762,19 +813,18 @@ class MarkSubjectExam extends React.Component<any, ExamState> {
     return retVal;
   }
   render() {
-    const {data: {createExamFilterDataCache, refetch}, mutate} = this.props;
-    const {
-      examData,
-      departments,
-      batches,
-      subjects,
-      semesters,
-      sections,
-      submitted,
-    } = this.state;
+    // const {data: {createExamFilterDataCache, refetch}, mutate} = this.props;
+    const { examData, branchId, departmentId, academicYearId, examFilterCacheList, isModalOpen, typesOfGradingList } = this.state;
 
     return (
       <section className="plugin-bg-white">
+        <Modal isOpen={isModalOpen} className="react-strap-modal-container">
+            <ModalHeader></ModalHeader>
+            <ModalBody className="modal-content">
+                <Grading examFilterCacheList={examFilterCacheList} typesOfGradingList={typesOfGradingList} onCloseModel={this.closeModal} onSelectGrade={this.setSelectedGrade}></Grading>
+                {/* <button className="btn btn-danger border-bottom" onClick={(e) => this.showModal(e, false)}>Cancel</button> */}
+            </ModalBody>
+        </Modal>
         <h3 className="bg-heading p-1">
           <i className="fa fa-university stroke-transparent mr-1" aria-hidden="true" />{' '}
           Admin - Academic Exam Setting
@@ -782,32 +832,24 @@ class MarkSubjectExam extends React.Component<any, ExamState> {
         <div className="bg-heading p-1 m-1">
           <div className="e-flex align-baseline">
             <h4 className="m-r-1">Select type of grading.</h4>
-            <label className="m-r-1">
-              <input
-                className="m-1"
-                type="radio"
-                value="PERCENTAGE"
-                checked={this.state.gradeType === 'PERCENTAGE'}
-                onChange={this.handleChangeGrade}
-              />
-              Percentage
-            </label>
-            <label className="m-r-1">
-              <input
-                className="m-1"
-                type="radio"
-                value="GRADE"
-                checked={this.state.gradeType === 'GRADE'}
-                onChange={this.handleChangeGrade}
-              />
+            {/* <label className="m-r-1"> */}
+              <input className="m-1" type="radio" value="PERCENTAGE" checked={this.state.gradeType === 'PERCENTAGE'} onChange={this.handleChangeGrade} />
+                Percentage
+              &nbsp;&nbsp;
+            {/* </label> */}
+            {/* <label className="m-r-1"> */}
+              <input className="m-1" type="radio" value="GRADE" checked={this.state.gradeType === 'GRADE'} onChange={this.handleChangeGrade} />
               Grade
-            </label>
+              
+            {/* </label> */}
 
             {this.state.gradeType === 'GRADE' && (
-              <span>
-                <Link to={`/plugins/ems-exam/page/grading`} className="btn btn-primary">
-                  Continue
-                </Link>
+
+              <span>&nbsp;&nbsp;
+                {/* <Link to={`/plugins/ems-exam/page/grading`} className="btn btn-primary"> */}
+                  
+                  <button onClick={(e) => this.showModal(e, true)} className="btn btn-primary" id="btnContinue">Continue</button>
+                {/* </Link> */}
               </span>
             )}
           </div>
@@ -817,7 +859,6 @@ class MarkSubjectExam extends React.Component<any, ExamState> {
             <table id="t-attendance" className="markAttendance">
               <thead>
                 <tr>
-                  <th>Department</th>
                   <th>Year</th>
                   <th>Semester</th>
                   <th>Section</th>
@@ -828,113 +869,53 @@ class MarkSubjectExam extends React.Component<any, ExamState> {
               <tbody>
                 <tr>
                   <td>
-                    <select
-                      required
-                      name="department"
-                      id="department"
-                      onChange={this.onChange}
-                      value={examData.department.id}
-                      className="gf-form-input max-width-22"
-                    >
-                      {this.createDepartments(
-                        this.props.data.createExamFilterDataCache.departments,
-                        examData.branch.id
-                      )}
+                    <select name="batch" id="batch" onChange={this.onChange} value={examData.batch.id} className="gf-form-input max-width-22" >
+                      { 
+                        this.createBatches( examFilterCacheList.batches, departmentId )
+                      }
                     </select>
                   </td>
 
                   <td>
-                    <select
-                      required
-                      name="batch"
-                      id="batch"
-                      onChange={this.onChange}
-                      value={examData.batch.id}
-                      className="gf-form-input max-width-22"
-                    >
-                      {this.createBatches(
-                        this.props.data.createExamFilterDataCache.batches,
-                        examData.department.id
-                      )}
+                    <select name="semester" id="semester" onChange={this.onChange} value={examData.semester.id} className="gf-form-input max-width-22" >
+                      {
+                        this.createSemesters( examFilterCacheList.semesters )
+                      }
                     </select>
                   </td>
 
                   <td>
-                    <select
-                      required
-                      name="semester"
-                      id="semester"
-                      onChange={this.onChange}
-                      value={examData.semester.id}
-                      className="gf-form-input max-width-22"
-                    >
-                      {this.createSemesters(
-                        this.props.data.createExamFilterDataCache.semesters
-                      )}
+                    <select name="section" id="section" onChange={this.onChange} value={examData.section.id} className="gf-form-input max-width-22" >
+                      {
+                        this.createSections( examFilterCacheList.sections, examData.batch.id )
+                      }
                     </select>
                   </td>
 
                   <td>
-                    <select
-                      required
-                      name="section"
-                      id="section"
-                      onChange={this.onChange}
-                      value={examData.section.id}
-                      className="gf-form-input max-width-22"
-                    >
-                      {this.createSections(
-                        this.props.data.createExamFilterDataCache.sections,
-                        examData.batch.id
-                      )}
-                    </select>
+                      <a onClick={this.decreaseExamValue.bind(this)} className="btn btn-primary mr-1 btn-small" >
+                        <i className="fa fa-minus" />
+                      </a> {this.state.noOfExams} 
+                      <a onClick={this.increaseExamValue.bind(this)} className="btn btn-primary mr-1 btn-small m-l-1" >
+                        <i className="fa fa-plus" />
+                      </a>
                   </td>
 
                   <td>
-                    <a
-                      onClick={this.decreaseExamValue.bind(this)}
-                      className="btn btn-primary mr-1 btn-small"
-                    >
-                      <i className="fa fa-minus" />
-                    </a>
-                    {this.state.noOfExams}
-                    <a
-                      onClick={this.increaseExamValue.bind(this)}
-                      className="btn btn-primary mr-1 btn-small m-l-1"
-                    >
-                      <i className="fa fa-plus" />
-                    </a>
-                  </td>
-
-                  <td>
-                    <button
-                      className="btn btn-primary"
-                      type="submit"
-                      id="btnTakeAtnd"
-                      name="btnTakeAtnd"
-                      style={{width: '130px'}}
-                    >
-                      Create Exam
-                    </button>
+                    <button className="btn btn-primary" type="submit" id="btnTakeAtnd" name="btnTakeAtnd" style={{width: '130px'}} > Create Exam </button>
                   </td>
                 </tr>
               </tbody>
             </table>
 
-            <div className="tflex bg-heading mt-1 e-flex" id="detailGrid">
-              <h4 className="p-1 py-2 mb-0"> Exam</h4>
-              <input
-                type="text"
-                id="examName"
-                name="examName"
-                value={examData.examName}
-                className="h-input m-1"
-                maxLength={255}
-              />
-              <div className="hhflex" />
-            </div>
+            
 
             <div className="hide" id="detailGridTable">
+              <div className="tflex bg-heading mt-1 e-flex" id="detailGrid">
+                <h4 className="p-1 py-2 mb-0"> Exam</h4>
+                <input type="text" id="examName" name="examName"  value={examData.examName} className="h-input m-1" maxLength={255} />
+                <div className="hhflex" />
+              </div>
               <table className="fwidth">
                 <thead>
                   <tr>
@@ -947,18 +928,13 @@ class MarkSubjectExam extends React.Component<any, ExamState> {
                     <th>Total Marks</th>
                   </tr>
                 </thead>
-                {this.createGrid(this.state.examData.mutateResult)}
+                {this.createGrid(examFilterCacheList)}
               </table>
 
               <div className="d-flex fwidth justify-content-between pt-2">
                 <p />
                 <div>
-                  <button
-                    className="btn btn-primary mr-1"
-                    id="btnSave"
-                    name="btnSave"
-                    onClick={this.onClick}
-                  >
+                  <button className="btn btn-primary mr-1" id="btnSave" name="btnSave" onClick={this.onClick} >
                     Save
                   </button>
                 </div>
@@ -971,15 +947,16 @@ class MarkSubjectExam extends React.Component<any, ExamState> {
   }
 }
 
-export default graphql(CREATE_FILTER_DATA_CACHE, {
-  options: ({}) => ({
-    variables: {
-      collegeId: 1851,
-      academicYearId: 1701,
-    },
-  }),
-})(
-  withLoadingHandler(compose(graphql(ADD_EXAM_SETTING, {name: 'addAcademicExamSetting'}))(
-    MarkSubjectExam
-  ) as any)
-);
+export default withApollo(MarkSubjectExam)
+// export default graphql(CREATE_FILTER_DATA_CACHE, {
+//   options: ({}) => ({
+//     variables: {
+//       collegeId: 1851,
+//       academicYearId: 1701,
+//     },
+//   }),
+// })(
+//   withLoadingHandler(compose(graphql(ADD_EXAM_SETTING, {name: 'addAcademicExamSetting'}))(
+//     MarkSubjectExam
+//   ) as any)
+// );

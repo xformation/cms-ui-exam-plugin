@@ -1,13 +1,14 @@
 import * as moment from 'moment';
 import * as React from 'react';
 import {RouteComponentProps, withRouter, Link} from 'react-router-dom';
-import {graphql, QueryProps, MutationFunc, compose} from 'react-apollo';
+import {graphql, QueryProps, MutationFunc, compose, withApollo} from 'react-apollo';
 //import * as ExamListQueryTypeForAdminGql from './ExamListQueryTypeForAdmin.graphql';
 //import * as AddReportMutationGql from './AddReportMutation.graphql';
 //import { LoadExamSubjQueryCacheForAdmin, ExamListQueryTypeForAdmin, AddReportMutation } from '../../types';
 //import withExamSubjDataLoader from './withExamSubjDataLoader';
 import {CREATE_FILTER_DATA_CACHE, ADD_EXAM_REPORT, GET_EXAM_DATA} from '../_queries';
 import withLoadingHandler from '../withLoadingHandler';
+import wsCmsBackendServiceSingletonClient from '../../../wsCmsBackendServiceClient';
 
 import {type} from 'os';
 
@@ -45,6 +46,12 @@ type ExamState = {
   dateofExam: any;
   dayValue: any;
   duratn: number;
+
+  user: any;
+  examFilterCacheList: any;
+  branchId: any;
+  academicYearId: any;
+  departmentId: any;
 };
 
 class SaData {
@@ -82,17 +89,30 @@ class SaData {
     this.comments = comments;
   }
 }
-export class ExamReportSrc extends React.Component<any, ExamState> {
-  constructor(props: any) {
+
+export interface ExamReportSrcProps extends React.HTMLAttributes<HTMLElement> {
+  [data: string]: any;
+  user?: any;
+  examFilterCacheList?: any;
+  
+}
+
+class ExamReportSrc extends React.Component<ExamReportSrcProps, ExamState> {
+  constructor(props: ExamReportSrcProps) {
     super(props);
     this.state = {
+      user: this.props.user,
+      examFilterCacheList: this.props.examFilterCacheList,
+      branchId: null,
+      academicYearId: null,
+      departmentId: null,
       dayValue: [],
       duratn: 0,
       dateofExam: '',
       examData: {
-        branch: {id: 1951},
-        academicyear: {id: 1701},
-        department: {id: ''},
+        // branch: {id: 1951},
+        // academicyear: {id: 1701},
+        // department: {id: ''},
         batch: {id: ''},
         section: {id: ''},
         academicExamSetting: {id: ''}, // 1051  //1701
@@ -129,6 +149,38 @@ export class ExamReportSrc extends React.Component<any, ExamState> {
     this.createGrid = this.createGrid.bind(this);
     // this.handleMarksObtainedChange = this.handleMarksObtainedChange.bind(this);
     this.handletotalChange = this.handletotalChange.bind(this);
+
+    this.registerSocket = this.registerSocket.bind(this);
+  }
+
+  async componentDidMount(){
+    await this.registerSocket();
+  }
+
+  registerSocket() {
+    const socket = wsCmsBackendServiceSingletonClient.getInstance();
+
+    socket.onmessage = (response: any) => {
+        let message = JSON.parse(response.data);
+        console.log("MarkSubjectExam. message received from server ::: ", message);
+        this.setState({
+            branchId: message.selectedBranchId,
+            academicYearId: message.selectedAcademicYearId,
+            departmentId: message.selectedDepartmentId,
+        });
+        console.log("MarkSubjectExam. branchId: ",this.state.branchId);
+        console.log("MarkSubjectExam. departmentId: ",this.state.departmentId);  
+        console.log("MarkSubjectExam. ayId: ",this.state.academicYearId);  
+    }
+
+    socket.onopen = () => {
+        console.log("MarkSubjectExam. Opening websocekt connection to cmsbackend. User : ",this.state.user.login);
+        socket.send(this.state.user.login);
+    }
+
+    window.onbeforeunload = () => {
+        console.log("MarkSubjectExam. Closing websocket connection with cms backend service");
+    }
   }
 
   createDepartments(departments: any, selectedBranchId: any) {
@@ -172,7 +224,7 @@ export class ExamReportSrc extends React.Component<any, ExamState> {
     for (let i = 0; i < batches.length; i++) {
       let id = batches[i].id;
       let dptId = '' + batches[i].department.id;
-      if (dptId == selectedDepartmentId) {
+      if (parseInt(dptId, 10) === parseInt(selectedDepartmentId, 10)) {
         batchesOptions.push(
           <option key={id} value={id}>
             {batches[i].batch}
@@ -191,7 +243,7 @@ export class ExamReportSrc extends React.Component<any, ExamState> {
     for (let i = 0; i < sections.length; i++) {
       let id = sections[i].id;
       let sbthId = '' + sections[i].batch.id;
-      if (sbthId == selectedBatchId) {
+      if (parseInt(sbthId, 10) === parseInt(selectedBatchId,10)) {
         sectionsOptions.push(
           <option key={id} value={id}>
             {sections[i].section}
@@ -201,11 +253,7 @@ export class ExamReportSrc extends React.Component<any, ExamState> {
     }
     return sectionsOptions;
   }
-  createacademicExamSettings(
-    academicExamSettings: any,
-    selectedDepartmentId: any,
-    selectedBatchId: any
-  ) {
+  createacademicExamSettings( academicExamSettings: any, selectedDepartmentId: any, selectedBatchId: any ) {
     let examOptions = [
       <option key={0} value="">
         Select Exam
@@ -214,8 +262,8 @@ export class ExamReportSrc extends React.Component<any, ExamState> {
     for (let i = 0; i < academicExamSettings.length; i++) {
       let id = academicExamSettings[i].id;
       if (
-        academicExamSettings[i].department.id == selectedDepartmentId &&
-        academicExamSettings[i].batch.id == selectedBatchId
+        parseInt(academicExamSettings[i].departmentId, 10) === parseInt(selectedDepartmentId, 10) &&
+        parseInt(academicExamSettings[i].batchId,10) === parseInt(selectedBatchId, 10)
       ) {
         examOptions.push(
           <option key={id} value={id}>
@@ -235,8 +283,8 @@ export class ExamReportSrc extends React.Component<any, ExamState> {
     for (let i = 0; i < subjects.length; i++) {
       let id = subjects[i].id;
       if (
-        subjects[i].department.id == selectedDepartmentId &&
-        subjects[i].batch.id == selectedBatchId
+        parseInt(subjects[i].department.id, 10) === parseInt(selectedDepartmentId, 10) &&
+        parseInt(subjects[i].batch.id, 10) === parseInt(selectedBatchId, 10)
       ) {
         subjectsOptions.push(
           <option key={id} value={id}>
@@ -254,20 +302,14 @@ export class ExamReportSrc extends React.Component<any, ExamState> {
     });
 
     const {mutate} = this.props;
-    const {examData} = this.state;
+    const {examData, departmentId} = this.state;
     e.preventDefault();
 
-    if (
-      examData.department.id &&
-      examData.batch.id &&
-      examData.section.id &&
-      examData.academicExamSetting.id &&
-      examData.subject.id
-    ) {
+    if ( departmentId && examData.batch.id && examData.section.id && examData.academicExamSetting.id && examData.subject.id ) {
       e.target.querySelector('#detailGridTable').removeAttribute('class');
 
       let examInputData = {
-        departmentId: examData.department.id,
+        departmentId: departmentId,
         batchId: examData.batch.id,
         sectionId: examData.section.id,
         academicExamSettingId: examData.academicExamSetting.id,
@@ -473,7 +515,7 @@ export class ExamReportSrc extends React.Component<any, ExamState> {
 
   onClick = (e: any) => {
     const {mutateUpd} = this.props;
-    const {examData} = this.state;
+    const {examData, departmentId} = this.state;
 
     e.preventDefault();
     let len = this.createGrid(this.state.examData.mutateResult).length;
@@ -491,7 +533,7 @@ export class ExamReportSrc extends React.Component<any, ExamState> {
       2351,
       examData.typeOfGarding.id,
       examData.academicExamSetting.id,
-      examData.department.id,
+      departmentId,
       examData.section.id,
       examData.batch.id,
       examData.subject.id,
@@ -583,16 +625,8 @@ export class ExamReportSrc extends React.Component<any, ExamState> {
   }
 
   render() {
-    const {data: {createExamFilterDataCache, refetch}, mutate} = this.props;
-    const {
-      examData,
-      departments,
-      batches,
-      sections,
-      academicExamSettings,
-      subjects,
-      submitted,
-    } = this.state;
+    // const {data: {createExamFilterDataCache, refetch}, mutate} = this.props;
+    const { examData, examFilterCacheList, departmentId } = this.state;
 
     return (
       <section className="plugin-bg-white">
@@ -606,7 +640,7 @@ export class ExamReportSrc extends React.Component<any, ExamState> {
             <table id="t-attendance" className="markAttendance">
               <thead>
                 <tr>
-                  <th>Department</th>
+                  {/* <th>Department</th> */}
                   <th>Year</th>
                   <th>Section</th>
                   <th>Exams</th>
@@ -616,13 +650,13 @@ export class ExamReportSrc extends React.Component<any, ExamState> {
               </thead>
               <tbody>
                 <tr>
-                  <td>
+                  {/* <td>
                     <select
                       required
                       name="department"
                       id="department"
                       onChange={this.onChange}
-                      value={examData.department.id}
+                      value={departmentId}
                       className="gf-form-input max-width-22"
                     >
                       {this.createDepartments(
@@ -630,77 +664,29 @@ export class ExamReportSrc extends React.Component<any, ExamState> {
                         examData.branch.id
                       )}
                     </select>
-                  </td>
+                  </td> */}
                   <td>
-                    <select
-                      required
-                      name="batch"
-                      id="batch"
-                      onChange={this.onChange}
-                      value={examData.batch.id}
-                      className="gf-form-input max-width-22"
-                    >
-                      {this.createBatches(
-                        this.props.data.createExamFilterDataCache.batches,
-                        examData.department.id
-                      )}
+                    <select required name="batch" id="batch" onChange={this.onChange} value={examData.batch.id} className="gf-form-input max-width-22" >
+                      {this.createBatches( examFilterCacheList.batches, departmentId )}
                     </select>
                   </td>
                   <td>
-                    <select
-                      required
-                      name="section"
-                      id="section"
-                      onChange={this.onChange}
-                      value={examData.section.id}
-                      className="gf-form-input max-width-22"
-                    >
-                      {this.createSections(
-                        this.props.data.createExamFilterDataCache.sections,
-                        examData.batch.id
-                      )}
+                    <select required name="section" id="section" onChange={this.onChange} value={examData.section.id} className="gf-form-input max-width-22" >
+                      {this.createSections( examFilterCacheList.sections, examData.batch.id )}
                     </select>
                   </td>
                   <td>
-                    <select
-                      required
-                      name="academicExamSetting"
-                      id="academicExamSetting"
-                      onChange={this.onChange}
-                      value={examData.academicExamSetting.id}
-                      className="gf-form-input max-width-22"
-                    >
-                      {this.createacademicExamSettings(
-                        this.props.data.createExamFilterDataCache.academicExamSettings,
-                        examData.department.id,
-                        examData.batch.id
-                      )}
+                    <select name="academicExamSetting" id="academicExamSetting" onChange={this.onChange} className="gf-form-input max-width-22" >
+                      {this.createacademicExamSettings( examFilterCacheList.academicExamSettings,  departmentId, examData.batch.id )}
                     </select>
                   </td>
                   <td>
-                    <select
-                      required
-                      name="subject"
-                      id="subject"
-                      onChange={this.onChange}
-                      value={examData.subject.subjectDesc}
-                      className="gf-form-input max-width-22"
-                    >
-                      {this.createSubjects(
-                        this.props.data.createExamFilterDataCache.subjects,
-                        examData.department.id,
-                        examData.batch.id
-                      )}
+                    <select name="subject" id="subject" onChange={this.onChange} value={examData.subject.subjectDesc} className="gf-form-input max-width-22" >
+                      {this.createSubjects( examFilterCacheList.subjects, departmentId, examData.batch.id )}
                     </select>
                   </td>
                   <td>
-                    <button
-                      className="btn btn-primary"
-                      type="submit"
-                      id="btnTakeAtnd"
-                      name="btnTakeAtnd"
-                      style={{width: '150px'}}
-                    >
+                    <button className="btn btn-primary" type="submit" id="btnTakeAtnd" name="btnTakeAtnd" style={{width: '150px'}} >
                       Create Exam Report
                     </button>
                   </td>
@@ -714,13 +700,7 @@ export class ExamReportSrc extends React.Component<any, ExamState> {
                 <thead>
                   <tr>
                     <th>
-                      <input
-                        type="checkbox"
-                        onClick={(e: any) => this.checkAllRows(e)}
-                        value="checkedall"
-                        name=""
-                        id=""
-                      />
+                      <input type="checkbox" onClick={(e: any) => this.checkAllRows(e)} value="checkedall" name="" id="" />
                     </th>
                     <th>Id</th>
                     <th>Student Name</th>
@@ -740,20 +720,10 @@ export class ExamReportSrc extends React.Component<any, ExamState> {
               <div className="d-flex fwidth justify-content-between pt-2">
                 <p />
                 <div>
-                  <button
-                    className="btn btn-primary mr-1"
-                    id="btnSave"
-                    name="btnSave"
-                    onClick={this.onClick}
-                  >
+                  <button className="btn btn-primary mr-1" id="btnSave" name="btnSave" onClick={this.onClick} >
                     Save
                   </button>
-                  <button
-                    className="btn btn-primary mr-1"
-                    id="btnReset"
-                    name="btnReset"
-                    onClick={this.reset}
-                  >
+                  <button className="btn btn-primary mr-1" id="btnReset" name="btnReset" onClick={this.reset} >
                     Reset
                   </button>
                 </div>
@@ -781,16 +751,20 @@ export class ExamReportSrc extends React.Component<any, ExamState> {
 //    (ExamReportSrc) as any
 //);
 
-export default graphql(CREATE_FILTER_DATA_CACHE, {
-  options: ({}) => ({
-    variables: {
-      collegeId: 1851,
-      academicYearId: 1701,
-    },
-  }),
-})(
-  withLoadingHandler(compose(
-    graphql(ADD_EXAM_REPORT, {name: 'addAcademicExamSettingData'}),
-    graphql(GET_EXAM_DATA, {name: 'getSubjectandStudents'})
-  )(ExamReportSrc) as any)
-);
+//-----
+// export default graphql(CREATE_FILTER_DATA_CACHE, {
+//   options: ({}) => ({
+//     variables: {
+//       collegeId: 1851,
+//       academicYearId: 1701,
+//     },
+//   }),
+// })(
+//   withLoadingHandler(compose(
+//     graphql(ADD_EXAM_REPORT, {name: 'addAcademicExamSettingData'}),
+//     graphql(GET_EXAM_DATA, {name: 'getSubjectandStudents'})
+//   )(ExamReportSrc) as any)
+// );
+
+export default withApollo(ExamReportSrc)
+
