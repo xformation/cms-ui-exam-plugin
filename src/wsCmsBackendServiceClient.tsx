@@ -1,4 +1,4 @@
-import {config} from './config'
+import {config} from './config';
 
 const cfg = {
     URL: config.WEB_SOCKET_URL_WITH_CMS_BACKEND

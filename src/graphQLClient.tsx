@@ -1,5 +1,5 @@
 import {ApolloClient, createNetworkInterface} from 'react-apollo';
-import {config} from './config'
+import {config} from './config';
 
 const networkInterface = createNetworkInterface({
   uri: config.GRAPHQL_URL
