@@ -3,7 +3,7 @@ export {LOAD_EXAM_DATA_CACHE} from './LoadExam';
 export {ADD_EXAM_REPORT} from './AddExamReport';
 export {GET_EXAM_DATA} from './GetExamData';
 export {CREATE_FILTER_DATA_CACHE} from './CreateFilterDataCache';
-export {GET_EXAM_SETTING_LIST} from './GetExamSettingList';
+export {GET_EXAM_SETTING_LIST} from './getExamSettingList';
 export {GET_DEPARTMENT_LIST} from './getDepartmentList';
 export {GET_BATCH_LIST} from './getBatchList';
 export {GET_SECTION_LIST} from './getSectionList';
