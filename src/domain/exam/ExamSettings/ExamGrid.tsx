@@ -55,6 +55,7 @@ class ExamGrid<T = {[data: string]: any}> extends React.Component<ExamProps, any
       // cityList: this.props.cityList,
       // originalCityList: this.props.cityList,
       modelHeader: '',
+      selectedDepartment: {},
     };
     this.registerSocket = this.registerSocket.bind(this);
   }
@@ -68,15 +69,17 @@ class ExamGrid<T = {[data: string]: any}> extends React.Component<ExamProps, any
 
     socket.onmessage = (response: any) => {
         let message = JSON.parse(response.data);
-        console.log("ExamGrid. message received from server ::: ", message);
+        console.log("1. ExamGrid. message received from server ::: ", message);
         this.setState({
             branchId: message.selectedBranchId,
             academicYearId: message.selectedAcademicYearId,
             departmentId: message.selectedDepartmentId,
+            selectedDepartment: message.department,
         });
         console.log("ExamGrid. branchId: ",this.state.branchId);
         console.log("ExamGrid. departmentId: ",this.state.departmentId); 
         console.log("ExamGrid. ayId: ",this.state.academicYearId);  
+        console.log("ExamGrid. selectedDepartment: ",this.state.selectedDepartment); 
     }
 
     socket.onopen = () => {
@@ -90,8 +93,9 @@ class ExamGrid<T = {[data: string]: any}> extends React.Component<ExamProps, any
   }
 
   createRows(objAry: any) {
-    const {branchId, departmentId} = this.state;
-    console.log('createRows() - Exam list on ExamGrid page:  ', objAry);
+    const {selectedDepartment} = this.state;
+    console.log('2. ExamGrid createRows() - selectedDepartment.name:  ', selectedDepartment.name);
+    console.log('3. ExamGrid createRows() - Exam list on ExamGrid page:  ', objAry);
     if (objAry === undefined || objAry === null) {
       return;
     }
@@ -99,8 +103,7 @@ class ExamGrid<T = {[data: string]: any}> extends React.Component<ExamProps, any
     const retVal = [];
     for (let i = 0; i < mutateResLength; i++) {
       const branchObj = objAry[i];
-      // if(parseInt(branchObj.cmsBranchVo.id,10) === parseInt(branchId,10) &&
-      //         parseInt(branchObj.cmsDepartmentVo.id,10) === parseInt(departmentId,10)){
+      if(branchObj.departmnt === selectedDepartment.name){
                 retVal.push(
                   <tr>
                     {/* id examName action sbjct examDate departmnt bctch sectn st ed subExamDate countvalue */}
@@ -128,7 +131,7 @@ class ExamGrid<T = {[data: string]: any}> extends React.Component<ExamProps, any
                     </td> */}
                   </tr>
                 );
-      // }
+      }
       
     }
     return retVal;

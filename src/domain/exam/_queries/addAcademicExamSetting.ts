@@ -7,7 +7,6 @@ export const ADD_EXAM_SETTING = gql`
         id
         examName
         semester
-        examDate
         startTime
         endTime
         gradeType

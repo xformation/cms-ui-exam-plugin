@@ -340,7 +340,7 @@ class MarkSubjectExam<T = {[data: string]: any}> extends React.Component<MarkSub
       </option>,
     ];
     for (let i = 0; i < semesters.length; i++) {
-      let id = semesters[i].id;
+      let id = semesters[i].description;
       semestersOptions.push(
         <option key={id} value={id}>
           {semesters[i].description}
@@ -580,13 +580,12 @@ class MarkSubjectExam<T = {[data: string]: any}> extends React.Component<MarkSub
   };
 
   onClick = (e: any) => {
-    const {mutate} = this.props;
     const {examData, branchId, academicYearId, departmentId} = this.state;
     e.preventDefault();
 
     let txtEsNm: any = document.querySelector('#examName');
     if (txtEsNm.value.trim() === '') {
-      alert('Please provide some value in Exam name');
+      alert('Please provide exam name');
       return;
     }
 
@@ -601,6 +600,7 @@ class MarkSubjectExam<T = {[data: string]: any}> extends React.Component<MarkSub
       }
     }
     if (this.state.isSubjectSame) {
+      alert("Duplicate subjects in exam schedule");
       return;
     }
 
@@ -612,7 +612,6 @@ class MarkSubjectExam<T = {[data: string]: any}> extends React.Component<MarkSub
         examData.exmDate[exdt.id] === ''
       ) {
         alert('Please select an exam date');
-
         return;
       }
     }
@@ -651,7 +650,7 @@ class MarkSubjectExam<T = {[data: string]: any}> extends React.Component<MarkSub
         examData.exmPassMarks[pm.id] === null ||
         examData.exmPassMarks[pm.id] === ''
       ) {
-        alert('Please select passing marks for an listed exam');
+        alert('Please select passing marks for a listed exam');
         return;
       }
     }
@@ -664,10 +663,12 @@ class MarkSubjectExam<T = {[data: string]: any}> extends React.Component<MarkSub
         examData.exmTotalMarks[tm.id] === null ||
         examData.exmTotalMarks[tm.id] === ''
       ) {
-        alert('Please select total marks for an listed exam');
+        alert('Please select total marks for a listed exam');
         return;
       }
-      if (examData.exmTotalMarks[tm.id] < examData.exmPassMarks[pm.id]) {
+      const passMarks = examData.exmPassMarks[pm.id];
+      const totalMarks = examData.exmTotalMarks[tm.id];
+      if (parseInt(totalMarks, 10) < parseInt(passMarks, 10)) {
         alert('Total marks should Greater than passing Marks');
         return;
       }
@@ -689,12 +690,12 @@ class MarkSubjectExam<T = {[data: string]: any}> extends React.Component<MarkSub
           subOptions.options[subOptions.selectedIndex].value,
           departmentId,
           examData.batch.id,
-          'SEMESTER1',
+          examData.semester.id,
           examData.section.id,
           branchId,
-          this.state.selectedGrade,
+          (this.state.gradeType === "GRADE") ? this.state.selectedGrade : null,
           examData.exmcountvalues['countvalue' + i],
-          this.state.groupValue
+          (this.state.gradeType === "GRADE") ? this.state.groupValue : null
         );
         examData.payLoad.push(sd);
       }
@@ -731,11 +732,11 @@ class MarkSubjectExam<T = {[data: string]: any}> extends React.Component<MarkSub
     })
     .then((data: any) => {
           console.log('Saved Result: ', data.data.addAcademicExamSetting);
-          alert('Added Succesfully');
+          alert('Exam Added Succesfully');
         })
         .catch((error: any) => {
           console.log('there is some error ', error);
-          return Promise.reject(`there is some error while updating : ${error}`);
+          return Promise.reject(`there is some error in exam add/update : ${error}`);
         });
   }
 

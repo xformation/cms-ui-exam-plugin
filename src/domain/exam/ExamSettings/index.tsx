@@ -133,14 +133,9 @@ class ExamSettings extends React.Component<ExamSettingsProps, any> {
   }
 
   async getTypesOfGrading() {
-    const {typesOfGradingList} = this.state;
+    // const {typesOfGradingList} = this.state;
     const {data} = await this.props.client.query({
       query: TYPE_OF_GRADINGS,
-        // variables: {
-        //   branchId: branchId,
-        //   academicYearId: academicYearId,
-        // },
-      
       fetchPolicy: 'no-cache',
     });
     this.setState({

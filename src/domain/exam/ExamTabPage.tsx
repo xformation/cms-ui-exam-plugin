@@ -1,9 +1,9 @@
 import * as React from 'react';
 // import { graphql, QueryProps, MutationFunc, compose } from 'react-apollo';
 import {TabContent, TabPane, Nav, NavItem, NavLink} from 'reactstrap';
-import MarkExam from './ExamSettings/MarkSubjectExam';
-import ExamReportSrc from './ExamSettings/ExamReportSrc';
-import AcExamListPage from './ExamSettings/ExamGrid';
+// import MarkExam from './ExamSettings/MarkSubjectExam';
+// import ExamReportSrc from './ExamSettings/ExamReportSrc';
+// import AcExamListPage from './ExamSettings/ExamGrid';
 // import { FaUserGraduate } from 'react-icons/fa';
 import '../../css/tabs.css';
 import ExamSettings from './ExamSettings';
