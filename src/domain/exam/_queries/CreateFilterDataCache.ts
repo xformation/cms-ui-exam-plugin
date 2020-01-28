@@ -1,7 +1,7 @@
 import gql from 'graphql-tag';
 
 export const CREATE_FILTER_DATA_CACHE = gql`
-  query createExamFilterDataCache($branchId: String!, $academicYearId: String!) {
+  query createExamFilterDataCache($branchId: Long, $academicYearId: Long) {
     createExamFilterDataCache(branchId: $branchId, academicYearId: $academicYearId) {
       branches {
         id
