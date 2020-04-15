@@ -8,6 +8,8 @@ import {TabContent, TabPane, Nav, NavItem, NavLink} from 'reactstrap';
 import '../../css/tabs.css';
 import ExamSettings from './ExamSettings';
 import {config} from '../../config';
+import { FaUserGraduate } from 'react-icons/fa';
+
 
 export default class ExamTab extends React.Component<any, any> {
   constructor(props: any) {
@@ -45,6 +47,15 @@ export default class ExamTab extends React.Component<any, any> {
     const {activeTab, user} = this.state;
     return (
       <section className="tab-container">
+      <div className="">
+          <h5 className="bg-heading p-1">
+          <i className="fa fa-university stroke-transparent mr-1" aria-hidden="true" />{' '}
+          Exam Setting
+        </h5>
+        {/* <h5><FaUserGraduate className="fa-2x " />Exam Setting</h5>
+        <h5><FaUserGraduate className="fa fa-university stroke-transparent mr-1" aria-hidden="true" />Exam Setting</h5> */}
+
+      </div>
         <Nav tabs className="pl-3 pl-3 mb-4 mt-4 bottom-box-shadow">
           <NavItem className="cursor-pointer">
             <NavLink className={`${activeTab === 0 ? 'active' : ''}`} onClick={() => { this.toggleTab(0); }} >

@@ -200,7 +200,7 @@ class MarkSubjectExam<T = {[data: string]: any}> extends React.Component<MarkSub
     this.handleExamDateChange = this.handleExamDateChange.bind(this);
     this.isDatesOverlap = this.isDatesOverlap.bind(this);
     this.closeModal = this.closeModal.bind(this);
-    this.setSelectedGrade = this.setSelectedGrade.bind(this);
+    // this.setSelectedGrade = this.setSelectedGrade.bind(this);
     this.doSave = this.doSave.bind(this);
     // this.checkForSelectedGrades = this.checkForSelectedGrades.bind(this);
   }
@@ -396,7 +396,7 @@ class MarkSubjectExam<T = {[data: string]: any}> extends React.Component<MarkSub
     }
 
     if (this.state.noOfExams === 0) {
-      alert('Please select no of exams');
+      alert('Please select No of Exams');
       return;
     }
 
@@ -585,9 +585,9 @@ class MarkSubjectExam<T = {[data: string]: any}> extends React.Component<MarkSub
 
     let txtEsNm: any = document.querySelector('#examName');
     if (txtEsNm.value.trim() === '') {
-      alert('Please provide exam name');
+      alert('Please provide Exam Name');
       return;
-    }
+    } 
 
     let allSubOpts: any = document.querySelectorAll('#subject');
     let isSubNotSelected = false;
@@ -595,7 +595,7 @@ class MarkSubjectExam<T = {[data: string]: any}> extends React.Component<MarkSub
     for (let i = 0; i < this.state.noOfExams; i++) {
       let subOptions: any = document.querySelector('#subject' + i);
       if (subOptions.options[subOptions.selectedIndex].value === '') {
-        alert('Please select a subject for a listed exam');
+        alert('Please select a subject');
         return;
       }
     }
@@ -611,7 +611,7 @@ class MarkSubjectExam<T = {[data: string]: any}> extends React.Component<MarkSub
         examData.exmDate[exdt.id] === null ||
         examData.exmDate[exdt.id] === ''
       ) {
-        alert('Please select an exam date');
+        alert('Please select an Exam Date');
         return;
       }
     }
@@ -736,7 +736,7 @@ class MarkSubjectExam<T = {[data: string]: any}> extends React.Component<MarkSub
         })
         .catch((error: any) => {
           console.log('there is some error ', error);
-          return Promise.reject(`there is some error in exam add/update : ${error}`);
+          return Promise.reject(`There is some error in exam add/update : ${error}`);
         });
   }
 
@@ -753,14 +753,14 @@ class MarkSubjectExam<T = {[data: string]: any}> extends React.Component<MarkSub
     });
   }
 
-  setSelectedGrade(selectedGrades: any) {
-    console.log("SELECTED GRADE :::: ",selectedGrades[0]);
-    this.setState({
-      selectedGrade: selectedGrades[0].id,
-      groupValue: selectedGrades[0].groupvalue,
-      isModalOpen: false
-    });
-  }
+  // setSelectedGrade(selectedGrades: any) {
+  //   console.log("SELECTED GRADE :::: ",selectedGrades[0]);
+  //   this.setState({
+  //     selectedGrade: selectedGrades[0].id,
+  //     groupValue: selectedGrades[0].groupvalue,
+  //     isModalOpen: false
+  //   });
+  // }
 
   createGrid(ary: any) {
     const {examData, examFilterCacheList, departmentId} = this.state;
@@ -771,31 +771,31 @@ class MarkSubjectExam<T = {[data: string]: any}> extends React.Component<MarkSub
         <tbody>
           <tr id="custom-width-input">
             <td>
-              <select name={'subject'} id={'subject' + x} onChange={this.onChange} value={examData.subject.id} className="gf-form-input max-width-22" >
+              <select name={'subject'} id={'subject' + x} onChange={this.onChange} value={examData.subject.id} className="gf-form-input max-width-18" >
                 {
                   this.createSubjects( examFilterCacheList.subjects, departmentId, examData.batch.id )
                 }
               </select>
             </td>
             <td>
-              <input type="date" value={examData.dateofExam} id={'examDate' + x} name="examDate" maxLength={10} onChange={this.handleChange} />
+              <input type="date" value={examData.dateofExam} id={'examDate' + x} name="examDate" maxLength={10} onChange={this.handleChange} className="gf-form-input max-width-11" />
             </td>
 
             <td>{examData.textValueMap['examDate' + x]}</td>
 
             <td>
               {' '}
-              <input id={'startTime' + x} type="time" name="startTime" step="2" value={examData.startTime} onChange={this.handleStTimeChange} />{' '}
+              <input id={'startTime' + x} type="time" name="startTime" step="2" value={examData.startTime} onChange={this.handleStTimeChange} className="gf-form-input max-width-15" />{' '}
             </td>
 
             <td>
               {' '}
-              <input id={'endTime' + x} type="time" name="endTime" step="2" value={examData.endTime} onChange={this.handleNdTimeChange} />{' '}
+              <input id={'endTime' + x} type="time" name="endTime" step="2" value={examData.endTime} onChange={this.handleNdTimeChange} className="gf-form-input max-width-15" />{' '}
             </td>
 
             <td>
               {' '}
-              <input id={'passingMarks' + x} name="passingMarks" value={examData.passing} onChange={this.handlePassMarksChange} />{' '}
+              <input id={'passingMarks' + x} name="passingMarks" value={examData.passing} onChange={this.handlePassMarksChange} className="gf-form-input max-width-8"/>{' '}
             </td>
 
             <td>
@@ -805,6 +805,7 @@ class MarkSubjectExam<T = {[data: string]: any}> extends React.Component<MarkSub
                 name="totalMarks"
                 value={examData.total}
                 onChange={this.handleTotalMarksChange}
+                className="gf-form-input max-width-8"
               />{' '}
             </td>
           </tr>
@@ -822,17 +823,14 @@ class MarkSubjectExam<T = {[data: string]: any}> extends React.Component<MarkSub
         <Modal isOpen={isModalOpen} className="react-strap-modal-container">
             <ModalHeader></ModalHeader>
             <ModalBody className="modal-content">
-                <Grading examFilterCacheList={examFilterCacheList} typesOfGradingList={typesOfGradingList} onCloseModel={this.closeModal} onSelectGrade={this.setSelectedGrade}></Grading>
+                {/* <Grading examFilterCacheList={examFilterCacheList} typesOfGradingList={typesOfGradingList} onCloseModel={this.closeModal} onSelectGrade={this.setSelectedGrade}></Grading> */}
                 {/* <button className="btn btn-danger border-bottom" onClick={(e) => this.showModal(e, false)}>Cancel</button> */}
             </ModalBody>
         </Modal>
-        <h3 className="bg-heading p-1">
-          <i className="fa fa-university stroke-transparent mr-1" aria-hidden="true" />{' '}
-          Admin - Academic Exam Setting
-        </h3>
+
         <div className="bg-heading p-1 m-1">
           <div className="e-flex align-baseline">
-            <h4 className="m-r-1">Select type of grading.</h4>
+            <h4 className="m-r-1">Select Type of Grading</h4>
             {/* <label className="m-r-1"> */}
               <input className="m-1" type="radio" value="PERCENTAGE" checked={this.state.gradeType === 'PERCENTAGE'} onChange={this.handleChangeGrade} />
                 Percentage
@@ -844,15 +842,15 @@ class MarkSubjectExam<T = {[data: string]: any}> extends React.Component<MarkSub
               
             {/* </label> */}
 
-            {this.state.gradeType === 'GRADE' && (
+            {/* {this.state.gradeType === 'GRADE' && ( */}
 
-              <span>&nbsp;&nbsp;
+              {/* // <span>&nbsp;&nbsp; */}
                 {/* <Link to={`/plugins/ems-exam/page/grading`} className="btn btn-primary"> */}
                   
-                  <button onClick={(e) => this.showModal(e, true)} className="btn btn-primary" id="btnContinue">Continue</button>
+                  {/* <button onClick={(e) => this.showModal(e, true)} className="btn btn-primary" id="btnContinue">Continue</button> */}
                 {/* </Link> */}
-              </span>
-            )}
+              {/* </span> */}
+            {/* // )} */}
           </div>
         </div>
         <div className="p-1">
@@ -913,16 +911,16 @@ class MarkSubjectExam<T = {[data: string]: any}> extends React.Component<MarkSub
 
             <div className="hide" id="detailGridTable">
               <div className="tflex bg-heading mt-1 e-flex" id="detailGrid">
-                <h4 className="p-1 py-2 mb-0"> Exam</h4>
-                <input type="text" id="examName" name="examName"  value={examData.examName} className="h-input m-1" maxLength={255} />
+                <h4 className="p-1 py-2 mb-0"> Exam Name:  <input type="text" id="examName" name="examName"  value={examData.examName} className="h-input m-1" maxLength={300} /></h4>
+                
                 <div className="hhflex" />
               </div>
               <table className="fwidth">
                 <thead>
                   <tr>
                     <th>Subject</th>
-                    <th>Date</th>
-                    <th>Day</th>
+                    <th>Exam Date</th>
+                    <th>Exam Day</th>
                     <th>Start Time</th>
                     <th>End Time</th>
                     <th>Passing Marks</th>
@@ -935,7 +933,7 @@ class MarkSubjectExam<T = {[data: string]: any}> extends React.Component<MarkSub
               <div className="d-flex fwidth justify-content-between pt-2">
                 <p />
                 <div>
-                  <button className="btn btn-primary mr-1" id="btnSave" name="btnSave" onClick={this.onClick} >
+                  <button className="btn btn-primary border-bottom" id="btnSave" name="btnSave" onClick={this.onClick} >
                     Save
                   </button>
                 </div>

@@ -16,5 +16,5 @@ export default function init() {
       </ApolloProvider>,
       document.getElementById('mountExamTab')
     );
-  }, 10);
+  }, 100);
 }
