@@ -11,8 +11,13 @@ export const ACEXAMLIST = gql`
       departmnt
       bctch
       sectn
-      st
+      startTime
+      endTime
+      total
+      semester
+      passing
       ed
+      st
       subExamDate
       countvalue
     }

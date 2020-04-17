@@ -3,10 +3,12 @@ import wsCmsBackendServiceSingletonClient from '../../../wsCmsBackendServiceClie
 import {RouteComponentProps, Link} from 'react-router-dom';
 import {graphql, QueryProps, compose, withApollo} from 'react-apollo';
 import {AcExamSettingListQuery} from '../../types';
+import {NavItem,NavLink, TabPane, TabContent} from 'reactstrap';
 
 import * as AcExamSettingListQueryGql from './AcExamSettingListQuery.graphql';
 import withLoadingHandler from '../../../components/withLoadingHandler';
 import {ACEXAMLIST} from '../_queries';
+import ExamDetailsPage from './ExamDetailsPage';
 
 export interface ExamProps extends React.HTMLAttributes<HTMLElement> {
   [data: string]: any;
@@ -16,6 +18,8 @@ export interface ExamProps extends React.HTMLAttributes<HTMLElement> {
   source?: string;
   sourceOfApplication?: string;
   user?: any;
+  examObj: any,
+  activeTab: any,
   // stateList?: any;
   // cityList?: any;
   // originalCityList?: any;
@@ -30,7 +34,9 @@ class ExamGrid<T = {[data: string]: any}> extends React.Component<ExamProps, any
   constructor(props: ExamProps) {
     super(props);
     this.state = {
+      activeTab: 0,
       examList: this.props.examList,
+      examObj: {},
       user: this.props.user,
       branchId: null,
       academicYearId: null,
@@ -58,6 +64,13 @@ class ExamGrid<T = {[data: string]: any}> extends React.Component<ExamProps, any
       selectedDepartment: {},
     };
     this.registerSocket = this.registerSocket.bind(this);
+    this.toggleTab = this.toggleTab.bind(this);
+  }
+
+  async toggleTab(tabNo: any) {
+    await this.setState({
+      activeTab: tabNo,
+    });
   }
 
   async componentDidMount(){
@@ -92,6 +105,20 @@ class ExamGrid<T = {[data: string]: any}> extends React.Component<ExamProps, any
     }
   }
 
+  async showDetail(obj: any, e: any) {
+    await this.SetObject(obj);
+    console.log('3. data in examObj:', this.state.examObj);
+    await this.toggleTab(1);
+  }
+
+  async SetObject(obj: any) {
+    console.log('1. setting object :', obj);
+    await this.setState({
+      examObj: obj,
+    });
+    console.log('2. data in obj:', obj);
+  }
+
   createRows(objAry: any) {
     const {selectedDepartment} = this.state;
     console.log('2. ExamGrid createRows() - selectedDepartment.name:  ', selectedDepartment.name);
@@ -108,7 +135,11 @@ class ExamGrid<T = {[data: string]: any}> extends React.Component<ExamProps, any
                   <tr>
                     {/* id examName action sbjct examDate departmnt bctch sectn st ed subExamDate countvalue */}
                     {/* <td>{branchObj.countvalue}</td> */}
-                    <td>{branchObj.examName}</td>
+                    <td>
+                <a onClick={(e: any) => this.showDetail(branchObj, e)}>
+                  {branchObj.examName}
+                </a>
+              </td>
                     <td>{branchObj.bctch}</td>
                     <td>{branchObj.departmnt}</td>
                     <td>{branchObj.sectn}</td>
@@ -150,7 +181,7 @@ class ExamGrid<T = {[data: string]: any}> extends React.Component<ExamProps, any
   }
 
   render() {
-    const {examList, branchObj} = this.state;
+    const {examList, branchObj,activeTab} = this.state;
     return (
       <main>
         {/* <button
@@ -160,7 +191,14 @@ class ExamGrid<T = {[data: string]: any}> extends React.Component<ExamProps, any
         >
           <i className="fa fa-plus-circle" /> Add new Branch
         </button> */}
-        
+        <TabContent activeTab={activeTab}>
+          <TabPane tabId={0}>
+          <div className="container-fluid p-1 ">
+          <div className="m-b-1 bg-heading-bgStudent studentListFlex">
+            <div className="">
+              <h4 className="ptl-06">Exam Details</h4>
+            </div>
+          </div>
         {examList !== null && examList !== undefined && examList.length > 0 ? (
           <div style={{width: '100%', height: '500px', overflow: 'auto'}}>
             <table id="branchTable" className="striped-table fwidth bg-white p-2 m-t-1">
@@ -181,6 +219,39 @@ class ExamGrid<T = {[data: string]: any}> extends React.Component<ExamProps, any
           </div>
         ) : <div>No Record Found</div>
         }
+        </div>
+         </TabPane>
+        <TabPane tabId={1}>
+            <div className="container-fluid" style={{padding: '0px'}}>
+              <div className="m-b-1 bg-heading-bgStudent studentListFlex p-point5">
+                <div className="">
+                  <h4 className="ptl-06">Exam Details</h4>
+                </div>
+                <div className="">
+                  <a
+                    className="btn btn-primary m-l-1"
+                    onClick={() => {
+                      this.toggleTab(0);
+                    }}
+                  >
+                    Back
+                  </a>
+                  <a
+                    className="btn btn-primary m-l-1"
+                    onClick={(e: any) => {
+                      print();
+                    }}
+                  >
+                    Print
+                  </a>
+                </div>
+              </div>
+              {this.state.examObj !== null && this.state.examObj !== undefined && (
+                <ExamDetailsPage data={this.state.examObj} />
+              )}
+            </div>
+          </TabPane>
+       </TabContent>
       </main>
     );
   }
