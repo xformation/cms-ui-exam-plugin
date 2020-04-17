@@ -3,8 +3,6 @@ import {RouteComponentProps, Link} from 'react-router-dom';
 import {graphql, QueryProps, MutationFunc, compose, withApollo} from 'react-apollo';
 import * as AddTypeOfGradingGql from './AddTypeOfGrading.graphql';
 import {TypeOfGradings, AddTypeOfGrading} from '../../types';
-import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
-
 // import withGradingDataLoader from './withGradingDataLoader';
 import {
   ADD_TYPE_OF_GRADING,
@@ -39,7 +37,6 @@ interface type {
 // };
 
 type ExamGradeState = {
-  isModalOpen: any;
   gradeData: any;
   branches: any;
   academicYears: any;
@@ -51,10 +48,6 @@ type ExamGradeState = {
   user: any;
   examFilterCacheList: any;
   typesOfGradingList: any;
-  selectedGrade: any;
-  groupValue: any;
-  examFilterCacheList: any;
-
 };
 
 class GradePage {
@@ -83,15 +76,12 @@ export interface GradingProps extends React.HTMLAttributes<HTMLElement> {
   typesOfGradingList?: any;
   onCloseModel?: any;
   onSelectGrade?: any;
-  
 }
 class Grading extends React.Component<GradingProps, ExamGradeState> {
   constructor(props: GradingProps) {
     super(props);
     this.state = {
-      isModalOpen: false,
       noOfExams: 0,
-      groupValue: '',
       user: this.props.user,
       examFilterCacheList: this.props.examFilterCacheList,
       typesOfGradingList: this.props.typesOfGradingList,
@@ -119,7 +109,6 @@ class Grading extends React.Component<GradingProps, ExamGradeState> {
       branches: [],
       academicYears: [],
       dtPicker: [],
-      selectedGrade: '',
       submitted: false,
       add: false,
       selectedGrades: [],
@@ -134,7 +123,6 @@ class Grading extends React.Component<GradingProps, ExamGradeState> {
     this.createGradeGrid = this.createGradeGrid.bind(this);
     this.closeModal = this.closeModal.bind(this);
     this.doSave = this.doSave.bind(this);
-    this.setSelectedGrade = this.setSelectedGrade.bind(this);
   }
 
   increaseExamValue() {
@@ -207,7 +195,7 @@ class Grading extends React.Component<GradingProps, ExamGradeState> {
         gradeData.exmMinMarks[minm.id] === null ||
         gradeData.exmMinMarks[minm.id] === ''
       ) {
-        alert('Please enter Minimum Marks');
+        alert('Please enter Minimum marks for an listed exam');
         return;
       }
     }
@@ -219,7 +207,7 @@ class Grading extends React.Component<GradingProps, ExamGradeState> {
         gradeData.exmMaxMarks[maxm.id] === null ||
         gradeData.exmMaxMarks[maxm.id] === ''
       ) {
-        alert('Please enter Maximum Marks');
+        alert('Please enter Maximum marks for an listed exam');
         return;
       }
       // if (gradeData.exmMaxMarks[maxm.id] < gradeData.exmMinMarks[minm.id]) {
@@ -234,7 +222,7 @@ class Grading extends React.Component<GradingProps, ExamGradeState> {
         gradeData.exmgradesMarks[dt.id] === null ||
         gradeData.exmgradesMarks[dt.id] === ''
       ) {
-        alert('Please enter the Grade');
+        alert('Please enter grade for an listed exam');
         return;
       }
     }
@@ -295,8 +283,8 @@ class Grading extends React.Component<GradingProps, ExamGradeState> {
         alert('Added Succesfully');
       })
       .catch((error: any) => {
-       console.log('There is some error ', error);
-        return Promise.reject(`There is some error while updating : ${error}`);
+       console.log('there is some error ', error);
+        return Promise.reject(`there is some error while updating : ${error}`);
       });
   }
 
@@ -371,51 +359,21 @@ class Grading extends React.Component<GradingProps, ExamGradeState> {
     return retVal;
   }
 
-  // closeModal(bShow: boolean) {
-  //   this.props.onCloseModel(bShow);
-  // }
-
-  showModal(e: any, bShow: boolean) {
-    e && e.preventDefault();
-    this.setState(() => ({
-        isModalOpen: bShow
-    }));
-  }
-
   closeModal(bShow: boolean) {
-    this.setState({
-      isModalOpen: bShow
-    });
+    this.props.onCloseModel(bShow);
   }
-
-  setSelectedGrade(selectedGrades: any) {
-    console.log("SELECTED GRADE :::: ",selectedGrades[0]);
-    this.setState({
-      selectedGrade: selectedGrades[0].id,
-      groupValue: selectedGrades[0].groupvalue,
-      isModalOpen: false
-    });
-  }
-
 
   render() {
     // const { data: { refetch }, mutate } = this.props;
-    const {gradeData, submitted, selectedGrades, examFilterCacheList, isModalOpen, typesOfGradingList} = this.state;
+    const {gradeData, submitted, selectedGrades, typesOfGradingList} = this.state;
 
     return (
       <section className="plugin-bg-white">
-         <Modal isOpen={isModalOpen} className="react-strap-modal-container">
-            <ModalHeader></ModalHeader>
-            <ModalBody className="modal-content">
-                <Grading examFilterCacheList={examFilterCacheList} typesOfGradingList={typesOfGradingList} onCloseModel={this.closeModal} onSelectGrade={this.setSelectedGrade}></Grading>
-                {/* <button className="btn btn-danger border-bottom" onClick={(e) => this.showModal(e, false)}>Cancel</button> */}
-            </ModalBody>
-        </Modal>
         <div className="">
           <div className="bg-heading p-1">
             <div className="eflex">
               <div className="e-flex m-t-0">
-                <h4 className="m-r-1">Select No of Grades:</h4>
+                <h4 className="m-r-1">Create Grade:</h4>
                 <span>
                   <a
                     onClick={this.decreaseExamValue.bind(this)} className="btn btn-primary mr-1 btn-small"
@@ -463,14 +421,14 @@ class Grading extends React.Component<GradingProps, ExamGradeState> {
                 <tr>
                   <th>Min Marks</th>
                   <th>Max Marks</th>
-                  <th>Grade</th>
+                  <th>Grades</th>
                 </tr>
               </thead>
               {this.createGrid()}
             </table>
           </div>
           <div className="tflex bg-heading mt-1 dflex" id="detailGrid">
-            <h4 className="p-1 py-2 mb-0">Grade List</h4>
+            <h4 className="p-1 py-2 mb-0">Grading</h4>
           </div>
           <div className="" id="detailGrid">
             <div className="" id="detailGridTable" style={{height:"150px", overflow:"auto"}}>
@@ -491,7 +449,7 @@ class Grading extends React.Component<GradingProps, ExamGradeState> {
             </div>
           </div>
         </div>
-        <button className="btn btn-primary border-bottom" onClick={(e) => this.onClickContinueButton(e)}>OK</button>
+        <button className="btn btn-primary border-bottom" onClick={(e) => this.onClickContinueButton(e)}>Ok</button>
         &nbsp;&nbsp;&nbsp;
         <button className="btn btn-danger border-bottom" onClick={(e) => this.closeModal(false)}>Cancel</button>
         
@@ -500,29 +458,5 @@ class Grading extends React.Component<GradingProps, ExamGradeState> {
   }
 }
 
-// export default withGradingDataLoader(
-
-//   compose(
-//     graphql<AddTypeOfGrading, ExamRootProps>(AddTypeOfGradingGql, {
-//       name: "mutate",
-//     }),
-//   )
-//     (Grading) as any
-// );
-
-
-// export default graphql(CREATE_FILTER_DATA_CACHE, {
-//   options: ({}) => ({
-//     variables: {
-//       collegeId: 1801,
-//       academicYearId: 1701,
-//     },
-//   }),
-// })(
-//   withLoadingHandler(compose(
-//     graphql(ADD_TYPE_OF_GRADING, {name: 'mutate'}),
-//     graphql(TYPE_OF_GRADINGS, {name: 'mutate'})
-//   )(Grading) as any)
-// );
 
 export default withApollo(Grading)
