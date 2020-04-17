@@ -4,7 +4,6 @@ import {graphql, QueryProps, MutationFunc, compose, withApollo} from 'react-apol
 import * as AddTypeOfGradingGql from './AddTypeOfGrading.graphql';
 import {TypeOfGradings, AddTypeOfGrading} from '../../types';
 import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
-// import {MarkSubjectExam} from './MarkSubjectExam';
 
 // import withGradingDataLoader from './withGradingDataLoader';
 import {
@@ -50,6 +49,7 @@ type ExamGradeState = {
   add: any;
   selectedGrades: any;
   user: any;
+  examFilterCacheList: any;
   typesOfGradingList: any;
   selectedGrade: any;
   groupValue: any;
