@@ -6,6 +6,7 @@ type ExamTableStates = {
     user: any;
     activeTab: any;
     examObj: any;
+    examData:any;
   };
 
 export interface ExamDetailsProps extends React.HTMLAttributes<HTMLElement> {
@@ -19,9 +20,13 @@ export interface ExamDetailsProps extends React.HTMLAttributes<HTMLElement> {
      activeTab: 0,
      examObj: this.props.data,
      user: this.props.user,
+     examData: {
+ 
+     },
     };
     this.toggleTab = this.toggleTab.bind(this);
   }
+  
   async componentDidMount() {
     this.setState({
       examObj: this.props.data,
@@ -33,247 +38,109 @@ export interface ExamDetailsProps extends React.HTMLAttributes<HTMLElement> {
       examObj: this.props.data,
     });
   }
+  ;
   toggleTab(tabNo: any) {
     this.setState({
       activeTab: tabNo,
     });
   }
 
-  render() {
-    const {activeTab, examObj} = this.state;
+ render() {
+    const {activeTab,examData, examObj} = this.state;
     console.log('Check the new obj in another page:', examObj);
     return (
-        <section className="student-profile-container">
-          <div className="plugin-bg-white">
-            <div>
-              <div className="b-1 m-1">
-                <div className="p-m-1">
-                  <Nav tabs className="" id="rmfloat">
-                    <NavItem className="cursor-pointer">
-                      <NavLink
-                        className={`${activeTab === 0 ? 'active' : ''}`}
-                        onClick={() => {
-                          this.toggleTab(0);
-                        }}
-                      >
-                        exam Details
-                      </NavLink>
-                    </NavItem>
-                    {/* <NavItem className="cursor-pointer">
-                      <NavLink
-                        className={`${activeTab === 1 ? 'active' : ''}`}
-                        onClick={() => {
-                          this.toggleTab(1);
-                        }}
-                      >
-                        Contract
-                      </NavLink>
-                    </NavItem>
-                    <NavItem className="cursor-pointer">
-                      <NavLink
-                        className={`${activeTab === 2? 'active' : ''}`}
-                        onClick={() => {
-                          this.toggleTab(2);
-                        }}
-                      >
-                        Insurance
-                      </NavLink>
-                      </NavItem>*/}
-                  </Nav>
-                  <TabContent activeTab={activeTab} className="ltab-contianer p-0">
-                    <TabPane tabId={0}>
-                      <span>
-                      <div className="p-2">
-                  <div className="details-container">
-                    <div className="row">
-                      <div className="col-sm-4 col-xs-12 m-b-1 adminDetails">
+      
+                
+            
+              <TabContent activeTab={activeTab} className="ltab-contianer p-1">
+                     
+                    
+                     
+                     <div className="row">
+                     
+                     <div className="col-sm-2 col-xs-4 m-b-1 adminDetails">
                         <span className="profile-label w-8">
-                          year:
+                          Year:
                         </span>
                         <span className="">{examObj.bctch}</span>
                       </div>
-                      <div className="col-sm-4 col-xs-12 m-b-1 adminDetails">
-                        <span className="profile-label w-12">
+                      <div className="col-sm-3 col-xs-6 m-b-4 adminDetails">
+                        <span className="profile-label w-15">
                           Semester:
                         </span>
                         <span className="">{examObj.semester}</span>
                       </div>
-                      <div className="col-sm-4 col-xs-12 m-b-1 adminDetails">
-                        <span className="profile-label w-10">
+                      <div className="col-sm-7 col-xs-5 m-b-1 adminDetails">
+                        <span className="profile-label w-20">
                           Section: </span>
                         <span className="">{examObj.sectn}</span>
 
                       </div>
-                    </div>
-                    <div className="row">
-                      <div className="col-sm-4 col-xs-12 m-b-1 adminDetails">
-                        <span className="profile-label w-8">
-                          Subject:</span>
-                        <span className="">{examObj.sbjct}</span>
                       </div>
-                      <div className="col-sm-4 col-xs-12 m-b-1 adminDetails">
-                        <span className="profile-label w-12">
-                          Date:</span>
-                        <span className="">{examObj.examDate}</span>
-                      </div>
-                      <div className="col-sm-4 col-xs-12 m-b-1 adminDetails">
-                        <span className="profile-label w-10">
-                         Start Time:</span>
-                        <span className="">{examObj.startTime}</span>
-                      </div>
-                    </div>
-                    <div className="row">
-                      <div className="col-sm-4 col-xs-12 m-b-1 adminDetails">
-                        <span className="profile-label w-8">
-                          End Time: </span>
-                        <span className="">{examObj.endTime}</span>
-                      </div>
-                      <div className="col-sm-4 col-xs-12 m-b-1 adminDetails">
-                        <span className="profile-label w-12">
-                          Passing Marks: </span>
-                        <span className="">{examObj.passing}</span>
-                      </div>
-                      <div className="col-sm-4 col-xs-12 m-b-1 adminDetails">
-                        <span className="profile-label w-10">
-                          Total Marks: </span>
-                        <span className="">{examObj.total}</span>
-                      </div>
-                    </div>
-                  </div>
-                  {/* <div className="details-container">
-                    <div className="row">
-                      <div className="col-sm-4 col-xs-12 m-b-1 adminDetails">
-                        <span className="profile-label w-8">
-                         Model: </span>
-                        <span className="">{vObj.model}</span>
-                      </div>
-                      <div className="col-sm-4 col-xs-12 m-b-1 adminDetails"> */}
-                        {/* <span className="profile-label w-12">
-                          Contact Number:
-                      </span>
-                        <span className="">{vObj.contactNumber}</span>
-                      </div>
-                    </div>
-                  </div>
+                      {/* <TabPane tabId={1}>
+            <div className="container-fluid" style={{padding: '0px'}}>
+              <div className="m-b-1 bg-heading-bgStudent studentListFlex p-point5">
+              <div className="row">
+                
+                <div className="">
+                  <a
+                    className="btn btn-primary m-l-1"
+                    onClick={() => {
+                      this.toggleTab(0);
+                    }}
+                  >
+                    Back
+                  </a>
+                  <a
+                    className="btn btn-primary m-l-1"
+                    onClick={(e: any) => {
+                      print();
+                    }}
+                  >
+                    Print
+                  </a>
                 </div>
-                </span> */}
-                    {/* </TabPane>
-                    <TabPane tabId={1}>
-                      <span>
-                      <div className="p-2">
-                  <div className="details-container">
-                    <div className="row">
-                      <div className="col-sm-4 col-xs-12 m-b-1 adminDetails">
-                        <span className="profile-label w-8">
-                          Vendor Name:
-                        </span>
-                        {vObj.contract !== undefined && (
-
-                          <span >{vObj.contract.vendorName}</span>
-                        )}
-                      </div>
-                      <div className="col-sm-4 col-xs-12 m-b-1 adminDetails">
-                        <span className="profile-label w-10">
-                          Year:
-                        </span>
-                        {vObj.contract !== undefined && (
-
-                          <span >{vObj.contract.typeOfOwnerShip}</span>
-                        )}
-                      </div>
-                      <div className="col-sm-4 col-xs-12 m-b-1 adminDetails">
-                        <span className="profile-label w-10">
-                          Duration Of Contract:
-                        </span>
-                        {vObj.contract !== undefined && (
-
-                          <span >{vObj.contract.durationOfContract}</span>
-                        )}
-                      </div>
-             </div>
-             <div className="row">
-                      <div className="col-sm-4 col-xs-12 m-b-1 adminDetails">
-                        <span className="profile-label w-8">
-                          Date Of Contract:
-                        </span>
-                        {vObj.contract !== undefined && (
-
-                          <span >{vObj.strStartDate}</span>
-                        )}
-                      </div>
-                      <div className="col-sm-4 col-xs-12 m-b-1 adminDetails">
-                        <span className="profile-label w-10">
-                          Contract Expiring Date:
-                        </span>
-                        {vObj.contract !== undefined && (
-
-                          <span >{vObj.strEndDate}</span>
-                        )}
-                      </div>
-             </div>
-             </div>
-               </div>
-                      </span>
-                    </TabPane>
-                    <TabPane tabId={2}>
-                      <span>
-                      <div className="p-2">
-                  <div className="details-container">
-                    <div className="row">
-                      <div className="col-sm-4 col-xs-12 m-b-1 adminDetails">
-                        <span className="profile-label w-8">
-                          Insurance Company:
-                        </span>
-                        {vObj.insurance !== undefined && (
-
-                          <span >{vObj.insurance.insuranceCompany}</span>
-                        )}
-                      </div>
-                      <div className="col-sm-4 col-xs-12 m-b-1 adminDetails">
-                        <span className="profile-label w-8">
-                          Type Of Insurance:
-                        </span>
-                        {vObj.insurance !== undefined && (
-
-                          <span >{vObj.insurance.typeOfInsurance}</span>
-                        )}
-                      </div>
-                    </div>
-                    <div className="row">
-                      <div className="col-sm-4 col-xs-12 m-b-1 adminDetails">
-                        <span className="profile-label w-8">
-                          Date Of Insurance:
-                        </span>
-                        {vObj.contract !== undefined && (
-
-                          <span >{vObj.strDateOfInsurance}</span>
-                        )}
-                      </div>
-                      <div className="col-sm-4 col-xs-12 m-b-1 adminDetails">
-                        <span className="profile-label w-10">
-                          Valid Till:
-                        </span>
-                        {vObj.contract !== undefined && (
-
-                          <span >{vObj.strValidTill}</span>
-                        )}
-                      </div>
-             </div>
-                  </div>
-               </div>
-
-                      </span> */}
-                      </div>
-                      
-                      </span>
-                    </TabPane>
-                  </TabContent>
                 </div>
               </div>
+              {this.state.examObj !== null && this.state.examObj !== undefined && (
+                <ExamDetailsPage
+                 data={this.state.examObj} />
+              )}
             </div>
-          </div>
-        </section>
-      );
+          </TabPane> */}
+               
+                
+                              
+
+                       <h4> ExamName :{examObj.examName}</h4>
+                     
+                    
+                      <table id="branchTable" className="striped-table fwidth bg-white p-3 m-t-1">
+              <thead>
+                <tr>
+                  <th>Subject</th>
+                  <th>Date</th>
+                  {/* <th>Day</th> */}
+                  <th>Start time</th>
+                  <th>End Time</th>
+                  <th>Passing Marks</th>
+                  <th>Total Marks</th>
+
+                </tr>
+              </thead>
+              <td>{examObj.sbjct}</td>
+              <td>{examObj.examDate}</td>
+              {/* <td>{examObj.day}</td> */}
+              <td>{examObj.startTime}</td>
+              <td>{examObj.endTime}</td>
+            
+              <td>{examObj.passing}</td>
+              <td>{examObj.total}</td>
+
+
+            </table>
+       </TabContent> 
+    );
     }
   }
   export default withApollo(ExamDetailsPage);

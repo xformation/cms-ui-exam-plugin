@@ -183,7 +183,7 @@ class ExamGrid<T = {[data: string]: any}> extends React.Component<ExamProps, any
   render() {
     const {examList, branchObj,activeTab} = this.state;
     return (
-      <main>
+      <section className="customCss">
         {/* <button
           className="btn btn-primary"
           style={{width: '150px'}}
@@ -194,11 +194,7 @@ class ExamGrid<T = {[data: string]: any}> extends React.Component<ExamProps, any
         <TabContent activeTab={activeTab}>
           <TabPane tabId={0}>
           <div className="container-fluid p-1 ">
-          <div className="m-b-1 bg-heading-bgStudent studentListFlex">
-            <div className="">
-              <h4 className="ptl-06">Exam Details</h4>
-            </div>
-          </div>
+          
         {examList !== null && examList !== undefined && examList.length > 0 ? (
           <div style={{width: '100%', height: '500px', overflow: 'auto'}}>
             <table id="branchTable" className="striped-table fwidth bg-white p-2 m-t-1">
@@ -221,15 +217,16 @@ class ExamGrid<T = {[data: string]: any}> extends React.Component<ExamProps, any
         }
         </div>
          </TabPane>
-        <TabPane tabId={1}>
+         <TabPane tabId={1}>
             <div className="container-fluid" style={{padding: '0px'}}>
               <div className="m-b-1 bg-heading-bgStudent studentListFlex p-point5">
-                <div className="">
+                
+                  <div className="">
                   <h4 className="ptl-06">Exam Details</h4>
                 </div>
                 <div className="">
                   <a
-                    className="btn btn-primary m-l-1"
+                    className="btn btn-primary m-l-1  pull-right"
                     onClick={() => {
                       this.toggleTab(0);
                     }}
@@ -237,7 +234,7 @@ class ExamGrid<T = {[data: string]: any}> extends React.Component<ExamProps, any
                     Back
                   </a>
                   <a
-                    className="btn btn-primary m-l-1"
+                    className="btn btn-primary m-l-1 pull-right"
                     onClick={(e: any) => {
                       print();
                     }}
@@ -250,9 +247,10 @@ class ExamGrid<T = {[data: string]: any}> extends React.Component<ExamProps, any
                 <ExamDetailsPage data={this.state.examObj} />
               )}
             </div>
+            
           </TabPane>
        </TabContent>
-      </main>
+       </section >
     );
   }
 }
