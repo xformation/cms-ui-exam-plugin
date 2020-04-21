@@ -92,13 +92,16 @@ class ExamSettings extends React.Component<ExamSettingsProps, any> {
     });
     // let bid = 34;
     // let aid = 56;
-
     if (tabNo === 0) {
-      this.acExamSettings();
+      this.getTypesOfGrading();
     }
     if (tabNo === 1) {
+      this.acExamSettings();
+    }
+    if (tabNo === 2) {
       this.getExamFilterCache();
       this.getTypesOfGrading();
+      
     }
     
     this.setState({
@@ -182,25 +185,35 @@ class ExamSettings extends React.Component<ExamSettingsProps, any> {
       <section className="tab-container row vertical-tab-container">
         <Nav tabs className="pl-3 pl-3 mb-4 mt-4 col-sm-2">
           <NavItem className="cursor-pointer">
-            <NavLink
-              className={`vertical-nav-link ${activeTab === 0 ? 'side-active' : ''}`}
-              onClick={() => {
-                this.toggleTab(0);
-              }}
-            >
-              Exams List
-            </NavLink>
+          <NavLink
+          className={`vertical-nav-link ${activeTab === 0 ? 'side-active' : ''}`}
+          onClick={() => {
+            this.toggleTab(0);
+          }}>
+          Create Grade
+          </NavLink>
           </NavItem>
+          
           <NavItem className="cursor-pointer">
             <NavLink
               className={`vertical-nav-link ${activeTab === 1 ? 'side-active' : ''}`}
               onClick={() => {
                 this.toggleTab(1);
-              }}
-            >
+              }}>
+              Exams List
+            </NavLink>
+          </NavItem>
+
+          <NavItem className="cursor-pointer">
+            <NavLink
+              className={`vertical-nav-link ${activeTab === 2 ? 'side-active' : ''}`}
+              onClick={() => {
+                this.toggleTab(2);
+              }}>
               Add Exam
             </NavLink>
           </NavItem>
+          </Nav>
           {/* <NavItem className="cursor-pointer">
             <NavLink
               className={`vertical-nav-link ${activeTab === 2 ? 'side-active' : ''}`}
@@ -221,9 +234,18 @@ class ExamSettings extends React.Component<ExamSettingsProps, any> {
               Grading
             </NavLink>
           </NavItem> */}
-        </Nav>
-        <TabContent activeTab={activeTab} className="col-sm-9 border-left p-t-1">
+        {/* </Nav> */}
+        <TabContent activeTab={activeTab} className="col-sm-10 border-left p-t-1">
+          
           <TabPane tabId={0}>
+            {
+                user !== null && typesOfGradingList !== null && (
+                  <Grading user={user} typesOfGradingList={typesOfGradingList.typeOfGradings} />
+                )
+            }
+          </TabPane>
+          
+          <TabPane tabId={1}>
             {
                 user !== null && examList !== null && (
                   <ExamGrid user={user} examList={examList.acExamSettings} />
@@ -231,10 +253,10 @@ class ExamSettings extends React.Component<ExamSettingsProps, any> {
             }
           </TabPane>
 
-          <TabPane tabId={1}>
+          <TabPane tabId={2}>
             {
-              user !== null && examFilterCacheList !== null && typesOfGradingList !== null && (
-                <MarkSubjectExam user={user} examFilterCacheList={examFilterCacheList.createExamFilterDataCache} typesOfGradingList={typesOfGradingList.typeOfGradings}/>
+              user !== null && examFilterCacheList !== null && typesOfGradingList !== null &&  (
+                <MarkSubjectExam user={user} examFilterCacheList={examFilterCacheList.createExamFilterDataCache} typesOfGradingList={typesOfGradingList.typeOfGradings} />
               )
             }
           </TabPane>

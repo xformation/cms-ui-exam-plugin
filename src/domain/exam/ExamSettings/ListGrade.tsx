@@ -319,11 +319,11 @@ class Grading extends React.Component<GradingProps, ExamGradeState> {
         let grade = gradesArr[j];
         retVal.push(
           <tr>
-            {/* {j === 0 && (
+            {j === 0 && (
               <td rowSpan={gradesArr.length}>
                 <input onClick={(e: any) => this.onClickCheckbox(keys[i], gradesArr, e)} type="radio" name="grades" id={'chk' + keys[i]} />
               </td>
-            )} */}
+            )}
             <td>{grade.minMarks}</td>
             <td>{grade.maxMarks}</td>
             <td>{grade.grades}</td>
@@ -370,63 +370,8 @@ class Grading extends React.Component<GradingProps, ExamGradeState> {
     return (
       <section className="plugin-bg-white">
         <div className="">
-          <div className="bg-heading p-1">
-            <div className="eflex">
-              <div className="e-flex m-t-0">
-                <h4 className="m-r-1">Create Grade:</h4>
-                <span>
-                  <a
-                    onClick={this.decreaseExamValue.bind(this)} className="btn btn-primary mr-1 btn-small"
-                  >
-                    <i className="fa fa-minus" />
-                  </a>
-                  {this.state.noOfExams}
-                  <a
-                    onClick={this.increaseExamValue.bind(this)}
-                    className="btn btn-primary mr-1 btn-small m-l-1"
-                  >
-                    <i className="fa fa-plus" />
-                  </a>
-                </span>
-              {/* </div> */}
-              {/* <span>
-                <button className="btn btn-primary mr-1" style={{ width: '130px' }} id="btnCreateGradeGrid" name="btnCreateGradeGrid" onClick={this.createGradeGrid}>Create Grade</button>
-              </span> */}
-              {/* <div> */}
-                <span>
-                  <button className="btn btn-primary mr-1" id="btnSave" name="btnSave" onClick={this.onClick} >
-                    Save
-                  </button>
-                </span>
-                <span>
-                  {/* <Link
-                    to={`/plugins/ems-exam/page/addexam`}
-                    className="btn btn-primary" >Back
-                </Link> */}
-                </span>
-                {selectedGrades.length > 0 && (
-                  <span>
-                    {/* <Link to={`/plugins/ems-exam/page/addexam`} className="btn btn-primary m-l-1" onClick={this.onClickContinueButton}>
-                      Continue
-              </Link> */}
-                  </span>
-                )}
-              </div>
-            </div>
-          </div>
-
-          <div className="" id="detailGridTable">
-            <table className="fwidth">
-              <thead>
-                <tr>
-                  <th>Min Marks</th>
-                  <th>Max Marks</th>
-                  <th>Grade</th>
-                </tr>
-              </thead>
-              {this.createGrid()}
-            </table>
-          </div>
+          
+          
           <div className="tflex bg-heading mt-1 dflex" id="detailGrid">
             <h4 className="p-1 py-2 mb-0">Grade List</h4>
           </div>
@@ -435,9 +380,9 @@ class Grading extends React.Component<GradingProps, ExamGradeState> {
               <table className="fwidth">
                 <thead>
                   <tr>
-                    {/* <th> */}
+                    <th>
                       {/* <input type="radio" value="checkedall" name="" id="chkCheckedAll" /> */}
-                    {/* </th> */}
+                    </th>
                     <th>Min Marks</th>
                     <th>Max Marks</th>
                     <th>Grades</th>
@@ -449,9 +394,9 @@ class Grading extends React.Component<GradingProps, ExamGradeState> {
             </div>
           </div>
         </div>
-        {/* <button className="btn btn-primary border-bottom" onClick={(e) => this.onClickContinueButton(e)}>Ok</button> */}
-        {/* &nbsp;&nbsp;&nbsp; */}
-        {/* <button className="btn btn-danger border-bottom" onClick={(e) => this.closeModal(false)}>Cancel</button> */}
+        <button className="btn btn-primary border-bottom" onClick={(e) => this.onClickContinueButton(e)}>Ok</button>
+        &nbsp;&nbsp;&nbsp;
+        <button className="btn btn-danger border-bottom" onClick={(e) => this.closeModal(false)}>Cancel</button>
         
       </section>
     );
