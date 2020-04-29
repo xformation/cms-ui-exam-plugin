@@ -129,7 +129,7 @@ export interface ExamDetailsProps extends React.HTMLAttributes<HTMLElement> {
                 </tr>
               </thead>
               <td>{examObj.sbjct}</td>
-              <td>{examObj.examDate}</td>
+              <td>{examObj.st}</td>
               {/* <td>{examObj.day}</td> */}
               <td>{examObj.startTime}</td>
               <td>{examObj.endTime}</td>

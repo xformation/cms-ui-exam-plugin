@@ -7,9 +7,42 @@ import {NavItem,NavLink, TabPane, TabContent} from 'reactstrap';
 
 import * as AcExamSettingListQueryGql from './AcExamSettingListQuery.graphql';
 import withLoadingHandler from '../../../components/withLoadingHandler';
-import {ACEXAMLIST} from '../_queries';
+import {ACEXAMLIST, CREATE_FILTER_DATA_CACHE} from '../_queries';
 import ExamDetailsPage from './ExamDetailsPage';
+import EditExam from './EditExam'
 
+
+type ExamState = {
+  isModalOpen: any;
+  user: any;
+  examData: any;
+  branches: any;
+  academicYears: any;
+  departments: any;
+  batches: any;
+  subjects: any;
+  semesters: any;
+  sections: any;
+  submitted: any;
+  noOfExams: number;
+  dateofExam: any;
+  dayValue: any;
+  isSubjectSame: any;
+  startDate: any;
+  gradeType: any;
+  selectedGrade: any;
+  groupValue: any;
+  gradingId: any;
+
+  branchId: any;
+  academicYearId: any;
+  departmentId: any;
+  examFilterCacheList: any;
+  typesOfGradingList: any;
+  exObj:any;
+  ExObj:any;
+
+};
 export interface ExamProps extends React.HTMLAttributes<HTMLElement> {
   [data: string]: any;
   examList?: any;
@@ -20,6 +53,9 @@ export interface ExamProps extends React.HTMLAttributes<HTMLElement> {
   user?: any;
   examObj: any,
   activeTab: any,
+
+  exam:any,
+  examFilterCacheList:any,
   // stateList?: any;
   // cityList?: any;
   // originalCityList?: any;
@@ -36,9 +72,11 @@ class ExamGrid<T = {[data: string]: any}> extends React.Component<ExamProps, any
     this.state = {
       activeTab: 0,
       examList: this.props.examList,
+      examFilterCacheList : this.props.examFilterCacheList,
       examObj: {},
       user: this.props.user,
       branchId: null,
+
       academicYearId: null,
       departmentId: null,
       totalRecords: this.props.totalRecords,
@@ -60,11 +98,16 @@ class ExamGrid<T = {[data: string]: any}> extends React.Component<ExamProps, any
       // stateList: this.props.stateList,
       // cityList: this.props.cityList,
       // originalCityList: this.props.cityList,
+      batches: [],
+      sections: [],
       modelHeader: '',
       selectedDepartment: {},
     };
+    this.createBatches = this.createBatches.bind(this);
+    this.createSections = this.createSections.bind(this);
     this.registerSocket = this.registerSocket.bind(this);
     this.toggleTab = this.toggleTab.bind(this);
+    this.getExamFilter = this.getExamFilter.bind(this);
   }
 
   async toggleTab(tabNo: any) {
@@ -73,10 +116,13 @@ class ExamGrid<T = {[data: string]: any}> extends React.Component<ExamProps, any
     });
   }
 
-  async componentDidMount(){
+  async componentDidMount() {
     await this.registerSocket();
+    console.log(
+      '5. check create catch batches:',
+      this.state.examFilterCacheList.batches
+    );
   }
-
   registerSocket() {
     const socket = wsCmsBackendServiceSingletonClient.getInstance();
 
@@ -105,10 +151,55 @@ class ExamGrid<T = {[data: string]: any}> extends React.Component<ExamProps, any
     }
   }
 
+  createBatches(batches: any, selectedDepartmentId: any) {
+    let batchesOptions = [
+      <option key={0} value="">
+        Select Year
+      </option>,
+    ];
+    for (let i = 0; i < batches.length; i++) {
+      let id = batches[i].id;
+      let dptId = '' + batches[i].department.id;
+      if (dptId == selectedDepartmentId) {
+        batchesOptions.push(
+          <option key={id} value={id}>
+            {batches[i].batch}
+          </option>
+        );
+      }
+    }
+    return batchesOptions;
+  }
+
+  createSections(sections: any, selectedBatchId: any) {
+    let sectionsOptions = [
+      <option key={0} value="">
+        Select Section
+      </option>,
+    ];
+    for (let i = 0; i < sections.length; i++) {
+      let id = sections[i].id;
+      let sbthId = '' + sections[i].batch.id;
+      if (sbthId == selectedBatchId) {
+        sectionsOptions.push(
+          <option key={id} value={id}>
+            {sections[i].section}
+          </option>
+        );
+      }
+    }
+    return sectionsOptions;
+  }
+
   async showDetail(obj: any, e: any) {
     await this.SetObject(obj);
     console.log('3. data in examObj:', this.state.examObj);
     await this.toggleTab(1);
+  }
+  async getStDetail(obj: any, e: any,) {
+    await this.SetObject(obj);
+    console.log('3. data in examObj:', this.state.examObj);
+    await this.toggleTab(2);
   }
 
   async SetObject(obj: any) {
@@ -117,6 +208,23 @@ class ExamGrid<T = {[data: string]: any}> extends React.Component<ExamProps, any
       examObj: obj,
     });
     console.log('2. data in obj:', obj);
+  }
+
+  async getExamFilter() {
+    const {branchId, academicYearId} = this.state;
+    console.log('exam branch Id:', branchId);
+    const {data} = await this.props.client.query({
+      query: CREATE_FILTER_DATA_CACHE,
+      variables: {
+        collegeId: '' + branchId,
+        academicYearId: '' + academicYearId,
+      },
+
+      fetchPolicy: 'no-cache',
+    });
+    this.setState({
+      examFilterCacheList: data,
+    });
   }
 
   createRows(objAry: any) {
@@ -146,10 +254,20 @@ class ExamGrid<T = {[data: string]: any}> extends React.Component<ExamProps, any
                     <td>{branchObj.sbjct}</td>
                     <td>{branchObj.st}</td>
                     <td>{branchObj.ed}</td>
+                    <td>
+                  <button
+                    className="btn btn-primary"
+                    onClick={(e: any) => this.getStDetail(branchObj, e)}
+                  >
+                    {' '}
+                    Edit{' '}
+                  </button>
+                </td>
           
                     {/* <td>{branchObj.action}</td> */}
                     {/* <td>{branchObj.countvalue}</td> */}
           
+
                     {/* <td>
                       {
                         <button
@@ -181,9 +299,9 @@ class ExamGrid<T = {[data: string]: any}> extends React.Component<ExamProps, any
   }
 
   render() {
-    const {examList, branchObj,activeTab} = this.state;
+    const {examList, branchObj,activeTab,user,examFilterCacheList,exam} = this.state;
     return (
-      <section className="customCss">
+      <main >
         {/* <button
           className="btn btn-primary"
           style={{width: '150px'}}
@@ -197,7 +315,7 @@ class ExamGrid<T = {[data: string]: any}> extends React.Component<ExamProps, any
           
         {examList !== null && examList !== undefined && examList.length > 0 ? (
           <div style={{width: '100%', height: '500px', overflow: 'auto'}}>
-            <table id="branchTable" className="striped-table fwidth bg-white p-2 m-t-1">
+            <table id="branchTable" className="markAttendance">
               <thead>
                 <tr>
                   {/* <th>Id</th> */}
@@ -208,6 +326,7 @@ class ExamGrid<T = {[data: string]: any}> extends React.Component<ExamProps, any
                   <th>Subjects</th>
                   <th>Start Date</th>
                   <th>End Date</th>
+                  <th>Action</th>
                 </tr>
               </thead>
               <tbody>{this.createRows(examList)}</tbody>
@@ -228,7 +347,7 @@ class ExamGrid<T = {[data: string]: any}> extends React.Component<ExamProps, any
                   <a
                     className="btn btn-primary m-l-1  pull-right"
                     onClick={() => {
-                      this.toggleTab(0);
+                      this.toggleTab(1);
                     }}
                   >
                     Back
@@ -246,11 +365,45 @@ class ExamGrid<T = {[data: string]: any}> extends React.Component<ExamProps, any
               {this.state.examObj !== null && this.state.examObj !== undefined && (
                 <ExamDetailsPage data={this.state.examObj} />
               )}
+               
             </div>
             
           </TabPane>
+          <TabPane tabId={2}>
+          <div className="container-fluid" style={{padding: '0px'}}>
+              <div className="m-b-1 bg-heading-bgStudent studentListFlex p-point5">
+                <div className="">
+                  <h4 className="ptl-06">Student Details</h4>
+                </div>
+                <div className="">
+                  <a
+                    className="btn btn-primary m-l-1"
+                    onClick={() => {
+                      this.toggleTab(0);
+                    }}
+                  >
+                    Back
+                  </a>
+                </div>
+              </div>
+              {user !== null &&
+                this.state.examObj !== null &&
+                this.state.examObj !== undefined && (
+                  <EditExam
+                    // user={user}
+                    // data={this.state.examObj}
+                    // examObj={this.state.examObj}
+                    //   batches={this.state.examFiterCacheList.batches}
+                    //   sections={this.state.examFiterCacheList.sections}
+                  />
+                )}
+              {/* {this.state.StdObj !== null && this.state.StdObj !== undefined && (
+                <EditStudentPage data={this.state.StdObj} />
+              )} */}
+            </div>
+          </TabPane>
        </TabContent>
-       </section >
+       </main >
     );
   }
 }

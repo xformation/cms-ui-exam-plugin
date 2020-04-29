@@ -666,9 +666,20 @@ class ExamReportSrc extends React.Component<ExamReportSrcProps, ExamState> {
                     </select>
                   </td> */}
                   <td>
-                    <select required name="batch" id="batch" onChange={this.onChange} value={examData.batch.id} className="gf-form-input max-width-22" >
-                      {this.createBatches( examFilterCacheList.batches, departmentId )}
-                    </select>
+                 
+              <label htmlFor=""> Year <span style={{color: 'red'}}> * </span> </label>
+               <select name="batch" id="batch" className="gf-form-input width-11 m-b-1"  onChange={this.onChange} value={examData.batch.id} style={{width: '10.8rem', marginBottom: '10px', borderRadius: '0px'}} >
+                  {examFilterCacheList !== null &&
+                  examFilterCacheList !== undefined &&
+                  examFilterCacheList.batches !== null &&
+                  examFilterCacheList.batches !== undefined
+                    ? this.createBatches(
+                      examFilterCacheList.batches,
+                        departmentId
+                      )
+                    : null}
+                    {/* {this.createBatches(createStudentFilterDataCache.batches, departmentId)} */}
+                </select>
                   </td>
                   <td>
                     <select required name="section" id="section" onChange={this.onChange} value={examData.section.id} className="gf-form-input max-width-22" >
