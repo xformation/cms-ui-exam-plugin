@@ -2,7 +2,6 @@ import * as React from 'react';
 // import { withRouter, RouteComponentProps, Link } from 'react-router-dom';
 import {TabContent, TabPane, Nav, NavItem, NavLink} from 'reactstrap';
 import {withApollo} from 'react-apollo';
-
 import '../../../css/exam-settings.css';
 import AcExamListPage from './ExamGrid';
 import ExamReportSrc from './ExamReportSrc';
@@ -33,7 +32,7 @@ class ExamSettings extends React.Component<ExamSettingsProps, any> {
       activeTab: 0,
       user: this.props.user,
       examList: null,
-      examFilterCacheList: null,
+      createExamFilterDataCache: null,
       typesOfGradingList: null,
       departmentList: null,
       batchList: null,
@@ -96,7 +95,7 @@ class ExamSettings extends React.Component<ExamSettingsProps, any> {
       this.getTypesOfGrading();
     }
     if (tabNo === 1) {
-      this.acExamSettings();
+      this.getExamFilterCache();
     }
     if (tabNo === 2) {
       this.getExamFilterCache();
@@ -120,18 +119,19 @@ class ExamSettings extends React.Component<ExamSettingsProps, any> {
   }
 
   async getExamFilterCache() {
-    const {branchId, academicYearId} = this.state;
+    const {branchId, academicYearId, departmentId} = this.state;
     const {data} = await this.props.client.query({
       query: CREATE_FILTER_DATA_CACHE,
         variables: {
           branchId: branchId,
           academicYearId: academicYearId,
+          departmentId: departmentId,
         },
       
       fetchPolicy: 'no-cache',
     });
     this.setState({
-      examFilterCacheList: data,
+      createExamFilterDataCache: data,
     });
   }
 
@@ -180,7 +180,7 @@ class ExamSettings extends React.Component<ExamSettingsProps, any> {
   // }
 
   render() {
-    const {activeTab, user, examList, examFilterCacheList, typesOfGradingList} = this.state;
+    const {activeTab, user, examList, createExamFilterDataCache, typesOfGradingList} = this.state;
     return (
       <section className="tab-container row vertical-tab-container">
         <Nav tabs className="pl-3 pl-3 mb-4 mt-4 col-sm-2">
@@ -246,17 +246,24 @@ class ExamSettings extends React.Component<ExamSettingsProps, any> {
           </TabPane>
           
           <TabPane tabId={1}>
-            {
-                user !== null && examList !== null && (
-                  <ExamGrid user={user} examList={examList.acExamSettings} />
-                )
-            }
+          {user !== null && createExamFilterDataCache !== null && (
+              <ExamGrid
+                user={user}
+                createExamFilterDataCache={
+                  createExamFilterDataCache.createExamFilterDataCache
+                }
+              />
+            )}
           </TabPane>
 
           <TabPane tabId={2}>
             {
-              user !== null && examFilterCacheList !== null && typesOfGradingList !== null &&  (
-                <MarkSubjectExam user={user} examFilterCacheList={examFilterCacheList.createExamFilterDataCache} typesOfGradingList={typesOfGradingList.typeOfGradings} />
+              user !== null && createExamFilterDataCache !== null && typesOfGradingList !== null &&  (
+                <MarkSubjectExam
+                 user={user} 
+                 examFilterCacheList={createExamFilterDataCache.createExamFilterDataCache} 
+                 typesOfGradingList={typesOfGradingList.typeOfGradings} 
+                 />
               )
             }
           </TabPane>

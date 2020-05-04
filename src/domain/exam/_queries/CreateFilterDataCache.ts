@@ -1,8 +1,16 @@
 import gql from 'graphql-tag';
 
 export const CREATE_FILTER_DATA_CACHE = gql`
-  query createExamFilterDataCache($branchId: Long, $academicYearId: Long) {
-    createExamFilterDataCache(branchId: $branchId, academicYearId: $academicYearId) {
+  query createExamFilterDataCache(
+    $branchId: Long
+    $departmentId: Long
+    $academicYearId: Long
+  ) {
+    createExamFilterDataCache(
+      branchId: $branchId
+      departmentId: $departmentId
+      academicYearId: $academicYearId
+    ) {
       branches {
         id
         branchName
@@ -11,9 +19,6 @@ export const CREATE_FILTER_DATA_CACHE = gql`
         id
         name
         branch {
-          id
-        }
-        academicyear {
           id
         }
       }
@@ -34,10 +39,10 @@ export const CREATE_FILTER_DATA_CACHE = gql`
       academicExamSettings {
         id
         examName
-        countvalue
         departmentId
         batchId
       }
+
       subjects {
         id
         subjectType
@@ -53,6 +58,46 @@ export const CREATE_FILTER_DATA_CACHE = gql`
       semesters {
         id
         description
+      }
+      academicExamSettings {
+        id
+        examName
+        semester
+        examDate
+        strexamDate
+        day
+        duration
+        startTime
+        gradeType
+        departmentId
+        batchId
+        sectionId
+        branchId
+        academicyearId
+        subjectId
+        academicyear {
+          id
+        }
+        subject {
+          id
+          subjectDesc
+        }
+        branch {
+          id
+          branchName
+        }
+        department {
+          id
+          name
+        }
+        section {
+          id
+          section
+        }
+        batch {
+          id
+          batch
+        }
       }
     }
   }

@@ -62,7 +62,9 @@ export interface ExamDetailsProps extends React.HTMLAttributes<HTMLElement> {
                         <span className="profile-label w-8">
                           Year:
                         </span>
-                        <span className="">{examObj.bctch}</span>
+                        {examObj.batch !== undefined && (
+                        <span>{examObj.batch.batch}</span>
+                      )}
                       </div>
                       <div className="col-sm-3 col-xs-6 m-b-4 adminDetails">
                         <span className="profile-label w-15">
@@ -73,8 +75,9 @@ export interface ExamDetailsProps extends React.HTMLAttributes<HTMLElement> {
                       <div className="col-sm-7 col-xs-5 m-b-1 adminDetails">
                         <span className="profile-label w-20">
                           Section: </span>
-                        <span className="">{examObj.sectn}</span>
-
+                          {examObj.section !== undefined && (
+                        <span>{examObj.section.section}</span>
+                      )}
                       </div>
                       </div>
                       {/* <TabPane tabId={1}>
@@ -128,8 +131,10 @@ export interface ExamDetailsProps extends React.HTMLAttributes<HTMLElement> {
 
                 </tr>
               </thead>
-              <td>{examObj.sbjct}</td>
-              <td>{examObj.examDate}</td>
+              {examObj.subject !== undefined && (
+                        <td>{examObj.subject.subjectDesc}</td>
+                      )}
+              <td>{examObj.strexamDate}</td>
               {/* <td>{examObj.day}</td> */}
               <td>{examObj.startTime}</td>
               <td>{examObj.endTime}</td>

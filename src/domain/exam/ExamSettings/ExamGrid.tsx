@@ -1,70 +1,91 @@
 import * as React from 'react';
-import wsCmsBackendServiceSingletonClient from '../../../wsCmsBackendServiceClient';
+import * as _ from 'lodash';
 import {RouteComponentProps, Link} from 'react-router-dom';
 import {graphql, QueryProps, compose, withApollo} from 'react-apollo';
 import {AcExamSettingListQuery} from '../../types';
 import {NavItem,NavLink, TabPane, TabContent} from 'reactstrap';
-
+import ExamDetailsPage from './ExamDetailsPage';
+import '../../../css/dark.css';
 import * as AcExamSettingListQueryGql from './AcExamSettingListQuery.graphql';
 import withLoadingHandler from '../../../components/withLoadingHandler';
-import {ACEXAMLIST} from '../_queries';
-import ExamDetailsPage from './ExamDetailsPage';
+import {GET_EXAM_DATA,CREATE_FILTER_DATA_CACHE} from '../_queries';
+import wsCmsBackendServiceSingletonClient from '../../../wsCmsBackendServiceClient';
+
+
+const w140 = {
+  width: '140px',
+  marginBottom: '5px',
+};
+
+type ExamTableStates = {
+  exams: any;
+  examData: any;
+  branches: any;
+  departments: any;
+  batches: any;
+  sections: any;
+  pageSize: any;
+  search: any;
+  branchId: any;
+  academicYearId: any;
+  departmentId: any;
+  createExamFilterDataCache: any;
+  user: any;
+  activeTab: any;
+  examObj: any;
+};
 
 export interface ExamProps extends React.HTMLAttributes<HTMLElement> {
   [data: string]: any;
-  examList?: any;
-  totalRecords?: number | string;
-  type?: string;
-  source?: string;
-  sourceOfApplication?: string;
   user?: any;
-  examObj: any,
-  activeTab: any,
-  // stateList?: any;
-  // cityList?: any;
-  // originalCityList?: any;
+  createExamFilterDataCache?: any;
 }
 
-// const ERROR_MESSAGE_MANDATORY_FIELD_MISSING = "Mandatory fields missing";
-// const ERROR_MESSAGE_SERVER_SIDE_ERROR = "Due to some error in preferences service, branch could not be saved. Please check preferences service logs";
-// const SUCCESS_MESSAGE_BRANCH_ADDED = "New branch saved successfully";
-// const SUCCESS_MESSAGE_BRANCH_UPDATED = "Branch updated successfully";
-
-class ExamGrid<T = {[data: string]: any}> extends React.Component<ExamProps, any> {
+class ExamGrid extends React.Component<ExamProps, ExamTableStates> {
   constructor(props: ExamProps) {
     super(props);
+    const params = new URLSearchParams(location.search);
     this.state = {
       activeTab: 0,
-      examList: this.props.examList,
       examObj: {},
       user: this.props.user,
+      createExamFilterDataCache: this.props.createExamFilterDataCache,
       branchId: null,
       academicYearId: null,
       departmentId: null,
-      totalRecords: this.props.totalRecords,
-      type: this.props.type,
-      isModalOpen: false,
-      branchObj: {
-        stateId: '',
-        cityId: '',
-        branchName: '',
-        address: '',
-        pinCode: '',
-        branchHead: '',
-        status: '',
+      exams: {},
+      examData: {
+        batch: {
+          id: '',
+        },
+        section: {
+          id: '',
+        },
+        mutateResult: [],
+        search: '',
       },
-      errorMessage: '',
-      successMessage: '',
-      source: this.props.source,
-      sourceOfApplication: this.props.sourceOfApplication,
-      // stateList: this.props.stateList,
-      // cityList: this.props.cityList,
-      // originalCityList: this.props.cityList,
-      modelHeader: '',
-      selectedDepartment: {},
+      branches: [],
+      departments: [],
+      batches: [],
+      sections: [],
+      pageSize: 5,
+      search: '',
     };
-    this.registerSocket = this.registerSocket.bind(this);
+    // this.createBranches = this.createBranches.bind(this);
+    // this.createDepartments = this.createDepartments.bind(this);
+    this.createBatches = this.createBatches.bind(this);
+    this.createSections = this.createSections.bind(this);
+    this.showDetail = this.showDetail.bind(this);
+    this.SetObject = this.SetObject.bind(this);
+    this.getcreateExamFilterDataCache = this.getcreateExamFilterDataCache.bind(this);
     this.toggleTab = this.toggleTab.bind(this);
+
+    // this.searchHandlers = this.searchHandlers.bind(this);
+    this.checkAllExams = this.checkAllExams.bind(this);
+    this.onClickCheckbox = this.onClickCheckbox.bind(this);
+    this.createExamRows = this.createExamRows.bind(this);
+    this.createNoRecordMessage = this.createNoRecordMessage.bind(this);
+    this.registerSocket = this.registerSocket.bind(this);
   }
 
   async toggleTab(tabNo: any) {
@@ -77,7 +98,7 @@ class ExamGrid<T = {[data: string]: any}> extends React.Component<ExamProps, any
     await this.registerSocket();
   }
 
-  registerSocket() {
+  async registerSocket() {
     const socket = wsCmsBackendServiceSingletonClient.getInstance();
 
     socket.onmessage = (response: any) => {
@@ -87,23 +108,274 @@ class ExamGrid<T = {[data: string]: any}> extends React.Component<ExamProps, any
             branchId: message.selectedBranchId,
             academicYearId: message.selectedAcademicYearId,
             departmentId: message.selectedDepartmentId,
-            selectedDepartment: message.department,
         });
         console.log("ExamGrid. branchId: ",this.state.branchId);
         console.log("ExamGrid. departmentId: ",this.state.departmentId); 
         console.log("ExamGrid. ayId: ",this.state.academicYearId);  
-        console.log("ExamGrid. selectedDepartment: ",this.state.selectedDepartment); 
-    }
+    };
 
     socket.onopen = () => {
-        console.log("ExamGrid. Opening websocekt connection to cmsbackend. User : ",this.state.user.login);
-        socket.send(this.state.user.login);
-    }
+        console.log("ExamGrid. Opening websocekt connection to cmsbackend. User : ",
+        new URLSearchParams(location.search).get("signedInUser")
+        );
+        socket.send(new URLSearchParams(location.search).get("signedInUser"));
+    };
 
     window.onbeforeunload = () => {
         console.log("ExamGrid. Closing websocket connection with cms backend service");
-    }
+    };
   }
+
+  async getcreateExamFilterDataCache() {
+    const {branchId, academicYearId, departmentId} = this.state;
+    console.log('exam branch Id:', branchId);
+    const {data} = await this.props.client.query({
+      query: CREATE_FILTER_DATA_CACHE,
+      variables: {
+        branchId: '' + branchId,
+        academicYearId: '' + academicYearId,
+        departmentId: '' + departmentId,
+
+      },
+
+      fetchPolicy: 'no-cache',
+    });
+    this.setState({
+      createExamFilterDataCache: data,
+    });
+  }
+
+  createBatches(batches: any, selectedDepartmentId: any) {
+    let batchesOptions = [
+      <option key={0} value="">
+        Select Year
+      </option>,
+    ];
+    for (let i = 0; i < batches.length; i++) {
+      let id = batches[i].id;
+      let dptId = '' + batches[i].department.id;
+      if (dptId == selectedDepartmentId) {
+        batchesOptions.push(
+          <option key={id} value={id}>
+            {batches[i].batch}
+          </option>
+        );
+      }
+    }
+    return batchesOptions;
+  }
+
+  createSections(sections: any, selectedBatchId: any) {
+    let sectionsOptions = [
+      <option key={0} value="">
+        Select Section
+      </option>,
+    ];
+    for (let i = 0; i < sections.length; i++) {
+      let id = sections[i].id;
+      let sbthId = '' + sections[i].batch.id;
+      if (sbthId == selectedBatchId) {
+        sectionsOptions.push(
+          <option key={id} value={id}>
+            {sections[i].section}
+          </option>
+        );
+      }
+    }
+    return sectionsOptions;
+  }
+
+  checkAllExams(e: any) {
+    const {examData} = this.state;
+    const mutateResLength = examData.mutateResult.length;
+    let chkAll = e.nativeEvent.target.checked;
+    let els = document.querySelectorAll('input[type=checkbox]');
+
+    var empty = [].filter.call(els, function(el: any) {
+      if (chkAll) {
+        el.checked = true;
+  
+        el.checked = false;
+      }
+    });
+  }
+
+  onClickCheckbox(index: any, e: any) {
+    // const { target } = e;
+    const {id} = e.nativeEvent.target;
+    let chkBox: any = document.querySelector('#' + id);
+    chkBox.checked = e.nativeEvent.target.checked;
+  }
+  createNoRecordMessage(objAry: any) {
+    const mutateResLength = objAry.length;
+    const retVal = [];
+    for (let x = 0; x < mutateResLength; x++) {
+      const tempObj = objAry[x];
+      const exams = tempObj.data.getExamList;
+      const length = exams.length;
+      if (length === 0) {
+        retVal.push(<h4 className="ptl-06">No Record Found</h4>);
+      }
+    }
+    return retVal;
+  }
+
+  createExamRows(objAry: any) {
+    let {search} = this.state.examData;
+    search = search.trim();
+    const mutateResLength = objAry.length;
+    const retVal = [];
+    for (let x = 0; x < mutateResLength; x++) {
+      const tempObj = objAry[x];
+      const exams = tempObj.data.getExamList;
+      const length = exams.length;
+      for (let i = 0; i < length; i++) {
+        const exam = exams[i];
+        if (search) {
+          if (exam.examName.indexOf(search) !== -1) {
+            retVal.push(
+              <tr key={exam.id}>
+                <td>
+                  <input
+                    onClick={(e: any) => this.onClickCheckbox(i, e)}
+                    checked={exam.isChecked}
+                    type="checkbox"
+                    name="chk"
+                    id={'chk' + exam.id}
+                  />
+                </td>
+                <td>
+                  {/* <Link
+                    className="table-link link-color"
+                    to={`/plugins/ems-student/page/student?id=${student.id}`}
+                  >
+                    {student.studentName}
+                  </Link> */}
+                  {/* <a onClick={(e: any) => this.showDetail(student, e)}> */}
+                  {/* <a
+                    onClick={() => {
+                      // this.toggleTab(1);
+                      (e: any) => this.showDetail(student, e);
+                    }}
+                  >
+                    {student.studentName}
+                  </a> */}
+                  <a
+                    onClick={(e: any) => this.showDetail(exam, e)}
+                    style={{color: '#307dc2'}}
+                  >
+                    {exam.examName}
+                  </a>
+                </td>
+            
+                <td>
+                  {exam.department.name}
+                </td>
+                <td>{exam.batch.batch}</td>
+                <td>{exam.section.section}</td>
+                <td>{exam.subject.subjectDesc}</td>
+                <td>{exam.strexamDate}</td>
+                <td>{exam.startTime}</td>
+                <td>{exam.endTime}</td>
+              </tr>
+            );
+            console.log('print exam obj:', exam);
+          }
+        } else {
+          retVal.push(
+            <tr key={exam.id}>
+              <td>
+                <input
+                  onClick={(e: any) => this.onClickCheckbox(i, e)}
+                  checked={exam.isChecked}
+                  type="checkbox"
+                  name="chk"
+                  id={'chk' + exam.id}
+                />
+              </td>
+              <td>
+                {/* <Link
+                  className="table-link link-color"
+                  to={`/plugins/ems-student/page/student?id=${student.id}`}
+                >
+                  {student.studentName}
+                </Link> */}
+                {/* <a onClick={(e: any) => this.showDetail(student, e)}> */}
+                {/* <a
+                  onClick={() => {
+                    // this.toggleTab(1);
+                    (e: any) => this.showDetail(student, e);
+                  }}
+                >
+                  {student.studentName}
+                </a> */}
+                <a
+                  onClick={(e: any) => this.showDetail(exam, e)}
+                  style={{color: '#307dc2'}}
+                >
+                  {exam.examName}
+                </a>
+              </td>
+              <td>
+                  {exam.department.name}
+                </td>
+                <td>{exam.batch.batch}</td>
+                <td>{exam.section.section}</td>
+                <td>{exam.subject.subjectDesc}</td>
+                <td>{exam.strexamDate}</td>
+                <td>{exam.startTime}</td>
+                <td>{exam.endTime}</td>
+              
+            </tr>
+          );
+          console.log('print exam obj:', exam);
+        }
+      }
+    }
+
+    return retVal;
+  }
+
+
+  onChange = (e: any) => {
+    const {search} = e.nativeEvent.target;
+    const {name, value} = e.nativeEvent.target;
+    const {examData} = this.state;
+   
+    if (name === 'year') {
+      this.setState({
+        examData: {
+          ...examData,
+          batch: {
+            id: value,
+          },
+          section: {
+            id: '',
+          },
+        },
+      });
+    } else if (name === 'sectionObj') {
+      this.setState({
+        examData: {
+          ...examData,
+          section: {
+            id: value,
+          },
+        },
+      });
+    } 
+    
+   
+    else {
+      this.setState({
+        examData: {
+          ...examData,
+          [name]: value,
+        },
+      });
+    }
+  };
+  
 
   async showDetail(obj: any, e: any) {
     await this.SetObject(obj);
@@ -119,105 +391,169 @@ class ExamGrid<T = {[data: string]: any}> extends React.Component<ExamProps, any
     console.log('2. data in obj:', obj);
   }
 
-  createRows(objAry: any) {
-    const {selectedDepartment} = this.state;
-    console.log('2. ExamGrid createRows() - selectedDepartment.name:  ', selectedDepartment.name);
-    console.log('3. ExamGrid createRows() - Exam list on ExamGrid page:  ', objAry);
-    if (objAry === undefined || objAry === null) {
+ 
+
+  onClick = (e: any) => {
+    const {name, value} = e.nativeEvent.target;
+    const {mutate} = this.props;
+    const {examData, branchId, departmentId} = this.state;
+    e.preventDefault();
+    if (!branchId) {
+      alert('Please select branch from preferences');
       return;
     }
-    const mutateResLength = objAry.length;
-    const retVal = [];
-    for (let i = 0; i < mutateResLength; i++) {
-      const branchObj = objAry[i];
-      if(branchObj.departmnt === selectedDepartment.name){
-                retVal.push(
-                  <tr>
-                    {/* id examName action sbjct examDate departmnt bctch sectn st ed subExamDate countvalue */}
-                    {/* <td>{branchObj.countvalue}</td> */}
-                    <td>
-                <a onClick={(e: any) => this.showDetail(branchObj, e)}>
-                  {branchObj.examName}
-                </a>
-              </td>
-                    <td>{branchObj.bctch}</td>
-                    <td>{branchObj.departmnt}</td>
-                    <td>{branchObj.sectn}</td>
-                    <td>{branchObj.sbjct}</td>
-                    <td>{branchObj.st}</td>
-                    <td>{branchObj.ed}</td>
-          
-                    {/* <td>{branchObj.action}</td> */}
-                    {/* <td>{branchObj.countvalue}</td> */}
-          
-                    {/* <td>
-                      {
-                        <button
-                          className="btn btn-primary"
-                          onClick={e => this.showDetail(e, true, branchObj, 'Edit Branch')}
-                        >
-                          Edit
-                        </button>
-                      }
-                    </td> */}
-                  </tr>
-                );
-      }
-      
-    }
-    return retVal;
-  }
+    let examFilterInputObject = {
+      branchId: branchId, 
+      departmentId: departmentId, 
+      batchId: examData.batch.id, 
+      sectionId: examData.section.id, 
+     
+    };
 
-  async acExamSettings(e: any) {
-    console.log('Refreshing branch list');
-    const {data} = await this.props.client.query({
-      query: ACEXAMLIST,
-      fetchPolicy: 'no-cache',
-    });
-    const temp = data.acExamSettings;
-    this.setState({
-      list: temp,
-    });
-  }
+    this.props.client
+      .mutate({
+        mutation: GET_EXAM_DATA,
+        variables: {
+          filter: examFilterInputObject,
+        },
+      })
+      .then((data: any) => {
+        const sdt = data;
+        examData.mutateResult = [];
+        examData.mutateResult.push(sdt);
+        this.setState({
+          examData: examData,
+        });
+        console.log('Exam filter mutation result ::::: ', examData.mutateResult);
+      })
+      .catch((error: any) => {
+        console.log('there was an error sending the query result', error);
+        return Promise.reject(`Could not retrieve exam data: ${error}`);
+      });
+  };
 
   render() {
-    const {examList, branchObj,activeTab} = this.state;
+    const { examData,
+      createExamFilterDataCache,
+      departmentId,
+      activeTab,
+      user,} = this.state;
     return (
       <section className="customCss">
-        {/* <button
-          className="btn btn-primary"
-          style={{width: '150px'}}
-          onClick={e => this.showModal(e, true, 'Add New Branch')}
-        >
-          <i className="fa fa-plus-circle" /> Add new Branch
-        </button> */}
-        <TabContent activeTab={activeTab}>
-          <TabPane tabId={0}>
-          <div className="container-fluid p-1 ">
-          
-        {examList !== null && examList !== undefined && examList.length > 0 ? (
-          <div style={{width: '100%', height: '500px', overflow: 'auto'}}>
-            <table id="branchTable" className="striped-table fwidth bg-white p-2 m-t-1">
-              <thead>
-                <tr>
-                  {/* <th>Id</th> */}
-                  <th>Exam Name</th>
-                  <th>Year</th>
-                  <th>Department</th>
-                  <th>Section</th>
-                  <th>Subjects</th>
-                  <th>Start Date</th>
-                  <th>End Date</th>
-                </tr>
-              </thead>
-              <tbody>{this.createRows(examList)}</tbody>
-            </table>
+      <TabContent activeTab={activeTab}>
+        <TabPane tabId={0}>
+          <div className="container-fluid" style={{padding: '0px'}}>
+            <div className="m-b-1 bg-heading-bgStudent studentListFlex p-point5">
+              <div className="">
+                <h4 className="ptl-06">Exam Details</h4>
+              </div>
           </div>
-        ) : <div>No Record Found</div>
-        }
-        </div>
-         </TabPane>
-         <TabPane tabId={1}>
+
+            <div>
+              <div className="student-flex">
+                <div>
+                  <label htmlFor="">Year</label>
+                  <select
+                    required
+                    name="year"
+                    id="year"
+                    onChange={this.onChange}
+                    value={examData.batch.id}
+                    className="gf-form-input max-width-22"
+                  >
+                    {createExamFilterDataCache !== null &&
+                    createExamFilterDataCache !== undefined &&
+                    createExamFilterDataCache.batches !== null &&
+                    createExamFilterDataCache.batches !== undefined
+                      ? this.createBatches(
+                        createExamFilterDataCache.batches,
+                          departmentId
+                        )
+                      : null}
+                    {/* {this.createBatches(createStudentFilterDataCache.batches, departmentId)} */}
+                  </select>
+                </div>
+                <div>
+                  <label htmlFor="">Section</label>
+                  <select
+                    required
+                    name="sectionObj"
+                    id="sectionObj"
+                    onChange={this.onChange}
+                    value={examData.section.id}
+                    className="gf-form-input max-width-12"
+                  >
+                    {createExamFilterDataCache !== null &&
+                    createExamFilterDataCache !== undefined &&
+                    createExamFilterDataCache.sections !== null &&
+                    createExamFilterDataCache.sections !== undefined
+                      ? this.createSections(
+                        createExamFilterDataCache.sections,
+                          examData.batch.id
+                        )
+                      : null}
+                  </select>
+                </div>
+
+              
+                <div id="srch" className="margin-bott">
+                  <label htmlFor="">Search</label>
+                  <input
+                    type="text"
+                    className="gf-form-input"
+                    name="search"
+                    value={examData.search}
+                    onChange={this.onChange}
+                  />
+                </div>
+                <div className="bg-heading-bg studentSearch">
+                  {/* <h4 className="ptl-06"></h4> */}
+                  <button
+                    className="btn btn-primary"
+                    id="btnFind"
+                    name="btnFind"
+                    onClick={this.onClick}
+                    style={w140}
+                  >
+                    Search Exams
+                  </button>
+                </div>
+              </div>
+
+              <table id="studentlistpage" className="striped-table fwidth bg-white">
+                <thead>
+                  <tr>
+                    <th>
+                      <input
+                        type="checkbox"
+                        onClick={(e: any) => this.checkAllExams(e)}
+                        value="checkedall"
+                        name=""
+                        id="chkCheckedAll"
+                      />
+                    </th>
+                    <th>Exam Name</th>
+                    
+                    <th>Department</th>
+                    <th>Year</th>
+                    <th>Section</th>
+                    <th>Subject</th>
+                    <th>Date</th>
+                    <th>Start Time</th>
+                    <th>End Time</th>
+                    
+                  </tr>
+                </thead>
+                <tbody>
+                  {this.createExamRows(this.state.examData.mutateResult)}
+                </tbody>
+              </table>
+              {/* <Pagination /> */}
+              {this.createNoRecordMessage(this.state.examData.mutateResult)}
+            </div>
+          </div>
+        </TabPane>
+        <TabPane tabId={1}>
             <div className="container-fluid" style={{padding: '0px'}}>
               <div className="m-b-1 bg-heading-bgStudent studentListFlex p-point5">
                 
@@ -249,10 +585,11 @@ class ExamGrid<T = {[data: string]: any}> extends React.Component<ExamProps, any
             </div>
             
           </TabPane>
-       </TabContent>
-       </section >
-    );
-  }
+       
+      </TabContent>
+    </section>
+  );
+}
 }
 
 export default withApollo(ExamGrid);
