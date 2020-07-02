@@ -186,7 +186,7 @@ class MarkSubjectExam<T = {[data: string]: any}> extends React.Component<MarkSub
     this.registerSocket = this.registerSocket.bind(this);
     this.createDepartments = this.createDepartments.bind(this);
     this.createBatches = this.createBatches.bind(this);
-    this.createSemesters = this.createSemesters.bind(this);
+    
     this.createSubjects = this.createSubjects.bind(this);
     this.createSections = this.createSections.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -333,22 +333,22 @@ class MarkSubjectExam<T = {[data: string]: any}> extends React.Component<MarkSub
     return subjectsOptions;
   }
 
-  createSemesters(semesters: any) {
-    let semestersOptions = [
-      <option key={0} value="">
-        Select Semester
-      </option>,
-    ];
-    for (let i = 0; i < semesters.length; i++) {
-      let id = semesters[i].description;
-      semestersOptions.push(
-        <option key={id} value={id}>
-          {semesters[i].description}
-        </option>
-      );
-    }
-    return semestersOptions;
-  }
+  // createSemesters(semesters: any) {
+  //   let semestersOptions = [
+  //     <option key={0} value="">
+  //       Select Semester
+  //     </option>,
+  //   ];
+  //   for (let i = 0; i < semesters.length; i++) {
+  //     let id = semesters[i].description;
+  //     semestersOptions.push(
+  //       <option key={id} value={id}>
+  //         {semesters[i].description}
+  //       </option>
+  //     );
+  //   }
+  //   return semestersOptions;
+  // }
 
   createSections(sections: any, selectedBatchId: any) {
     let sectionsOptions = [
@@ -446,16 +446,18 @@ class MarkSubjectExam<T = {[data: string]: any}> extends React.Component<MarkSub
           },
         },
       });
-    } else if (name === 'semester') {
-      this.setState({
-        examData: {
-          ...examData,
-          semester: {
-            id: value,
-          },
-        },
-      });
-    } else if (name === 'subject') {
+     }
+    // else if (name === 'semester') {
+    //   this.setState({
+    //     examData: {
+    //       ...examData,
+    //       semester: {
+    //         id: value,
+    //       },
+    //     },
+    //   });
+    // } 
+    else if (name === 'subject') {
       this.setState({
         examData: {
           ...examData,
@@ -875,11 +877,20 @@ class MarkSubjectExam<T = {[data: string]: any}> extends React.Component<MarkSub
                   </td>
 
                   <td>
-                    <select name="semester" id="semester" onChange={this.onChange} value={examData.semester.id} className="gf-form-input max-width-22" >
-                      {
-                        this.createSemesters( examFilterCacheList.semesters )
-                      }
-                    </select>
+                  <select
+                name="semester"
+                id="semester"
+                onChange={this.onChange}
+                value={examData.semester}
+              >
+                <option value="">Select Semester</option>
+                <option value="SEMESTER1">SEMESTER1</option>
+                <option value="SEMESTER2">SEMESTER2</option>
+                <option value="SEMESTER3">SEMESTER3</option>
+                <option value="SEMESTER4">SEMESTER4</option>
+                <option value="SEMESTER5">SEMESTER5</option>
+                <option value="SEMESTER6">SEMESTER6</option>
+              </select>
                   </td>
 
                   <td>

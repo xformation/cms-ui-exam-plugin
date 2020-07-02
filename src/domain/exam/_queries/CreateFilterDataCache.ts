@@ -55,10 +55,7 @@ export const CREATE_FILTER_DATA_CACHE = gql`
           id
         }
       }
-      semesters {
-        id
-        description
-      }
+
       academicExamSettings {
         id
         examName
