@@ -26,7 +26,7 @@ export const GET_EXAM_DATA = gql`
       subjectId
       academicyear {
         id
-        year
+        description
         startDate
         endDate
       }

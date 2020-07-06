@@ -29,7 +29,7 @@ type ExamState = {
   departments: any;
   batches: any;
   subjects: any;
-  semesters: any;
+  // semesters: any;
   sections: any;
   submitted: any;
   noOfExams: number;
@@ -150,9 +150,10 @@ class MarkSubjectExam<T = {[data: string]: any}> extends React.Component<MarkSub
         batch: {
           id: '',
         },
-        semester: {
-          id: '',
-        },
+        // semester: {
+        //   id: '',
+        // },
+        semester: "",
         subject: {
           id: '',
         },
@@ -177,7 +178,7 @@ class MarkSubjectExam<T = {[data: string]: any}> extends React.Component<MarkSub
       academicYears: [],
       departments: [],
       batches: [],
-      semesters: [],
+      // semesters: [],
       sections: [],
       subjects: [],
       submitted: false,
@@ -423,9 +424,9 @@ class MarkSubjectExam<T = {[data: string]: any}> extends React.Component<MarkSub
           section: {
             id: '',
           },
-          semester: {
-            id: '',
-          },
+          // semester: {
+          //   id: '',
+          // },
         },
       });
     } else if (name === 'batch') {
@@ -441,9 +442,9 @@ class MarkSubjectExam<T = {[data: string]: any}> extends React.Component<MarkSub
           section: {
             id: '',
           },
-          semester: {
-            id: '',
-          },
+          // semester: {
+          //   id: '',
+          // },
         },
       });
      }
@@ -692,7 +693,7 @@ class MarkSubjectExam<T = {[data: string]: any}> extends React.Component<MarkSub
           subOptions.options[subOptions.selectedIndex].value,
           departmentId,
           examData.batch.id,
-          examData.semester.id,
+          examData.semester,
           examData.section.id,
           branchId,
           (this.state.gradeType === "GRADE") ? this.state.selectedGrade : null,

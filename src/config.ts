@@ -1,9 +1,7 @@
-const secSrvUrl = 'http://localhost:8094';
-const apiUrl = 'http://localhost:8080/api';
-
-const graphqlUrl = 'http://localhost:9096';
-const loggedInUserUrl = 'http://localhost:3000';
-const webSockWithCmsBackendUrl = 'ws://localhost:4000/websocket/tracker/websocket';
+const IP = 'localhost';
+const graphqlUrl = 'http://' + IP + ':9096';
+const loggedInUserUrl = 'http://' + IP + ':3000';
+const webSockWithCmsBackendUrl = 'ws://' + IP + ':4000/websocket/tracker/websocket';
 
 export const config = {
   GRAPHQL_URL: graphqlUrl + '/graphql',
